@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toPointLabel = document.getElementById("to-point-label");
   const swapPointsBtn = document.getElementById("swap-points-btn");
   const clearPointsBtn = document.getElementById("clear-points-btn");
+  const simulateBtn = document.getElementById("simulate-btn");
 
   const dashboardCitySelect = document.getElementById("dashboard-city-select");
   const refreshDashboardBtn = document.getElementById("refresh-dashboard-aqi");
@@ -429,6 +430,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function updatePointLabels() {
     if (fromPointLabel) fromPointLabel.textContent = formatPointLabel(mapState.from);
     if (toPointLabel) toPointLabel.textContent = formatPointLabel(mapState.to);
+    if (simulateBtn) {
+      const ready = Boolean(mapState.from && mapState.to);
+      simulateBtn.disabled = !ready;
+      simulateBtn.title = ready ? "" : "Pilih titik asal dan tujuan di peta terlebih dahulu";
+    }
   }
 
   function updateMapVisuals() {

@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
+  min-height: 44px;
   border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
@@ -229,6 +230,8 @@
   transform: translateY(-100%);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .mobile-menu.active {
@@ -349,6 +352,14 @@
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .nav-brand {
+    font-size: 22px;
   }
 }
 

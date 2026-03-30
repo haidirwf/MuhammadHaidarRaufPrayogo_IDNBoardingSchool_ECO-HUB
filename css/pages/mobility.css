@@ -267,6 +267,7 @@
 .map-actions .btn {
   padding: 10px 12px;
   font-size: 14px;
+  width: auto;
 }
 
 .form-group {
@@ -577,10 +578,19 @@
     grid-column: span 2;
   }
 
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .dashboard-toolbar,
   .toolbar-controls {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .toolbar-controls select,
+  .toolbar-controls .btn {
+    width: 100%;
   }
 }
 
@@ -616,6 +626,10 @@
 
   .mobility-map {
     height: 230px;
+  }
+
+  .map-actions .btn {
+    width: 100%;
   }
 
   .air-detail-grid {

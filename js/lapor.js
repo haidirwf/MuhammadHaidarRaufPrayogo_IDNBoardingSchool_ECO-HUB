@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Data Management ---
   const STORAGE_KEY = "Eco-Hub_reports";
+  const ALLOWED_STATUS_CLASS = new Set([
+    "status-diterima",
+    "status-proses",
+    "status-selesai",
+  ]);
 
   // 1. Improved Dummy Data
   const seedReports = [
@@ -42,7 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(seedReports));
       return seedReports;
     }
-    return JSON.parse(stored);
+    try {
+      return JSON.parse(stored);
+    } catch (error) {
+      console.warn("Invalid report storage. Reset to seed data.", error);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(seedReports));
+      return seedReports;
+    }
   }
 
   function addReport(report) {
@@ -54,6 +65,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Feed Logic & Modal ---
   const feedList = document.getElementById("feed-list");
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function normalizeStatusClass(status, statusClass) {
+    if (ALLOWED_STATUS_CLASS.has(statusClass)) return statusClass;
+    if (status === "Selesai") return "status-selesai";
+    if (status === "Dalam Proses") return "status-proses";
+    return "status-diterima";
+  }
 
   // Modal Elements
   const modal = document.getElementById("report-modal");
@@ -84,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pill = document.getElementById("modal-status-pill");
     pill.innerText = rep.status;
-    pill.className = `status-pill ${rep.statusClass || getStatusClass(rep.status)}`;
+    pill.className = `status-pill ${normalizeStatusClass(rep.status, rep.statusClass)}`;
 
     // Open
     modal.classList.add("open");
@@ -96,32 +123,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const recent = reports.slice(0, 5); // display top 5
 
     feedList.innerHTML = recent
-      .map(
-        (rep) => `
-            <div class="feed-card ${rep.statusClass || getStatusClass(rep.status)} fade-up"
-                 style="cursor: pointer;"
-                 onclick="showReportDetail('${rep.ref}')">
-                <div class="feed-header">
-                    <span class="feed-type">${rep.type}</span>
-                    <span class="feed-time">${rep.time || "Baru saja"}</span>
-                </div>
-                <div class="feed-loc">
-                    <i data-lucide="map-pin" size="14"></i> ${rep.location.split(",")[0]}...
-                </div>
-                <div class="feed-status">
-                    <span class="status-pill">${rep.status}</span>
-                </div>
-            </div>
-        `,
-      )
+      .map((rep) => {
+        const safeRef = encodeURIComponent(String(rep.ref || ""));
+        const safeType = escapeHtml(rep.type || "Jenis tidak diketahui");
+        const safeTime = escapeHtml(rep.time || "Baru saja");
+        const safeLocation = escapeHtml(
+          String(rep.location || "Lokasi tidak diketahui")
+            .split(",")[0]
+            .trim(),
+        );
+        const safeStatus = escapeHtml(rep.status || "Diterima");
+        const safeStatusClass = normalizeStatusClass(rep.status, rep.statusClass);
+
+        return `
+          <div class="feed-card ${safeStatusClass} fade-up"
+               style="cursor: pointer;"
+               data-report-ref="${safeRef}">
+              <div class="feed-header">
+                  <span class="feed-type">${safeType}</span>
+                  <span class="feed-time">${safeTime}</span>
+              </div>
+              <div class="feed-loc">
+                  <i data-lucide="map-pin" size="14"></i> ${safeLocation}...
+              </div>
+              <div class="feed-status">
+                  <span class="status-pill">${safeStatus}</span>
+              </div>
+          </div>
+        `;
+      })
       .join("");
 
     if (window.lucide) lucide.createIcons();
 
+    const cards = feedList.querySelectorAll("[data-report-ref]");
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        const ref = decodeURIComponent(card.getAttribute("data-report-ref") || "");
+        if (ref) showReportDetail(ref);
+      });
+    });
+
     // Trigger animations
     setTimeout(() => {
-      const cards = feedList.querySelectorAll(".feed-card");
-      cards.forEach((card, index) => {
+      const animatedCards = feedList.querySelectorAll(".feed-card");
+      animatedCards.forEach((card, index) => {
         setTimeout(() => {
           card.classList.add("visible");
         }, index * 100);
@@ -161,6 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Same UI Style logic as requested
         if (found) {
+          const safeType = escapeHtml(found.type || "Jenis tidak diketahui");
+          const safeLocation = escapeHtml(found.location || "Lokasi tidak diketahui");
+          const safeStatus = escapeHtml(found.status || "Diterima");
+          const safeStatusClass = normalizeStatusClass(found.status, found.statusClass);
           checkResult.innerHTML = `
                       <div class="result-found-card">
                           <div class="result-icon-box success">
@@ -168,14 +218,15 @@ document.addEventListener("DOMContentLoaded", () => {
                           </div>
                           <div class="result-content">
                               <h4>Laporan Ditemukan</h4>
-                              <div class="result-detail-item"><strong>Jenis:</strong> ${found.type}</div>
-                              <div class="result-detail-item"><strong>Lokasi:</strong> ${found.location}</div>
-                              <span class="status-badge ${found.statusClass || getStatusClass(found.status)}">${found.status}</span>
+                              <div class="result-detail-item"><strong>Jenis:</strong> ${safeType}</div>
+                              <div class="result-detail-item"><strong>Lokasi:</strong> ${safeLocation}</div>
+                              <span class="status-badge ${safeStatusClass}">${safeStatus}</span>
                           </div>
                       </div>
                   `;
           checkResult.className = "check-result-container fade-up visible";
         } else {
+          const safeQuery = escapeHtml(query);
           checkResult.innerHTML = `
                       <div class="result-not-found-card">
                           <div class="result-icon-box error">
@@ -183,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           </div>
                           <div class="result-content">
                               <h4>Tidak Ditemukan</h4>
-                              <p>Nomor referensi <strong>${query}</strong> tidak terdaftar dlm sistem kami.</p>
+                              <p>Nomor referensi <strong>${safeQuery}</strong> tidak terdaftar dlm sistem kami.</p>
                           </div>
                       </div>
                   `;
