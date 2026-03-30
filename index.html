@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eco-Hub — Eco Smart Mobility & City Insights</title>
+    <title>Eco Hub — Eco Smart Mobility & City Insights</title>
     <meta
       name="description"
       content="Platform eco-smart city untuk simulasi mobilitas, insight emisi, kualitas udara, dan rekomendasi aksi hijau personal."
@@ -27,8 +27,6 @@
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-
-    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/gamification.css" />
   </head>
 
@@ -37,7 +35,7 @@
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
           <i data-lucide="leaf" color="var(--color-green-primary)"></i>
-          Eco-Hub
+          Eco Hub
         </a>
 
         <div class="nav-menu hide-mobile">
@@ -115,9 +113,24 @@
             <select id="dashboard-city-select" aria-label="Pilih kota untuk kondisi udara">
               <option value="Jakarta">Jakarta</option>
               <option value="Bandung">Bandung</option>
+              <option value="Bekasi">Bekasi</option>
+              <option value="Bogor">Bogor</option>
+              <option value="Depok">Depok</option>
+              <option value="Tangerang">Tangerang</option>
+              <option value="Semarang">Semarang</option>
               <option value="Surabaya">Surabaya</option>
+              <option value="Malang">Malang</option>
               <option value="Yogyakarta">Yogyakarta</option>
+              <option value="Denpasar">Denpasar</option>
+              <option value="Medan">Medan</option>
+              <option value="Palembang">Palembang</option>
+              <option value="Batam">Batam</option>
+              <option value="Pontianak">Pontianak</option>
+              <option value="Balikpapan">Balikpapan</option>
+              <option value="Samarinda">Samarinda</option>
+              <option value="Banjarmasin">Banjarmasin</option>
               <option value="Makassar">Makassar</option>
+              <option value="Manado">Manado</option>
             </select>
             <button id="refresh-dashboard-aqi" class="btn btn-outline" type="button">
               <i data-lucide="refresh-cw" size="16"></i> Perbarui Kondisi Udara
@@ -132,6 +145,7 @@
               <span id="aqi-badge" class="state-chip">Memuat...</span>
             </div>
             <div class="widget-value"><span id="dashboard-aqi">--</span> AQI</div>
+            <p id="aqi-city-note" class="widget-note aqi-city-note">--</p>
             <p id="aqi-desc" class="widget-note">Data sedang disiapkan.</p>
             <div class="air-detail-grid">
               <div>
@@ -282,7 +296,10 @@
 
               <div id="simulation-insight" class="main-insight"></div>
               <div id="population-insight" class="sub-insight"></div>
-              <div id="mode-comparison" class="mode-comparison" aria-label="Perbandingan emisi antar moda"></div>
+              <details class="mode-details">
+                <summary>Lihat detail emisi per moda</summary>
+                <div id="mode-comparison" class="mode-comparison" aria-label="Perbandingan emisi antar moda"></div>
+              </details>
             </article>
           </div>
         </div>
@@ -372,17 +389,12 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <h3>🌿 Eco-Hub</h3>
+            <h3>🌿 Eco Hub</h3>
             <p class="footer-tagline">
               Platform edukasi dan monitoring lingkungan untuk masa depan yang
               lebih baik.
             </p>
-            <div class="social-icons">
-              <a href="#"><i data-lucide="instagram"></i></a>
-              <a href="#"><i data-lucide="twitter"></i></a>
-              <a href="#"><i data-lucide="youtube"></i></a>
-            </div>
-          </div>
+</div>
 
           <div class="footer-links">
             <div class="footer-heading">Navigasi</div>
@@ -417,7 +429,7 @@
         </div>
 
         <div class="footer-bottom">
-          <p>&copy; 2026 Eco-Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco-Hub.</p>
+          <p>&copy; 2026 Eco Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco Hub.</p>
         </div>
       </div>
     </footer>
@@ -434,7 +446,7 @@
     </script>
     <script src="js/gamification.js"></script>
     <script>
-      if ("serviceWorker" in navigator) {
+      if ((location.protocol === "http:" || location.protocol === "https:") && "serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("sw.js")
@@ -444,5 +456,3 @@
     </script>
   </body>
 </html>
-
-

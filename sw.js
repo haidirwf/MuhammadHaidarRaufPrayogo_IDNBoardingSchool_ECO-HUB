@@ -1,4 +1,4 @@
-const CACHE_NAME = "Eco-Hub-v3";
+const CACHE_NAME = "Eco Hub-v3";
 const ASSETS = [
   "/",
   "/index.html",

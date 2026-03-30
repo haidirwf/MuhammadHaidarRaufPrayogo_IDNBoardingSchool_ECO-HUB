@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
       id: 8,
       title: "Mengenal 'Carbon Offsetting' Lebih Dekat",
       category: "Perubahan Iklim",
-      author: "Eco-Hub",
+      author: "Eco Hub",
       date: "03 Feb 2026",
       thumbColor: "#FFF3E0",
       wikiTopic: "Perdagangan_emisi",

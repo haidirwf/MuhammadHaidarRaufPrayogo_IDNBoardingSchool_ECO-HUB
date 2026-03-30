@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (location.protocol === "http:" || location.protocol === "https:") {
+    const hasManifest = document.querySelector('link[rel="manifest"]');
+    if (!hasManifest) {
+      const manifestLink = document.createElement("link");
+      manifestLink.rel = "manifest";
+      manifestLink.href = "manifest.json";
+      document.head.appendChild(manifestLink);
+    }
+  }
+
   // Mobile Menu
   const hamburger = document.querySelector(".hamburger");
   const mobileMenu = document.querySelector(".mobile-menu");

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tentang Eco-Hub</title>
+    <title>Tentang Eco Hub</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,7 +25,6 @@
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/gamification.css" />
   </head>
 
@@ -34,7 +33,7 @@
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
           <i data-lucide="leaf" color="var(--color-green-primary)"></i>
-          Eco-Hub
+          Eco Hub
         </a>
 
         <div class="nav-menu hide-mobile">
@@ -80,7 +79,7 @@
     <header class="about-hero section">
       <div class="container fade-up">
         <div class="breadcrumb">Beranda / Tentang</div>
-        <h1>Tentang Eco-Hub</h1>
+        <h1>Tentang Eco Hub</h1>
         <p class="hero-subtext">
           Platform smart mobility dan city insights untuk membantu pengguna
           mengambil keputusan perjalanan yang lebih ramah lingkungan.
@@ -192,7 +191,7 @@
               <h3>Muhammad Haidar Rauf Prayogo</h3>
               <span class="role">IDN Boarding School</span>
               <p>
-                Mengembangkan Eco-Hub dengan fokus pada UX yang ringkas:
+                Mengembangkan Eco Hub dengan fokus pada UX yang ringkas:
                 pilih rute di peta, hitung emisi, pahami kondisi kota, lalu
                 dorong aksi lingkungan yang konsisten.
               </p>
@@ -217,17 +216,12 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <h3>🌿 Eco-Hub</h3>
+            <h3>🌿 Eco Hub</h3>
             <p class="footer-tagline">
               Platform edukasi dan monitoring lingkungan untuk masa depan yang
               lebih baik.
             </p>
-            <div class="social-icons">
-              <a href="#"><i data-lucide="instagram"></i></a>
-              <a href="#"><i data-lucide="twitter"></i></a>
-              <a href="#"><i data-lucide="youtube"></i></a>
-            </div>
-          </div>
+</div>
 
           <div class="footer-links">
             <div class="footer-heading">Navigasi</div>
@@ -262,7 +256,7 @@
         </div>
 
         <div class="footer-bottom">
-          <p>&copy; 2026 Eco-Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco-Hub.</p>
+          <p>&copy; 2026 Eco Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco Hub.</p>
         </div>
       </div>
     </footer>
@@ -280,7 +274,7 @@
     ></script>
     <script src="js/gamification.js"></script>
     <script>
-      if ("serviceWorker" in navigator) {
+      if ((location.protocol === "http:" || location.protocol === "https:") && "serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("sw.js")

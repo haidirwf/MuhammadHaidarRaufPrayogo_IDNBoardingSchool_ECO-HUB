@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const IMPACT_KEY = "Eco-Hub_impact_tracker";
-  const REPORTS_KEY = "Eco-Hub_reports";
-  const AQI_CACHE_KEY = "Eco-Hub_aqi_cache_v1";
-  const GEO_CACHE_KEY = "Eco-Hub_geo_cache_v1";
+  const IMPACT_KEY = "Eco Hub_impact_tracker";
+  const REPORTS_KEY = "Eco Hub_reports";
+  const AQI_CACHE_KEY = "Eco Hub_aqi_cache_v1";
+  const GEO_CACHE_KEY = "Eco Hub_geo_cache_v1";
   const AQI_TTL_MS = 10 * 60 * 1000;
   const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-  const MOCK_MODE = localStorage.getItem("Eco-Hub_mock_mode") === "1";
+  const MOCK_MODE = localStorage.getItem("Eco Hub_mock_mode") === "1";
 
   // g CO2 per km per person (estimasi edukasi)
   const MODE_FACTORS = {
@@ -19,9 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const CITIES = {
     Jakarta: { lat: -6.2088, lon: 106.8456 },
     Bandung: { lat: -6.9175, lon: 107.6191 },
+    Bekasi: { lat: -6.2349, lon: 106.9896 },
+    Bogor: { lat: -6.5944, lon: 106.7892 },
+    Depok: { lat: -6.4025, lon: 106.7942 },
+    Tangerang: { lat: -6.1783, lon: 106.6319 },
+    Semarang: { lat: -6.9667, lon: 110.4167 },
     Surabaya: { lat: -7.2575, lon: 112.7521 },
+    Malang: { lat: -7.9666, lon: 112.6326 },
     Yogyakarta: { lat: -7.7956, lon: 110.3695 },
+    Denpasar: { lat: -8.6705, lon: 115.2126 },
+    Medan: { lat: 3.5952, lon: 98.6722 },
+    Palembang: { lat: -2.9909, lon: 104.7567 },
+    Batam: { lat: 1.0456, lon: 104.0305 },
+    Pontianak: { lat: -0.0263, lon: 109.3425 },
+    Balikpapan: { lat: -1.2379, lon: 116.8529 },
+    Samarinda: { lat: -0.5022, lon: 117.1537 },
+    Banjarmasin: { lat: -3.3186, lon: 114.5944 },
     Makassar: { lat: -5.1477, lon: 119.4328 },
+    Manado: { lat: 1.4748, lon: 124.8421 },
   };
   const MAP_TILE_SOURCES = [
     {
@@ -75,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dashboardActions = document.getElementById("dashboard-actions");
   const dashboardSaved = document.getElementById("dashboard-saved");
   const aqiBadge = document.getElementById("aqi-badge");
+  const aqiCityNote = document.getElementById("aqi-city-note");
   const aqiDesc = document.getElementById("aqi-desc");
   const dashboardPm25 = document.getElementById("dashboard-pm25");
   const dashboardPm10 = document.getElementById("dashboard-pm10");
@@ -680,6 +696,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const descriptor = getAqiDescriptor(air.aqi);
 
     if (dashboardAqi) dashboardAqi.textContent = String(Math.round(air.aqi));
+    if (aqiCityNote) aqiCityNote.textContent = city;
     if (aqiBadge) {
       aqiBadge.textContent = descriptor.label;
       aqiBadge.className = `state-chip ${descriptor.className}`;

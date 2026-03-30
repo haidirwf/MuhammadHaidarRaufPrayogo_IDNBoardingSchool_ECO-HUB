@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Data Management ---
-  const STORAGE_KEY = "Eco-Hub_reports";
+  const STORAGE_KEY = "Eco Hub_reports";
   const ALLOWED_STATUS_CLASS = new Set([
     "status-diterima",
     "status-proses",
@@ -251,6 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Form Submit Animation Fix ---
   const form = document.getElementById("lapor-form");
   const submitBtn = document.querySelector(".submit-btn");
+  const submitBtnText = submitBtn?.querySelector(".btn-text");
+  const submitSpinner = submitBtn?.querySelector(".spinner");
   const successState = document.getElementById("success-state");
 
   // Char count
@@ -276,6 +278,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // 2. Fix Animation: Use Class Toggling
       submitBtn.classList.add("loading");
       submitBtn.disabled = true;
+      submitBtnText?.classList.add("hidden");
+      submitSpinner?.classList.remove("hidden");
 
       setTimeout(() => {
         const nama = document.getElementById("nama").value;
@@ -323,6 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
         form.reset();
         submitBtn.classList.remove("loading");
         submitBtn.disabled = false;
+        submitBtnText?.classList.remove("hidden");
+        submitSpinner?.classList.add("hidden");
       }, 1500);
     });
   }
@@ -343,6 +349,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (pickerMapDiv && window.L) {
     const locInput = document.getElementById("lokasi");
     const gpsBtn = document.getElementById("btn-get-location");
+    const locationLoading = document.getElementById("location-loading");
+    const LAST_GPS_KEY = "Eco Hub_lastKnownLocation";
 
     // Auto-detect Jakarta roughly
     const pickerMap = L.map("picker-map").setView([-6.2088, 106.8456], 11);
@@ -422,38 +430,118 @@ document.addEventListener("DOMContentLoaded", () => {
           gpsBtn.disabled = true;
           gpsBtn.innerHTML =
             '<i class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></i>';
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
-              await applyPickedLocation(lat, lng, true);
-              gpsBtn.disabled = false;
-              gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
-              if (window.lucide)
-                window.lucide.createIcons({ root: gpsBtn.parentElement });
-            },
-            (err) => {
-              gpsBtn.disabled = false;
-              gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
-              if (window.lucide)
-                window.lucide.createIcons({ root: gpsBtn.parentElement });
+          locationLoading?.classList.remove("hidden");
+          const resetGpsBtn = () => {
+            gpsBtn.disabled = false;
+            gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
+            locationLoading?.classList.add("hidden");
+            if (window.lucide)
+              window.lucide.createIcons({ root: gpsBtn.parentElement });
+          };
 
-              if (err && err.code === 1) {
-                alert("Izin lokasi ditolak. Aktifkan izin lokasi di browser.");
-              } else if (err && err.code === 2) {
-                alert("Lokasi tidak tersedia. Coba lagi di area dengan sinyal GPS lebih baik.");
-              } else if (err && err.code === 3) {
-                alert("Permintaan lokasi timeout. Coba lagi.");
-              } else {
-                alert("Gagal mendapatkan lokasi GPS.");
+          const getCurrentPositionAsync = (options) =>
+            new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, options);
+            });
+
+          (async () => {
+            try {
+              // Try precise GPS first.
+              const precisePosition = await getCurrentPositionAsync({
+                enableHighAccuracy: true,
+                timeout: 12000,
+                maximumAge: 60000,
+              });
+
+              const lat = precisePosition.coords.latitude;
+              const lng = precisePosition.coords.longitude;
+              await applyPickedLocation(lat, lng, true);
+              localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
+              resetGpsBtn();
+              return;
+            } catch (firstErr) {
+              // Fallback: quicker network/cached location.
+              try {
+                const fallbackPosition = await getCurrentPositionAsync({
+                  enableHighAccuracy: false,
+                  timeout: 10000,
+                  maximumAge: 600000,
+                });
+
+                const lat = fallbackPosition.coords.latitude;
+                const lng = fallbackPosition.coords.longitude;
+                await applyPickedLocation(lat, lng, true);
+                localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
+                resetGpsBtn();
+                return;
+              } catch (secondErr) {
+                // Fallback terakhir: pakai cached location perangkat jika tersedia.
+                try {
+                  const cachedPosition = await getCurrentPositionAsync({
+                    enableHighAccuracy: false,
+                    timeout: 8000,
+                    maximumAge: Infinity,
+                  });
+
+                  const lat = cachedPosition.coords.latitude;
+                  const lng = cachedPosition.coords.longitude;
+                  await applyPickedLocation(lat, lng, true);
+                  localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
+                  resetGpsBtn();
+                  alert("GPS lambat. Menggunakan lokasi cache perangkat.");
+                  return;
+                } catch (thirdErr) {
+                  const err = thirdErr || secondErr || firstErr;
+
+                  if (err && err.code === 1) {
+                    resetGpsBtn();
+                    alert("Izin lokasi ditolak. Aktifkan izin lokasi di browser.");
+                    return;
+                  }
+
+                  if (err && err.code === 3) {
+                    try {
+                      const lastKnownRaw = localStorage.getItem(LAST_GPS_KEY);
+                      const lastKnown = lastKnownRaw
+                        ? JSON.parse(lastKnownRaw)
+                        : null;
+                      if (
+                        lastKnown &&
+                        Number.isFinite(lastKnown.lat) &&
+                        Number.isFinite(lastKnown.lng)
+                      ) {
+                        await applyPickedLocation(lastKnown.lat, lastKnown.lng, true);
+                        resetGpsBtn();
+                        alert(
+                          "GPS sedang timeout. Lokasi terakhir digunakan sebagai cadangan.",
+                        );
+                        return;
+                      }
+                    } catch (parseErr) {
+                      // Ignore corrupted cache and continue to map-center fallback.
+                    }
+
+                    const center = pickerMap.getCenter();
+                    await applyPickedLocation(center.lat, center.lng, true);
+                    resetGpsBtn();
+                    alert(
+                      "Permintaan lokasi timeout. Dipakai titik tengah peta sebagai estimasi, silakan geser manual jika perlu.",
+                    );
+                    return;
+                  }
+
+                  resetGpsBtn();
+                  if (err && err.code === 2) {
+                    alert(
+                      "Lokasi tidak tersedia. Coba lagi di area dengan sinyal GPS lebih baik.",
+                    );
+                  } else {
+                    alert("Gagal mendapatkan lokasi GPS.");
+                  }
+                }
               }
-            },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-              maximumAge: 120000,
-            },
-          );
+            }
+          })();
         } else {
           alert("Browser tidak mensupport Geolocation.");
         }
