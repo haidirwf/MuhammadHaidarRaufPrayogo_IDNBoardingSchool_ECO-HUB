@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fitur & Layanan — EcoSense</title>
+    <title>Fitur & Layanan — Eco-Hub</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,63 +42,54 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 16px;
             padding: 60px 0;
         }
 
         .feature-card {
-            background: white;
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 40px;
+            grid-column: span 4;
+            min-height: 180px;
+            padding: 24px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 100%;
         }
 
         .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
             border-color: var(--color-green-light);
         }
 
-        .feature-icon-box {
-            width: 72px;
-            height: 72px;
-            border-radius: 20px;
+        .feature-head {
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: rgba(45, 90, 39, 0.06);
-            color: var(--color-green-primary);
-            margin-bottom: 32px;
-            transition: all 0.3s ease;
-        }
-
-        /* Removed icon hover animation as requested */
-        .feature-card:hover .feature-icon-box {
-            background: var(--color-green-primary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .feature-card h3 {
-            font-size: 24px;
+            justify-content: space-between;
             margin-bottom: 16px;
-            color: var(--color-text-primary);
-            font-weight: 700;
         }
 
-        .feature-card p {
+        .feature-head h3 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .feature-head i {
+            color: var(--color-text-primary);
+        }
+
+        .feature-value {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+
+        .feature-note {
+            margin: 0 0 18px;
             color: var(--color-text-muted);
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 32px;
-            flex-grow: 1;
+            font-size: 14px;
+            line-height: 1.55;
         }
 
         .feature-card .cta-link {
@@ -114,27 +105,6 @@
 
         .feature-card .cta-link:hover {
             gap: 12px;
-        }
-
-        /* Small decorative elements */
-        .bg-pattern {
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle,
-                    rgba(212, 232, 205, 0.5) 0%,
-                    rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .feature-card * {
-            z-index: 1;
-            position: relative;
         }
 
         @media (max-width: 768px) {
@@ -153,6 +123,32 @@
 
             .features-grid {
                 padding: 40px 0;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .feature-card {
+                grid-column: span 1;
+            }
+
+            .feature-card:nth-child(5),
+            .feature-card:nth-child(6) {
+                grid-column: span 2;
+            }
+
+            .feature-value {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card,
+            .feature-card:nth-child(5),
+            .feature-card:nth-child(6) {
+                grid-column: span 1;
             }
         }
     </style>
@@ -167,7 +163,7 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-brand">
                 <i data-lucide="leaf" color="var(--color-green-primary)"></i>
-                EcoSense
+                Eco-Hub
             </a>
 
             <div class="nav-menu hide-mobile">
@@ -175,7 +171,7 @@
                 <a href="fitur.html" class="nav-link active">Fitur</a>
                 <a href="about.html" class="nav-link">Tentang</a>
                 <a href="konten.html" class="nav-link">Edukasi</a>
-                <a href="lapor.html" class="nav-link">Lapor</a>
+          <a href="lapor.html" class="nav-link">Lapor</a>
                 <a href="kontak.html" class="nav-link">Kontak</a>
             </div>
 
@@ -194,7 +190,7 @@
             <a href="fitur.html" class="mobile-nav-link">Fitur</a>
             <a href="about.html" class="mobile-nav-link">Tentang</a>
             <a href="konten.html" class="mobile-nav-link">Edukasi</a>
-            <a href="lapor.html" class="mobile-nav-link">Lapor</a>
+        <a href="lapor.html" class="mobile-nav-link">Lapor</a>
             <a href="kontak.html" class="mobile-nav-link">Kontak</a>
             <a href="lapor.html" class="btn btn-primary btn-full" style="margin-top: 20px">Mulai Sekarang</a>
         </div>
@@ -204,7 +200,7 @@
         <div class="container">
             <h1>Dashboard Fitur Lengkap</h1>
             <p>
-                Jelajahi berbagai alat dan kapabilitas yang EcoSense miliki untuk
+                Jelajahi berbagai alat dan kapabilitas yang Eco-Hub miliki untuk
                 membantu Anda peduli terhadap bumi.
             </p>
         </div>
@@ -213,95 +209,70 @@
     <main class="container">
         <div class="features-grid">
             <!-- Feature 1 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.1s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="wind" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.1s">
+                <div class="feature-head">
+                    <h3>Pemantau Kualitas Udara</h3>
+                    <i data-lucide="wind"></i>
                 </div>
-                <h3>Pemantau Kualitas Udara</h3>
-                <p>
-                    Integrasi langsung dengan API cuaca OpenMeteo yang menyajikan data
-                    indeks kualitas udara (*AQI*), curah polutan (PM2.5 & PM10) secara
-                    akurat dari setiap kota besar di Indonesia.
-                </p>
-                <a href="index.html#aqi-section" class="cta-link">Cek Udara Sekarang <i data-lucide="arrow-right"
+                <div class="feature-value">AQI Real-time</div>
+                <p class="feature-note">Data US AQI, PM2.5, PM10, dan kelembapan kota dipantau langsung untuk keputusan aktivitas harian.</p>
+                <a href="index.html#city-dashboard" class="cta-link">Cek Udara Sekarang <i data-lucide="arrow-right"
                         size="18"></i></a>
-            </div>
+            </article>
 
             <!-- Feature 2 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.2s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="calculator" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.2s">
+                <div class="feature-head">
+                    <h3>Simulasi Eco Mobility</h3>
+                    <i data-lucide="calculator"></i>
                 </div>
-                <h3>Kalkulator Jejak Karbon</h3>
-                <p>
-                    Hitung berapa kilogram emisi gas rumah kaca harian dari
-                    transportasi bermotor, konsumsi listrik, jenis diet makanan, serta
-                    manajemen pembuangan sampah Anda.
-                </p>
-                <a href="index.html#carbon-calc" class="cta-link">Hitung Emisi Saya <i data-lucide="arrow-right"
+                <div class="feature-value">5 Moda</div>
+                <p class="feature-note">Bandingkan emisi perjalanan per minggu dan lihat potensi penghematan karbon jika pindah moda.</p>
+                <a href="index.html#mobility-sim" class="cta-link">Hitung Emisi Saya <i data-lucide="arrow-right"
                         size="18"></i></a>
-            </div>
+            </article>
 
             <!-- Feature 3 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.3s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="map-pin" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.3s">
+                <div class="feature-head">
+                    <h3>Pelaporan Interaktif</h3>
+                    <i data-lucide="map-pin"></i>
                 </div>
-                <h3>Pelaporan Interaktif (Geocoding)</h3>
-                <p>
-                    Lihat tumpukan sampah atau pencemaran sungai? Laporkan secara
-                    langsung. Dilengkapi Mini-Map Leaflet pendeteksi koordinat lokasi
-                    satelit dengan autokomplit nama alamat.
-                </p>
+                <div class="feature-value">Geo Report</div>
+                <p class="feature-note">Laporkan isu lingkungan berbasis lokasi untuk mempercepat verifikasi dan tindak lanjut.</p>
                 <a href="lapor.html" class="cta-link">Buka Halaman Lapor <i data-lucide="arrow-right" size="18"></i></a>
-            </div>
+            </article>
 
             <!-- Feature 4 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.4s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="map" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.4s">
+                <div class="feature-head">
+                    <h3>Peta Sebaran Isu</h3>
+                    <i data-lucide="map"></i>
                 </div>
-                <h3>Peta Sebaran Isu Publik</h3>
-                <p>
-                    Lacak laporan komunitas atas berbagai kerusakan di sekeliling
-                    wilayah Anda secara transparan. Setiap kali Anda melapor, titik
-                    pin merah seketika menyembul di peta satelit digital.
-                </p>
+                <div class="feature-value">Area Prioritas</div>
+                <p class="feature-note">Lihat wilayah yang paling sering dilaporkan untuk menentukan prioritas aksi komunitas.</p>
                 <a href="lapor.html" class="cta-link">Jelajahi Peta <i data-lucide="arrow-right" size="18"></i></a>
-            </div>
+            </article>
 
             <!-- Feature 5 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.5s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="library" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.5s">
+                <div class="feature-head">
+                    <h3>Pusat Edukasi Lingkungan</h3>
+                    <i data-lucide="library"></i>
                 </div>
-                <h3>Pusat Edukasi Lingkungan</h3>
-                <p>
-                    Jutaan ilmu hijau merangkum isu Perubahan Iklim, Deforestasi
-                    Hutan, Pertanian Organik, dan Penghematan Energi secara lengkap,
-                    mengambil rujukan materi langsung dari Ensiklopedia (API Wikipedia
-                    HD).
-                </p>
+                <div class="feature-value">12+ Topik</div>
+                <p class="feature-note">Artikel dan wawasan sustainability untuk memperkuat literasi lingkungan pengguna.</p>
                 <a href="konten.html" class="cta-link">Mulai Belajar <i data-lucide="arrow-right" size="18"></i></a>
-            </div>
+            </article>
 
             <!-- Feature 6 -->
-            <div class="feature-card fade-up" style="animation-delay: 0.6s">
-                <div class="bg-pattern"></div>
-                <div class="feature-icon-box">
-                    <i data-lucide="award" size="32"></i>
+            <article class="feature-card card city-widget fade-up" style="animation-delay: 0.6s">
+                <div class="feature-head">
+                    <h3>PWA & Gamifikasi</h3>
+                    <i data-lucide="award"></i>
                 </div>
-                <h3>PWA & Sistem Gamifikasi</h3>
-                <p>
-                    Ekosistem aplikasi web progresif (Bisa dipasang seperti aplikasi
-                    Mobile). Hadir dengan penghargaan gamifikasi koin **EcoWarrior**
-                    di setiap kali keberhasilan menyelamatkan bumi!
-                </p>
+                <div class="feature-value">Badge Progress</div>
+                <p class="feature-note">Lacak level Eco Warrior dan progress aksi hijau agar pengguna tetap termotivasi.</p>
                 <!-- Modal triggred purely via widget -->
                 <a href="javascript:void(0)" onclick="
                 if (window.showGamificationModal)
@@ -311,7 +282,7 @@
                     'Isi kalkulator karbon atau melapor untuk mengaktifkan profil!',
                   );
               " class="cta-link">Lihat Level Saya <i data-lucide="arrow-right" size="18"></i></a>
-            </div>
+            </article>
         </div>
     </main>
 
@@ -319,7 +290,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <h3>🌿 EcoSense</h3>
+                    <h3>🌿 Eco-Hub</h3>
                     <p class="footer-tagline">
                         Platform edukasi dan monitoring lingkungan untuk masa depan yang
                         lebih baik.
@@ -333,45 +304,39 @@
 
                 <div class="footer-links">
                     <div class="footer-heading">Navigasi</div>
-                    <ul>
-                        <li><a href="index.html">Beranda</a></li>
-                        <li><a href="fitur.html">Fitur</a></li>
-                        <li><a href="about.html">Tentang</a></li>
-                        <li><a href="konten.html">Edukasi</a></li>
-                        <li><a href="lapor.html">Lapor</a></li>
-                        <li><a href="kontak.html">Kontak</a></li>
-                    </ul>
+            <ul>
+              <li><a href="index.html">Beranda</a></li>
+              <li><a href="fitur.html">Fitur</a></li>
+              <li><a href="about.html">Tentang</a></li>
+              <li><a href="konten.html">Edukasi</a></li>
+              <li><a href="lapor.html">Lapor</a></li>
+              <li><a href="kontak.html">Kontak</a></li>
+            </ul>
                 </div>
 
                 <div class="footer-links">
                     <div class="footer-heading">Topik</div>
-                    <ul>
-                        <li><a href="#">Kualitas Udara</a></li>
-                        <li><a href="#">Perubahan Iklim</a></li>
-                        <li><a href="#">Konservasi</a></li>
-                        <li><a href="#">Energi Terbarukan</a></li>
-                    </ul>
+            <ul>
+              <li><a href="#">Eco Mobility</a></li>
+              <li><a href="#">Kualitas Udara</a></li>
+              <li><a href="#">Citizen Reporting</a></li>
+              <li><a href="#">Smart City</a></li>
+            </ul>
                 </div>
 
                 <div class="footer-links">
-                    <div class="footer-heading">TechSoft 2026</div>
+                    <div class="footer-heading">ITB-Stikom Bali</div>
                     <ul>
                         <li>Web Design Competition</li>
-                        <li>Tema: INNOVATE</li>
                         <li>Sub-tema: Lingkungan</li>
-                        <li>HIMA-RPL Polindra</li>
+                        <li>ITB-Stikom Bali</li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>
-                    &copy; 2026 EcoSense. Dibuat untuk TECHSOFT 2026 — INNOVATE oleh tim
-                    <strong>idal nyari dimsum mentai terenak di cikarang mohon infonya
-                        trmks</strong>
-                    (IDN Boarding School). Hak cipta dilindungi.
-                </p>
-            </div>
+          <p>&copy; 2026 Eco-Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco-Hub.</p>
+        </div>
         </div>
     </footer>
 
@@ -389,3 +354,6 @@
 </body>
 
 </html>
+
+
+

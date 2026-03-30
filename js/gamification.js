@@ -1,5 +1,5 @@
 // Gamification and EcoPoints System
-const GAMIFICATION_KEY = "ecosense_gamification";
+const GAMIFICATION_KEY = "Eco-Hub_gamification";
 
 const DEFAULT_STATE = {
   points: 0,

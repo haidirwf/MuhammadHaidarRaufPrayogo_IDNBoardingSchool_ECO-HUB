@@ -53,18 +53,80 @@
 .card {
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: var(--card-radius);
   padding: 24px;
-  box-shadow: 2px 4px 0px rgba(0, 0, 0, 0.05);
-  /* Slightly lighter than spec for subtle feel */
+  box-shadow: var(--card-shadow);
   transition:
     transform 0.3s ease,
-    border-color 0.3s ease;
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card:hover {
   border-color: var(--color-green-light);
-  transform: translateY(-4px);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Card Consistency (non-.card components) */
+.feature-card,
+.aqi-card,
+.article-card,
+.article-item,
+.widget-card,
+.value-item,
+.contact-card,
+.pillar-card,
+.team-card,
+.faq-item,
+.sidebar-card,
+.feed-card,
+.modal-card,
+.result-found-card,
+.result-not-found-card,
+.gami-modal-card {
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.feature-card:hover,
+.article-card:hover,
+.article-item:hover,
+.contact-card:hover,
+.pillar-card:hover,
+.team-card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Card Typography Hierarchy */
+.card h3,
+.feature-card h3,
+.article-card h3,
+.widget-card h3,
+.team-card h3,
+.faq-toggle,
+.sidebar-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.card h4,
+.contact-card h4,
+.pillar-card h4,
+.article-content-small h4 {
+  font-weight: 600;
+}
+
+.card p,
+.feature-card p,
+.article-item p,
+.widget-card p,
+.contact-card p,
+.team-card p,
+.faq-content p,
+.widget-note {
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 /* Navbar */

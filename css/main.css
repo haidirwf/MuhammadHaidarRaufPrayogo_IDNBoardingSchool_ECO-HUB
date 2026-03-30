@@ -44,6 +44,9 @@
   /* Utility */
   --color-white: #ffffff;
   --color-black: #000000;
+  --card-radius: 12px;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 6px 14px rgba(0, 0, 0, 0.09);
 
   /* Spacing */
   --spacing-xs: 4px;
@@ -57,6 +60,7 @@
   /* Container */
   --container-width: 1200px;
   --container-padding: 20px;
+  --container-padding-mobile: clamp(16px, 4.5vw, 24px);
 }
 
 /* Reset & Base */
@@ -205,6 +209,62 @@ p {
 
 /* Mobile responsive utils */
 @media (max-width: 768px) {
+  html,
+  body {
+    max-width: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: 100%;
+    padding-left: var(--container-padding-mobile);
+    padding-right: var(--container-padding-mobile);
+  }
+
+  .container > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero-wrap,
+  .hero-grid,
+  .carbon-grid,
+  .features-grid,
+  .dashboard-grid,
+  .mobility-layout,
+  .tracker-layout,
+  .lapor-layout,
+  .kontak-layout,
+  .content-layout,
+  .mission-grid,
+  .values-grid,
+  .team-grid,
+  .articles-grid,
+  .articles-grid-layout {
+    min-width: 0;
+  }
+
+  .card,
+  .feature-card,
+  .aqi-card,
+  .article-card,
+  .article-item,
+  .widget-card,
+  .contact-card,
+  .pillar-card,
+  .team-card,
+  .faq-item,
+  .sidebar-card,
+  .feed-card,
+  .result-found-card,
+  .result-not-found-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .hide-mobile {
     display: none !important;
   }

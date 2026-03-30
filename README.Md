@@ -1,25 +1,27 @@
-# EcoSense — Platform Edukasi & Monitoring Lingkungan
+# EcoSense - Platform Smart Mobility & City Insights
 
-## Tim
-**idal nyari dimsum mentai terenak di cikarang mohon infonya trmks** (IDN Boarding School)
+## Informasi Lomba
+- Penyelenggara: ITB-Stikom Bali
+- Kategori: Individu
 
-## Anggota Tim
-- Ketua: Muhammad Haidar Rauf Prayogo
-- Anggota 1: Haidar
+## Peserta
+- Muhammad Haidar Rauf Prayogo
 
 ## Deskripsi Karya
-EcoSense adalah platform web edukasi dan pemantauan lingkungan interaktif yang dikembangkan
-sebagai respons terhadap meningkatnya isu lingkungan di Indonesia. Dengan mengangkat subtema
-Lingkungan dalam tema INNOVATE, EcoSense menyediakan fitur pemantauan kualitas udara
-real-time (AQI), kalkulator jejak karbon personal, pusat edukasi lingkungan, dan sistem
-pelaporan isu lingkungan berbasis komunitas.
+EcoSense adalah platform web interaktif yang membantu pengguna memahami dampak perjalanan
+harian terhadap lingkungan, sekaligus melihat kondisi kota secara ringkas untuk mendukung
+pengambilan keputusan yang lebih ramah lingkungan.
 
-Website ini dibangun menggunakan HTML5, CSS3, dan JavaScript murni tanpa framework backend,
-dengan desain yang responsif, aksesibel, dan berfokus pada kemudahan pengguna dalam
-mengakses informasi serta mengambil tindakan nyata terhadap isu lingkungan.
+Fitur utama:
+- Smart Mobility Simulation berbasis peta (pilih titik asal dan tujuan, lalu hitung emisi perjalanan).
+- Eco Smart City Dashboard (AQI, PM2.5, PM10, kelembapan, dan ringkasan laporan warga).
+- Green Action Recommendation berbasis konteks simulasi dan kondisi kota.
+- Lapor Isu Lingkungan untuk partisipasi komunitas.
+- Pusat Edukasi Lingkungan dan kuis interaktif.
+- Eco Impact Tracker untuk memantau progres aksi hijau pengguna.
 
-## Subtema
-Lingkungan
-
-## Tema
-INNOVATE (Impel Novelty, Navigate, Optimize, Validate, Advance Technological Endeavors)
+## Teknologi
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+- Leaflet.js (interaksi peta)

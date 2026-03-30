@@ -1,6 +1,6 @@
 {
-    "name": "EcoSense - Bimbingan Lingkungan",
-    "short_name": "EcoSense",
+    "name": "Eco-Hub - Bimbingan Lingkungan",
+    "short_name": "Eco-Hub",
     "description": "Platform edukasi dan pemantauan lingkungan interaktif.",
     "start_url": "/index.html",
     "display": "standalone",

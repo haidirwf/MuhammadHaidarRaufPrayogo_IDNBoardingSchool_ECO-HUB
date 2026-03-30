@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Data Management ---
-  const STORAGE_KEY = "ecosense_reports";
+  const STORAGE_KEY = "Eco-Hub_reports";
 
   // 1. Improved Dummy Data
   const seedReports = [
@@ -305,16 +305,26 @@ document.addEventListener("DOMContentLoaded", () => {
     ).addTo(pickerMap);
 
     let pickerMarker = null;
+    const reverseCache = new Map();
 
     async function reverseGeocode(lat, lng) {
+      const cacheKey = `${lat.toFixed(5)},${lng.toFixed(5)}`;
+      if (reverseCache.has(cacheKey)) {
+        return reverseCache.get(cacheKey);
+      }
+
       try {
-        locInput.value = "Sedang mencari alamat...";
+        locInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)} (mencari alamat...)`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
           {
             headers: { "Accept-Language": "id-ID,id;q=0.9" },
+            signal: controller.signal,
           },
         );
+        clearTimeout(timeout);
         const data = await res.json();
 
         let address =
@@ -324,52 +334,73 @@ document.addEventListener("DOMContentLoaded", () => {
           const parts = [road, suburb || village, city || town].filter(Boolean);
           if (parts.length > 0) address = parts.join(", ");
         }
-        locInput.value = address;
-        locInput.dataset.lat = lat;
-        locInput.dataset.lng = lng;
+        reverseCache.set(cacheKey, address);
+        return address;
       } catch (e) {
-        locInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-        locInput.dataset.lat = lat;
-        locInput.dataset.lng = lng;
+        return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
       }
     }
 
-    pickerMap.on("click", (e) => {
-      const lat = e.latlng.lat;
-      const lng = e.latlng.lng;
+    async function applyPickedLocation(lat, lng, moveMap = true) {
+      if (moveMap) pickerMap.setView([lat, lng], 15);
+
       if (pickerMarker) {
-        pickerMarker.setLatLng(e.latlng);
+        pickerMarker.setLatLng([lat, lng]);
       } else {
-        pickerMarker = L.marker(e.latlng).addTo(pickerMap);
+        pickerMarker = L.marker([lat, lng]).addTo(pickerMap);
       }
-      reverseGeocode(lat, lng);
+
+      // Set coordinates immediately so UX tetap jalan meskipun reverse geocode gagal.
+      locInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      locInput.dataset.lat = lat;
+      locInput.dataset.lng = lng;
+
+      const resolved = await reverseGeocode(lat, lng);
+      locInput.value = resolved;
+      locInput.dataset.lat = lat;
+      locInput.dataset.lng = lng;
+    }
+
+    pickerMap.on("click", (e) => {
+      applyPickedLocation(e.latlng.lat, e.latlng.lng, false);
     });
 
     if (gpsBtn) {
       gpsBtn.addEventListener("click", () => {
         if ("geolocation" in navigator) {
+          gpsBtn.disabled = true;
           gpsBtn.innerHTML =
             '<i class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></i>';
           navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
               const lat = position.coords.latitude;
               const lng = position.coords.longitude;
-              pickerMap.setView([lat, lng], 15);
-              if (pickerMarker) {
-                pickerMarker.setLatLng([lat, lng]);
-              } else {
-                pickerMarker = L.marker([lat, lng]).addTo(pickerMap);
-              }
-              reverseGeocode(lat, lng);
+              await applyPickedLocation(lat, lng, true);
+              gpsBtn.disabled = false;
               gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
               if (window.lucide)
                 window.lucide.createIcons({ root: gpsBtn.parentElement });
             },
-            () => {
-              alert("Gagal mendapatkan lokasi GPS.");
+            (err) => {
+              gpsBtn.disabled = false;
               gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
               if (window.lucide)
                 window.lucide.createIcons({ root: gpsBtn.parentElement });
+
+              if (err && err.code === 1) {
+                alert("Izin lokasi ditolak. Aktifkan izin lokasi di browser.");
+              } else if (err && err.code === 2) {
+                alert("Lokasi tidak tersedia. Coba lagi di area dengan sinyal GPS lebih baik.");
+              } else if (err && err.code === 3) {
+                alert("Permintaan lokasi timeout. Coba lagi.");
+              } else {
+                alert("Gagal mendapatkan lokasi GPS.");
+              }
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 120000,
             },
           );
         } else {

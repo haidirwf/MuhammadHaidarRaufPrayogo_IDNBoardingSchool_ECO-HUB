@@ -1,4 +1,4 @@
-const CACHE_NAME = "ecosense-v1";
+const CACHE_NAME = "Eco-Hub-v3";
 const ASSETS = [
   "/",
   "/index.html",
@@ -11,6 +11,7 @@ const ASSETS = [
   "/css/components.css",
   "/css/pages/home.css",
   "/css/pages/about.css",
+  "/css/pages/mobility.css",
   "/css/pages/lapor.css",
   "/css/pages/kontak.css",
   "/css/pages/konten.css",
@@ -19,6 +20,7 @@ const ASSETS = [
   "/js/aqi.js",
   "/js/carbon.js",
   "/js/konten.js",
+  "/js/mobility.js",
   "/js/lapor.js",
   "/js/gamification.js",
 ];

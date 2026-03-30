@@ -458,6 +458,25 @@ textarea {
 }
 
 @media (max-width: 768px) {
+  .lapor-hero > .container,
+  .container.lapor-layout {
+    padding-left: clamp(18px, 5vw, 24px) !important;
+    padding-right: clamp(18px, 5vw, 24px) !important;
+  }
+
+  .lapor-main,
+  .lapor-sidebar,
+  .form-card,
+  .sidebar-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #picker-map,
+  #lapor-map {
+    max-width: 100%;
+  }
+
   .grid-2 {
     grid-template-columns: 1fr;
   }
