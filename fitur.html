@@ -10,8 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet" />
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
 
@@ -76,7 +74,7 @@
         }
 
         .feature-head i {
-            color: var(--color-text-primary);
+            color: var(--color-green-primary);
         }
 
         .feature-value {
@@ -156,15 +154,13 @@
         }
     </style>
 
-    <!-- Leaflet CSS for possible gamification widget loading -->
-    <link rel="stylesheet" href="css/gamification.css" />
 </head>
 
 <body>
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="nav-brand">
-                <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+                <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
                 Eco Hub
             </a>
 
@@ -214,11 +210,11 @@
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.1s">
                 <div class="feature-head">
                     <h3>Pemantau Kualitas Udara</h3>
-                    <i data-lucide="wind"></i>
+                    <i class="fas fa-wind"></i>
                 </div>
                 <div class="feature-value">AQI Real-time</div>
                 <p class="feature-note">Data US AQI, PM2.5, PM10, dan kelembapan kota dipantau langsung untuk keputusan aktivitas harian.</p>
-                <a href="index.html#city-dashboard" class="cta-link">Cek Udara Sekarang <i data-lucide="arrow-right"
+                <a href="index.html#city-dashboard" class="cta-link">Cek Udara Sekarang <i class="fas fa-arrow-right"
                         size="18"></i></a>
             </article>
 
@@ -226,11 +222,11 @@
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.2s">
                 <div class="feature-head">
                     <h3>Simulasi Eco Mobility</h3>
-                    <i data-lucide="calculator"></i>
+                    <i class="fas fa-calculator"></i>
                 </div>
                 <div class="feature-value">5 Moda</div>
                 <p class="feature-note">Bandingkan emisi perjalanan per minggu dan lihat potensi penghematan karbon jika pindah moda.</p>
-                <a href="index.html#mobility-sim" class="cta-link">Hitung Emisi Saya <i data-lucide="arrow-right"
+                <a href="index.html#mobility-sim" class="cta-link">Hitung Emisi Saya <i class="fas fa-arrow-right"
                         size="18"></i></a>
             </article>
 
@@ -238,51 +234,44 @@
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.3s">
                 <div class="feature-head">
                     <h3>Pelaporan Interaktif</h3>
-                    <i data-lucide="map-pin"></i>
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <div class="feature-value">Geo Report</div>
                 <p class="feature-note">Laporkan isu lingkungan berbasis lokasi untuk mempercepat verifikasi dan tindak lanjut.</p>
-                <a href="lapor.html" class="cta-link">Buka Halaman Lapor <i data-lucide="arrow-right" size="18"></i></a>
+                <a href="lapor.html" class="cta-link">Buka Halaman Lapor <i class="fas fa-arrow-right" size="18"></i></a>
             </article>
 
             <!-- Feature 4 -->
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.4s">
                 <div class="feature-head">
                     <h3>Peta Aksi Komunitas</h3>
-                    <i data-lucide="map"></i>
+                    <i class="fas fa-map"></i>
                 </div>
                 <div class="feature-value">Area Prioritas</div>
                 <p class="feature-note">Lihat wilayah yang paling sering dilaporkan untuk menentukan prioritas aksi komunitas.</p>
-                <a href="lapor.html" class="cta-link">Jelajahi Peta <i data-lucide="arrow-right" size="18"></i></a>
+                <a href="lapor.html" class="cta-link">Jelajahi Peta <i class="fas fa-arrow-right" size="18"></i></a>
             </article>
 
             <!-- Feature 5 -->
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.5s">
                 <div class="feature-head">
                     <h3>Pusat Edukasi Lingkungan</h3>
-                    <i data-lucide="library"></i>
+                    <i class="fas fa-book"></i>
                 </div>
                 <div class="feature-value">12+ Topik</div>
                 <p class="feature-note">Artikel dan wawasan sustainability untuk memperkuat literasi lingkungan pengguna.</p>
-                <a href="konten.html" class="cta-link">Mulai Belajar <i data-lucide="arrow-right" size="18"></i></a>
+                <a href="konten.html" class="cta-link">Mulai Belajar <i class="fas fa-arrow-right" size="18"></i></a>
             </article>
 
             <!-- Feature 6 -->
             <article class="feature-card card city-widget fade-up" style="animation-delay: 0.6s">
                 <div class="feature-head">
-                    <h3>PWA & Gamifikasi</h3>
-                    <i data-lucide="award"></i>
+                    <h3>PWA & Akses Cepat</h3>
+                    <i class="fas fa-award"></i>
                 </div>
-                <div class="feature-value">Badge Progress</div>
-                <p class="feature-note">Lacak level Eco Warrior dan progress aksi hijau agar pengguna tetap termotivasi.</p>
-                <!-- Modal triggred purely via widget -->
-                <a href="javascript:void(0)" onclick="
-                if (window.showGamificationModal)
-                  window.showGamificationModal();
-                else
-                  alert(
-                    'Isi kalkulator karbon atau melapor untuk mengaktifkan profil!',
-                  );" class="cta-link">Lihat Level Saya <i data-lucide="arrow-right" size="18"></i></a>
+                <div class="feature-value">Siap Mobile</div>
+                <p class="feature-note">Akses fitur inti dengan cepat dari berbagai device untuk aksi lingkungan harian.</p>
+                <a href="index.html#mobility-sim" class="cta-link">Buka Simulasi <i class="fas fa-arrow-right" size="18"></i></a>
             </article>
         </div>
     </main>
@@ -337,7 +326,6 @@
     </footer>
 
     <script src="js/main.js"></script>
-    <script src="js/gamification.js"></script>
     <script>
         if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
             window.addEventListener("load", () => {
@@ -350,6 +338,9 @@
 </body>
 
 </html>
+
+
+
 
 
 

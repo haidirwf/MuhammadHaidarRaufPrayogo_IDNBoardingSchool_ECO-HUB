@@ -32,11 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Show result
     displayResult(result);
-
-    // Gamification Hook
-    if (window.addEcoPoints) {
-      window.addEcoPoints(10, "Menghitung Jejak Karbon");
-    }
   });
 
   resetBtn.addEventListener("click", () => {
@@ -202,3 +197,5 @@ document.addEventListener("DOMContentLoaded", () => {
     recList.innerHTML = recs.map((r) => `<li>${r}</li>`).join("");
   }
 });
+
+

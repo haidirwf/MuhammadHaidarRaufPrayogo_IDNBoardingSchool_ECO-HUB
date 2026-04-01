@@ -85,8 +85,7 @@
 .feed-card,
 .modal-card,
 .result-found-card,
-.result-not-found-card,
-.gami-modal-card {
+.result-not-found-card {
   border-radius: var(--card-radius) !important;
   box-shadow: var(--card-shadow) !important;
 }
@@ -160,6 +159,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.nav-brand i,
+.widget-head i,
+.feature-head i,
+.icon-box i,
+.cta-link i,
+.hero-head .btn i {
+  color: var(--color-green-primary);
 }
 
 .nav-menu {

@@ -12,27 +12,18 @@
       rel="stylesheet"
     />
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/pages/about.css" />
 
     <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <link rel="stylesheet" href="css/gamification.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
 
@@ -97,7 +88,7 @@
 
           <div class="mission-pillars fade-up" style="animation-delay: 0.2s">
             <div class="pillar-card">
-              <i data-lucide="book-open" color="#2D5A27"></i>
+              <i class="fas fa-book-open" color="#2D5A27"></i>
               <div>
                 <h4>Edukasi</h4>
                 <p>
@@ -107,7 +98,7 @@
               </div>
             </div>
             <div class="pillar-card">
-              <i data-lucide="activity" color="#2D5A27"></i>
+              <i class="fas fa-heartbeat" color="#2D5A27"></i>
               <div>
                 <h4>Monitoring</h4>
                 <p>
@@ -117,7 +108,7 @@
               </div>
             </div>
             <div class="pillar-card">
-              <i data-lucide="users" color="#2D5A27"></i>
+              <i class="fas fa-users" color="#2D5A27"></i>
               <div>
                 <h4>Aksi</h4>
                 <p>
@@ -138,7 +129,7 @@
         </h2>
         <div class="grid values-grid">
           <div class="value-item fade-up">
-            <div class="icon-box"><i data-lucide="eye"></i></div>
+            <div class="icon-box"><i class="fas fa-eye"></i></div>
             <h3>Transparansi</h3>
             <p>
               Asumsi perhitungan emisi dan sumber data kota ditampilkan secara
@@ -146,7 +137,7 @@
             </p>
           </div>
           <div class="value-item fade-up" style="animation-delay: 0.1s">
-            <div class="icon-box"><i data-lucide="database"></i></div>
+            <div class="icon-box"><i class="fas fa-database"></i></div>
             <h3>Berbasis Data</h3>
             <p>
               Simulasi emisi, dashboard udara, dan prioritas area laporan
@@ -154,7 +145,7 @@
             </p>
           </div>
           <div class="value-item fade-up" style="animation-delay: 0.2s">
-            <div class="icon-box"><i data-lucide="heart-handshake"></i></div>
+            <div class="icon-box"><i class="fas fa-handshake"></i></div>
             <h3>Kolaboratif</h3>
             <p>
               Fitur laporan warga mendorong kolaborasi pengguna dan komunitas
@@ -162,7 +153,7 @@
             </p>
           </div>
           <div class="value-item fade-up" style="animation-delay: 0.3s">
-            <div class="icon-box"><i data-lucide="zap"></i></div>
+            <div class="icon-box"><i class="fas fa-bolt"></i></div>
             <h3>Actionable</h3>
             <p>
               Fokus pada output yang langsung bisa dipakai: rekomendasi mode
@@ -261,16 +252,9 @@
 
     <script src="js/main.js"></script>
     <script>
-      lucide.createIcons();
     </script>
 
     <!-- Leaflet JS -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <script src="js/gamification.js"></script>
     <script>
       if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -282,5 +266,8 @@
     </script>
   </body>
 </html>
+
+
+
 
 

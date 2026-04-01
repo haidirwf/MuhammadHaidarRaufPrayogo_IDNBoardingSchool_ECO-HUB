@@ -2,10 +2,49 @@
 // - dummyOnly: true  => semua map pakai dummy (hemat API)
 // - dummyOnly: false => aktifkan kembali tile/API peta online (OSM/Nominatim/OSRM)
 window.ECO_HUB_MAP_CONFIG = {
-  dummyOnly: true,
+  dummyOnly: false,
+};
+
+window.EcoHubMapFallback = {
+  bounds: {
+    minLat: -11.2,
+    maxLat: 6.8,
+    minLng: 94.5,
+    maxLng: 141.5,
+  },
+  eventToLatLng(container, event) {
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+    const lng =
+      this.bounds.minLng +
+      (x / Math.max(1, rect.width)) * (this.bounds.maxLng - this.bounds.minLng);
+    const lat =
+      this.bounds.maxLat -
+      (y / Math.max(1, rect.height)) * (this.bounds.maxLat - this.bounds.minLat);
+    return { lat, lng };
+  },
+  latLngToPercent(point) {
+    const left =
+      ((point.lng - this.bounds.minLng) /
+        (this.bounds.maxLng - this.bounds.minLng)) *
+      100;
+    const top =
+      ((this.bounds.maxLat - point.lat) /
+        (this.bounds.maxLat - this.bounds.minLat)) *
+      100;
+    return { left, top };
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Cleanup sisa data gamifikasi dari versi lama.
+  try {
+    localStorage.removeItem("Eco Hub_gamification");
+  } catch (error) {
+    console.warn("Gagal membersihkan data gamifikasi lama:", error);
+  }
+
   if (location.protocol === "http:" || location.protocol === "https:") {
     const hasManifest = document.querySelector('link[rel="manifest"]');
     if (!hasManifest) {
@@ -57,14 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Scroll to Top
   const scrollTopBtn = document.createElement("button");
   scrollTopBtn.className = "scroll-top";
-  scrollTopBtn.innerHTML = '<i data-lucide="arrow-up"></i>';
+  scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
   document.body.appendChild(scrollTopBtn);
-
-  // Re-run icons for dynamically added element
-  if (window.lucide) {
-    lucide.createIcons();
-  }
-
   window.addEventListener("scroll", () => {
     if (window.scrollY > 400) {
       scrollTopBtn.classList.add("visible");
@@ -111,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
       link.classList.add("active");
     }
   });
-
   initQuickStartCta();
 });
 
@@ -189,3 +221,5 @@ function animateValue(obj) {
       current.toLocaleString("id-ID") + (obj.getAttribute("data-suffix") || "");
   }, 20);
 }
+
+

@@ -40,6 +40,35 @@ document.addEventListener("DOMContentLoaded", () => {
     location: null,
   };
 
+  function eventToLatLngFallback(container, event) {
+    if (window.EcoHubMapFallback?.eventToLatLng) {
+      return window.EcoHubMapFallback.eventToLatLng(container, event);
+    }
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const lng = minLng + (x / Math.max(1, rect.width)) * (maxLng - minLng);
+    const lat = maxLat - (y / Math.max(1, rect.height)) * (maxLat - minLat);
+    return { lat, lng };
+  }
+
+  function latLngToPercentFallback(point) {
+    if (window.EcoHubMapFallback?.latLngToPercent) {
+      return window.EcoHubMapFallback.latLngToPercent(point);
+    }
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const left = ((point.lng - minLng) / (maxLng - minLng)) * 100;
+    const top = ((maxLat - point.lat) / (maxLat - minLat)) * 100;
+    return { left, top };
+  }
+
   function showForm() {
     if (!formCard) return;
     formCard.classList.remove("hidden");
@@ -80,12 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function mockAddressFromPoint(point) {
     const city = nearestCityForPoint(point);
-    return `Sekitar ${city} (${point.lat.toFixed(5)}, ${point.lng.toFixed(5)})`;
+    return `Sekitar ${city}`;
   }
 
   function formatMapLocation(point) {
     if (!point) return "Belum ada titik dipilih.";
-    return point.label || `Titik dipilih: ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}`;
+    return point.label || `Sekitar ${nearestCityForPoint(point)}`;
   }
 
   function updateMapLocationDisplay() {
@@ -181,7 +210,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initActivityMap() {
-    if (!activityMapEl || !window.L || formMapState.map) return;
+    if (!activityMapEl || formMapState.map) return;
+
+    if (!window.L) {
+      activityMapEl.classList.add("fallback-picker-map");
+      activityMapEl.innerHTML =
+        '<div class="fallback-map-bg">Peta Dummy Indonesia (klik untuk pilih lokasi)</div><div class="fallback-map-layer"></div>';
+      const layer = activityMapEl.querySelector(".fallback-map-layer");
+
+      activityMapEl.addEventListener("click", (event) => {
+        const picked = eventToLatLngFallback(activityMapEl, event);
+        if (!picked || !layer) return;
+        formMapState.location = {
+          lat: picked.lat,
+          lng: picked.lng,
+          label: mockAddressFromPoint({ lat: picked.lat, lng: picked.lng }),
+        };
+        const pos = latLngToPercentFallback(formMapState.location);
+        layer.innerHTML = `<span class="fallback-map-dot" style="left:${pos.left}%;top:${pos.top}%"></span>`;
+        updateMapLocationDisplay();
+      });
+
+      formMapState.map = { fallback: true };
+      return;
+    }
 
     const map = window.L.map(activityMapEl, { zoomControl: true }).setView([-2.5, 118], 5);
     if (!DUMMY_MAP_MODE) {
@@ -300,9 +352,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const activities = sortActivitiesByDate(loadActivities());
     const joined = loadJoinedState();
-    syncSummary(activities);
+    const now = Date.now();
+    const isActiveActivity = (item) => {
+      const start = parseDateTimeLocal(item?.datetime);
+      if (!Number.isFinite(start) || Number.isNaN(start)) return false;
+      return start + 2 * 60 * 60 * 1000 >= now;
+    };
+    const activeActivities = activities.filter((item) => {
+      return isActiveActivity(item);
+    });
+    syncSummary(activeActivities);
 
-    if (!activities.length) {
+    if (!activeActivities.length) {
       listEl.innerHTML = `
         <article class="card empty-state-card list-reveal" style="animation-delay: 0.02s">
           <h3>Belum Ada Kegiatan</h3>
@@ -310,16 +371,17 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="btn btn-primary" data-action="open-form-empty">Buat Kegiatan</button>
         </article>
       `;
-      if (window.lucide) window.lucide.createIcons({ root: listEl });
       return;
     }
 
-    listEl.innerHTML = activities
+    listEl.innerHTML = activeActivities
       .map((item, idx) => {
         const isJoined = Boolean(joined[item.id]);
         const start = parseDateTimeLocal(item.datetime);
         const isPast =
           Number.isFinite(start) && !Number.isNaN(start) ? start + 2 * 60 * 60 * 1000 < Date.now() : false;
+        const chipLabel = isPast ? "Selesai" : isJoined ? "Joined" : "Aktif";
+        const chipClass = isPast ? "chip-past" : isJoined ? "chip-joined" : "chip-active";
         const buttonLabel = isPast ? "Kegiatan Selesai" : isJoined ? "Batalkan Join" : "Join Kegiatan";
         const buttonClass = isJoined ? "btn btn-outline join-btn joined" : "btn btn-outline join-btn";
 
@@ -327,16 +389,16 @@ document.addEventListener("DOMContentLoaded", () => {
           <article id="activity-${item.id}" class="card activity-card list-reveal" style="animation-delay: ${Math.min(idx * 0.06, 0.36).toFixed(2)}s" data-id="${item.id}">
             <div class="activity-head">
               <h3 class="activity-title">${item.title}</h3>
-              <span class="activity-chip">${isPast ? "Selesai" : "Aktif"}</span>
+              <span class="activity-chip ${chipClass}">${chipLabel}</span>
             </div>
             <div class="activity-time">
-              <i data-lucide="calendar-clock" size="14"></i>
+              <i class="fas fa-calendar-alt" size="14"></i>
               ${formatDateTime(item.datetime)}
             </div>
             <p class="activity-body">${item.what}</p>
             <div class="activity-meta">
-              <span><i data-lucide="map-pin" size="14"></i>${item.where}</span>
-              <span><i data-lucide="user-round" size="14"></i>Penggagas: ${item.creator || "Warga"}</span>
+              <span><i class="fas fa-map-marker-alt" size="14"></i>${item.where}</span>
+              <span><i class="fas fa-user" size="14"></i>Penggagas: ${item.creator || "Warga"}</span>
             </div>
             <div class="activity-footer">
               <div class="participant-count">${item.participants || 0} peserta</div>
@@ -346,10 +408,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
       })
       .join("");
-
-    if (window.lucide) {
-      window.lucide.createIcons({ root: listEl });
-    }
   }
 
   function setFeedback(text, ok = false) {
@@ -474,3 +532,4 @@ document.addEventListener("DOMContentLoaded", () => {
   updateMapLocationDisplay();
   renderActivities();
 });
+

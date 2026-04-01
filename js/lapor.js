@@ -11,6 +11,34 @@ document.addEventListener("DOMContentLoaded", () => {
     "status-proses",
     "status-selesai",
   ]);
+  function eventToLatLngFallback(container, event) {
+    if (window.EcoHubMapFallback?.eventToLatLng) {
+      return window.EcoHubMapFallback.eventToLatLng(container, event);
+    }
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const lng = minLng + (x / Math.max(1, rect.width)) * (maxLng - minLng);
+    const lat = maxLat - (y / Math.max(1, rect.height)) * (maxLat - minLat);
+    return { lat, lng };
+  }
+
+  function latLngToPercentFallback(point) {
+    if (window.EcoHubMapFallback?.latLngToPercent) {
+      return window.EcoHubMapFallback.latLngToPercent(point);
+    }
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const left = ((point.lng - minLng) / (maxLng - minLng)) * 100;
+    const top = ((maxLat - point.lat) / (maxLat - minLat)) * 100;
+    return { left, top };
+  }
 
   // 1. Improved Dummy Data
   const seedReports = [
@@ -149,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <span class="feed-time">${safeTime}</span>
               </div>
               <div class="feed-loc">
-                  <i data-lucide="map-pin" size="14"></i> ${safeLocation}...
+                  <i class="fas fa-map-marker-alt" size="14"></i> ${safeLocation}...
               </div>
               <div class="feed-status">
                   <span class="status-pill">${safeStatus}</span>
@@ -159,7 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .join("");
 
-    if (window.lucide) lucide.createIcons();
 
     const cards = feedList.querySelectorAll("[data-report-ref]");
     cards.forEach((card) => {
@@ -219,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
           checkResult.innerHTML = `
                       <div class="result-found-card">
                           <div class="result-icon-box success">
-                              <i data-lucide="check-circle" class="icon-success"></i>
+                              <i class="fas fa-check-circle icon-success"></i>
                           </div>
                           <div class="result-content">
                               <h4>Laporan Ditemukan</h4>
@@ -235,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
           checkResult.innerHTML = `
                       <div class="result-not-found-card">
                           <div class="result-icon-box error">
-                              <i data-lucide="alert-circle" class="icon-error"></i>
+                              <i class="fas fa-exclamation-circle icon-error"></i>
                           </div>
                           <div class="result-content">
                               <h4>Tidak Ditemukan</h4>
@@ -248,7 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         checkBtn.innerHTML = originalText;
         checkBtn.disabled = false;
-        if (window.lucide) lucide.createIcons();
       }, 600);
     });
   }
@@ -317,17 +343,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         form.classList.add("hidden");
         successState.classList.remove("hidden");
-        if (window.lucide) lucide.createIcons();
 
         document
           .getElementById("report-form-card")
           .scrollIntoView({ behavior: "smooth", block: "start" });
-
-        // Gamification Hook
-        if (window.addEcoPoints) {
-          window.addEcoPoints(50, "Melaporkan Isu Lingkungan");
-        }
-
         // Reset
         form.reset();
         submitBtn.classList.remove("loading");
@@ -353,9 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pickerMapDiv = document.getElementById("picker-map");
   if (pickerMapDiv && window.L) {
     const locInput = document.getElementById("lokasi");
-    const gpsBtn = document.getElementById("btn-get-location");
-    const locationLoading = document.getElementById("location-loading");
-    const LAST_GPS_KEY = "Eco Hub_lastKnownLocation";
 
     function paintDummyMapBase(map) {
       if (!map) return;
@@ -518,130 +534,36 @@ document.addEventListener("DOMContentLoaded", () => {
     pickerMap.on("click", (e) => {
       applyPickedLocation(e.latlng.lat, e.latlng.lng, false);
     });
+  }
 
-    if (gpsBtn) {
-      gpsBtn.addEventListener("click", () => {
-        if ("geolocation" in navigator) {
-          gpsBtn.disabled = true;
-          gpsBtn.innerHTML =
-            '<i class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></i>';
-          locationLoading?.classList.remove("hidden");
-          const resetGpsBtn = () => {
-            gpsBtn.disabled = false;
-            gpsBtn.innerHTML = '<i data-lucide="crosshair"></i>';
-            locationLoading?.classList.add("hidden");
-            if (window.lucide)
-              window.lucide.createIcons({ root: gpsBtn.parentElement });
-          };
+  if (pickerMapDiv && !window.L) {
+    const locInput = document.getElementById("lokasi");
 
-          const getCurrentPositionAsync = (options) =>
-            new Promise((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, options);
-            });
+    pickerMapDiv.classList.add("fallback-picker-map");
+    pickerMapDiv.innerHTML =
+      '<div class="fallback-map-bg">Peta Dummy Indonesia (klik untuk pilih lokasi)</div><div class="fallback-map-layer"></div>';
+    const layer = pickerMapDiv.querySelector(".fallback-map-layer");
 
-          (async () => {
-            try {
-              // Try precise GPS first.
-              const precisePosition = await getCurrentPositionAsync({
-                enableHighAccuracy: true,
-                timeout: 12000,
-                maximumAge: 60000,
-              });
+    function setPickedLocation(lat, lng) {
+      if (!layer) return;
+      layer.innerHTML = "";
+      const pos = latLngToPercentFallback({ lat, lng });
+      const dot = document.createElement("span");
+      dot.className = "fallback-map-dot to";
+      dot.style.left = `${pos.left}%`;
+      dot.style.top = `${pos.top}%`;
+      layer.appendChild(dot);
 
-              const lat = precisePosition.coords.latitude;
-              const lng = precisePosition.coords.longitude;
-              await applyPickedLocation(lat, lng, true);
-              localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
-              resetGpsBtn();
-              return;
-            } catch (firstErr) {
-              // Fallback: quicker network/cached location.
-              try {
-                const fallbackPosition = await getCurrentPositionAsync({
-                  enableHighAccuracy: false,
-                  timeout: 10000,
-                  maximumAge: 600000,
-                });
-
-                const lat = fallbackPosition.coords.latitude;
-                const lng = fallbackPosition.coords.longitude;
-                await applyPickedLocation(lat, lng, true);
-                localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
-                resetGpsBtn();
-                return;
-              } catch (secondErr) {
-                // Fallback terakhir: pakai cached location perangkat jika tersedia.
-                try {
-                  const cachedPosition = await getCurrentPositionAsync({
-                    enableHighAccuracy: false,
-                    timeout: 8000,
-                    maximumAge: Infinity,
-                  });
-
-                  const lat = cachedPosition.coords.latitude;
-                  const lng = cachedPosition.coords.longitude;
-                  await applyPickedLocation(lat, lng, true);
-                  localStorage.setItem(LAST_GPS_KEY, JSON.stringify({ lat, lng }));
-                  resetGpsBtn();
-                  alert("GPS lambat. Menggunakan lokasi cache perangkat.");
-                  return;
-                } catch (thirdErr) {
-                  const err = thirdErr || secondErr || firstErr;
-
-                  if (err && err.code === 1) {
-                    resetGpsBtn();
-                    alert("Izin lokasi ditolak. Aktifkan izin lokasi di browser.");
-                    return;
-                  }
-
-                  if (err && err.code === 3) {
-                    try {
-                      const lastKnownRaw = localStorage.getItem(LAST_GPS_KEY);
-                      const lastKnown = lastKnownRaw
-                        ? JSON.parse(lastKnownRaw)
-                        : null;
-                      if (
-                        lastKnown &&
-                        Number.isFinite(lastKnown.lat) &&
-                        Number.isFinite(lastKnown.lng)
-                      ) {
-                        await applyPickedLocation(lastKnown.lat, lastKnown.lng, true);
-                        resetGpsBtn();
-                        alert(
-                          "GPS sedang timeout. Lokasi terakhir digunakan sebagai cadangan.",
-                        );
-                        return;
-                      }
-                    } catch (parseErr) {
-                      // Ignore corrupted cache and continue to map-center fallback.
-                    }
-
-                    const center = pickerMap.getCenter();
-                    await applyPickedLocation(center.lat, center.lng, true);
-                    resetGpsBtn();
-                    alert(
-                      "Permintaan lokasi timeout. Dipakai titik tengah peta sebagai estimasi, silakan geser manual jika perlu.",
-                    );
-                    return;
-                  }
-
-                  resetGpsBtn();
-                  if (err && err.code === 2) {
-                    alert(
-                      "Lokasi tidak tersedia. Coba lagi di area dengan sinyal GPS lebih baik.",
-                    );
-                  } else {
-                    alert("Gagal mendapatkan lokasi GPS.");
-                  }
-                }
-              }
-            }
-          })();
-        } else {
-          alert("Browser tidak mensupport Geolocation.");
-        }
-      });
+      locInput.value = `Sekitar (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+      locInput.dataset.lat = lat;
+      locInput.dataset.lng = lng;
     }
+
+    pickerMapDiv.addEventListener("click", (event) => {
+      const picked = eventToLatLngFallback(pickerMapDiv, event);
+      if (!picked) return;
+      setPickedLocation(picked.lat, picked.lng);
+    });
   }
 
   // --- Map Logic ---
@@ -667,6 +589,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     mainMarkersGroup = L.layerGroup().addTo(mainMap);
+  }
+
+  if (mapContainer && !window.L) {
+    mapContainer.classList.add("fallback-picker-map");
+    mapContainer.innerHTML =
+      '<div class="fallback-map-bg">Peta laporan tersedia dalam mode dummy.</div>';
   }
 
   const originalRenderFeed = renderFeed;
@@ -709,3 +637,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (typeof renderFeed === "function") renderFeed();
 });
+
+

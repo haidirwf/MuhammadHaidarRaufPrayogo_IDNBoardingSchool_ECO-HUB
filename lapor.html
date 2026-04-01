@@ -12,27 +12,23 @@
       rel="stylesheet"
     />
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/pages/lapor.css" />
-
-    <!-- Leaflet CSS -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-    <link rel="stylesheet" href="css/gamification.css" />
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/lapor.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
         <div class="nav-menu hide-mobile">
@@ -191,7 +187,7 @@
                     font-size: 13px;
                     color: var(--color-text-muted);"
                 >
-                  Pilih lokasi di peta atau klik tombol lokasi.
+                  Pilih lokasi langsung di peta.
                 </div>
                 <div
                   id="picker-map"
@@ -204,15 +200,6 @@
                     z-index: 1;"
                 ></div>
                 <div class="location-input-row">
-                  <button
-                    type="button"
-                    id="btn-get-location"
-                    class="btn btn-outline"
-                    style="padding: 10px"
-                    title="Gunakan Lokasi Saat Ini"
-                  >
-                    <i data-lucide="crosshair"></i>
-                  </button>
                   <input
                     type="text"
                     id="lokasi"
@@ -220,10 +207,6 @@
                     placeholder="Nama jalan, kelurahan, atau koordinat"
                     style="flex-grow: 1"
                   />
-                </div>
-                <div id="location-loading" class="location-loading hidden" aria-live="polite">
-                  <span class="mini-spinner" aria-hidden="true"></span>
-                  <span>Mendeteksi lokasi...</span>
                 </div>
               </div>
 
@@ -242,7 +225,7 @@
               <div class="form-group">
                 <label>Foto Bukti</label>
                 <div class="file-drop-zone" id="drop-zone">
-                  <i data-lucide="upload-cloud"></i>
+                  <i class="fas fa-cloud-upload-alt"></i>
                   <p>
                     Drag & Drop foto di sini atau <span>Klik untuk upload</span>
                   </p>
@@ -280,7 +263,7 @@
           <!-- Success State (Hidden initially) -->
           <div id="success-state" class="success-state hidden">
             <div class="success-icon-anim">
-              <i data-lucide="check-circle" size="64" color="#2D5A27"></i>
+              <i class="fas fa-check-circle" size="64" color="#2D5A27"></i>
             </div>
             <h2>Laporan Berhasil Dikirim!</h2>
             <p>
@@ -410,7 +393,7 @@
     <div id="report-modal" class="modal-overlay">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal()">
-          <i data-lucide="x" size="24"></i>
+          <i class="fas fa-times" size="24"></i>
         </button>
         <div class="modal-header">
           <h3 id="modal-type">Jenis Laporan</h3>
@@ -424,7 +407,7 @@
             <span class="modal-label">Lokasi</span>
             <div class="modal-value">
               <i
-                data-lucide="map-pin"
+                class="fas fa-map-marker-alt"
                 size="14"
                 style="display: inline; margin-right: 4px"
               ></i>
@@ -445,19 +428,17 @@
       </div>
     </div>
 
-    <script src="js/main.js"></script>
-    <script src="js/lapor.js"></script>
-    <script>
-      lucide.createIcons();
-    </script>
-
-    <!-- Leaflet JS -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
-    <script src="js/gamification.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/lapor.js"></script>
+    <script>
+    </script>
+
+    <!-- Leaflet JS -->
     <script>
       if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -469,6 +450,9 @@
     </script>
   </body>
 </html>
+
+
+
 
 
 

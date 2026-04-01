@@ -145,22 +145,44 @@ textarea {
   align-items: stretch;
 }
 
-.location-input-row #btn-get-location {
-  flex: 0 0 auto;
-}
-
 .location-input-row #lokasi {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.location-loading {
-  margin-top: 8px;
-  display: inline-flex;
+.fallback-picker-map {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #e8efe2, #f4f7f1);
+}
+
+.fallback-picker-map .fallback-map-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  justify-content: center;
   color: var(--color-text-muted);
+  font-size: 13px;
+  pointer-events: none;
+  text-align: center;
+  padding: 10px;
+}
+
+.fallback-picker-map .fallback-map-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.fallback-picker-map .fallback-map-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  background: #2d5a27;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .mini-spinner {
@@ -607,7 +629,6 @@ textarea {
     gap: 10px;
   }
 
-  .location-input-row #btn-get-location,
   .location-input-row #lokasi {
     width: 100%;
   }

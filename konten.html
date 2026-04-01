@@ -12,27 +12,18 @@
       rel="stylesheet"
     />
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/pages/konten.css" />
 
     <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <link rel="stylesheet" href="css/gamification.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
 
@@ -86,7 +77,7 @@
         </p>
 
         <div class="search-container">
-          <i data-lucide="search" class="search-icon"></i>
+          <i class="fas fa-search search-icon"></i>
           <input
             type="text"
             id="search-input"
@@ -131,7 +122,7 @@
           <div class="loading-state">Memuat artikel...</div>
         </div>
         <div id="no-results" class="no-results hidden">
-          <i data-lucide="search-x" size="48"></i>
+          <i class="fas fa-search-minus" size="48"></i>
           <h3>Tidak ada artikel ditemukan</h3>
           <p>Coba kata kunci lain atau ubah filter kategori.</p>
         </div>
@@ -142,14 +133,14 @@
         <!-- EcoFact Widget -->
         <div class="widget-card ecofact-card">
           <div class="widget-header">
-            <i data-lucide="lightbulb" color="#D4870C"></i>
+            <i class="fas fa-lightbulb" color="#D4870C"></i>
             <h3>Tahukah Kamu?</h3>
           </div>
           <div class="ecofact-content">
             <p id="ecofact-text">Memuat fakta menarik...</p>
           </div>
           <button id="share-fact" class="btn-text-icon">
-            <i data-lucide="copy"></i> Salin Fakta
+            <i class="fas fa-copy"></i> Salin Fakta
           </button>
         </div>
 
@@ -253,16 +244,9 @@
     <script src="js/main.js"></script>
     <script src="js/konten.js"></script>
     <script>
-      lucide.createIcons();
     </script>
 
     <!-- Leaflet JS -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <script src="js/gamification.js"></script>
     <script>
       if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -274,6 +258,9 @@
     </script>
   </body>
 </html>
+
+
+
 
 
 

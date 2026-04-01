@@ -2,14 +2,12 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const IMPACT_KEY = "Eco Hub_impact_tracker";
-  const REPORTS_KEY = "Eco Hub_reports";
+    const REPORTS_KEY = "Eco Hub_reports";
   const COMMUNITY_ACTIVITIES_KEY = "Eco Hub_community_activities_v1";
   const AQI_CACHE_KEY = "Eco Hub_aqi_cache_v1";
   const GEO_CACHE_KEY = "Eco Hub_geo_cache_v1";
   const ROUTE_CACHE_KEY = "Eco Hub_route_cache_v1";
-  const WEEKLY_PLAN_KEY = "Eco Hub_weekly_plan_v1";
-  const AQI_TTL_MS = 10 * 60 * 1000;
+    const AQI_TTL_MS = 10 * 60 * 1000;
   const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
   const ROUTE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   const MOCK_MODE = localStorage.getItem("Eco Hub_mock_mode") === "1";
@@ -77,8 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const tripsWeek = document.getElementById("trips-week");
   const fromPointLabel = document.getElementById("from-point-label");
   const toPointLabel = document.getElementById("to-point-label");
-  const swapPointsBtn = document.getElementById("swap-points-btn");
-  const clearPointsBtn = document.getElementById("clear-points-btn");
   const simulateBtn = document.getElementById("simulate-btn");
 
   const dashboardCitySelect = document.getElementById("dashboard-city-select");
@@ -115,21 +111,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const recGrid = document.getElementById("recommendation-grid");
 
-  const impactActions = document.getElementById("impact-actions");
-  const impactCarbon = document.getElementById("impact-carbon");
-  const impactLevel = document.getElementById("impact-level");
-  const impactProgress = document.getElementById("impact-progress");
-  const impactNext = document.getElementById("impact-next");
-
+          
   const heroInsightText = document.getElementById("hero-insight-text");
   const heroAqi = document.getElementById("hero-aqi");
   const heroSaving = document.getElementById("hero-saving");
-  const weeklyTarget = document.getElementById("weekly-target");
-  const weeklyProgress = document.getElementById("weekly-progress");
-  const weeklyStatus = document.getElementById("weekly-status");
-  const weeklyPlanList = document.getElementById("weekly-plan-list");
-  const leaderboardList = document.getElementById("leaderboard-list");
-
+          
   const mapEl = document.getElementById("mobility-map");
   const mapState = {
     from: null,
@@ -141,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fromMarker: null,
     toMarker: null,
     routeLine: null,
+    fallbackLayer: null,
   };
   const geocodeCache = new Map();
   const aqiCache = new Map();
@@ -150,6 +137,35 @@ document.addEventListener("DOMContentLoaded", () => {
     layerGroup: null,
   };
   let lastGeocodeAt = 0;
+
+  function eventToLatLngFallback(container, event) {
+    if (window.EcoHubMapFallback?.eventToLatLng) {
+      return window.EcoHubMapFallback.eventToLatLng(container, event);
+    }
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const lng = minLng + (x / Math.max(1, rect.width)) * (maxLng - minLng);
+    const lat = maxLat - (y / Math.max(1, rect.height)) * (maxLat - minLat);
+    return { lat, lng };
+  }
+
+  function latLngToPercentFallback(point) {
+    if (window.EcoHubMapFallback?.latLngToPercent) {
+      return window.EcoHubMapFallback.latLngToPercent(point);
+    }
+    const minLat = INDONESIA_BOUNDS[0][0];
+    const minLng = INDONESIA_BOUNDS[0][1];
+    const maxLat = INDONESIA_BOUNDS[1][0];
+    const maxLng = INDONESIA_BOUNDS[1][1];
+    const left = ((point.lng - minLng) / (maxLng - minLng)) * 100;
+    const top = ((maxLat - point.lat) / (maxLat - minLat)) * 100;
+    return { left, top };
+  }
 
   function setButtonLoading(button, loading, loadingText = "Memproses...") {
     if (!button) return;
@@ -516,30 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function getImpactState() {
-    const defaultState = {
-      actions: 0,
-      savedKg: 0,
-      lastSimulation: null,
-      recommendationsViewed: 0,
-    };
-
-    const raw = localStorage.getItem(IMPACT_KEY);
-    if (!raw) return defaultState;
-
-    try {
-      return { ...defaultState, ...JSON.parse(raw) };
-    } catch (error) {
-      console.warn("Impact state invalid", error);
-      return defaultState;
-    }
-  }
-
-  function saveImpactState(state) {
-    localStorage.setItem(IMPACT_KEY, JSON.stringify(state));
-  }
-
-  function getReports() {
+    function getReports() {
     const raw = localStorage.getItem(REPORTS_KEY);
     if (!raw) return [];
 
@@ -570,80 +563,6 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(el._timer);
       }
     }, 20);
-  }
-
-  function updateImpactUI() {
-    const state = getImpactState();
-    const level = getLevelByActions(state.actions);
-
-    animateNumber(impactActions, state.actions);
-    animateNumber(impactCarbon, state.savedKg);
-    if (impactLevel) impactLevel.textContent = level.name;
-
-    if (impactProgress) {
-      const progressValue = Math.max(0, Math.min(100, level.progressPct));
-      impactProgress.style.width = `${progressValue}%`;
-      impactProgress.parentElement.setAttribute("aria-valuenow", String(Math.round(progressValue)));
-    }
-
-    if (impactNext) {
-      impactNext.textContent =
-        level.remaining > 0
-          ? `${level.remaining} aksi lagi menuju ${level.nextName}.`
-          : "Level tertinggi tercapai. Kamu Earth Guardian!";
-    }
-
-    setBadgeState(level.code);
-    animateNumber(dashboardActions, state.actions);
-    animateNumber(dashboardSaved, state.savedKg);
-  }
-
-  function setBadgeState(levelCode) {
-    const badges = document.querySelectorAll(".badge-item");
-    if (!badges.length) return;
-
-    badges.forEach((badge) => badge.classList.remove("active"));
-    badges[0].classList.add("active");
-
-    if (levelCode === "green_mover" || levelCode === "earth_guardian") {
-      const greenMover = document.querySelector('[data-badge="green_mover"]');
-      if (greenMover) greenMover.classList.add("active");
-    }
-
-    if (levelCode === "earth_guardian") {
-      const earthGuardian = document.querySelector('[data-badge="earth_guardian"]');
-      if (earthGuardian) earthGuardian.classList.add("active");
-    }
-  }
-
-  function getLevelByActions(actions) {
-    if (actions >= 20) {
-      return {
-        code: "earth_guardian",
-        name: "Earth Guardian",
-        progressPct: 100,
-        remaining: 0,
-        nextName: "-",
-      };
-    }
-
-    if (actions >= 8) {
-      return {
-        code: "green_mover",
-        name: "Green Mover",
-        progressPct: ((actions - 8) / 12) * 100,
-        remaining: 20 - actions,
-        nextName: "Earth Guardian",
-      };
-    }
-
-    return {
-      code: "eco_starter",
-      name: "Eco Starter",
-      progressPct: (actions / 8) * 100,
-      remaining: 8 - actions,
-      nextName: "Green Mover",
-    };
   }
 
   async function fetchAQI(city) {
@@ -752,7 +671,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const score = Math.max(15, Math.round(100 - normalizedAqi * 0.35 - reportPenalty));
 
     if (areaScoreEl) areaScoreEl.textContent = String(score);
+
+    const scoreState = score >= 75 ? "good" : score >= 55 ? "warn" : "danger";
+    if (areaScoreEl) {
+      areaScoreEl.classList.remove("score-good", "score-warn", "score-danger");
+      areaScoreEl.classList.add(`score-${scoreState}`);
+    }
+
+    const areaScoreCard = areaScoreEl?.closest(".city-widget");
+    if (areaScoreCard) {
+      areaScoreCard.classList.remove(
+        "area-score-good",
+        "area-score-warn",
+        "area-score-danger",
+      );
+      areaScoreCard.classList.add(`area-score-${scoreState}`);
+    }
+
     if (areaScoreNote) {
+      areaScoreNote.classList.remove("score-good", "score-warn", "score-danger");
+      areaScoreNote.classList.add(`score-${scoreState}`);
       if (score >= 75) {
         areaScoreNote.textContent = "Area relatif sehat. Pertahankan transportasi rendah emisi.";
       } else if (score >= 55) {
@@ -845,7 +783,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderCommunityActionMap(cityName, topArea) {
-    if (!communityActionMapEl || !window.L) return;
+    if (!communityActionMapEl) return;
+    if (!window.L) {
+      const actions = getCommunityActivitiesForMap(cityName);
+      if (!actions.length) {
+        communityActionMapEl.innerHTML =
+          '<div class="fallback-map-empty">Belum ada titik kegiatan warga.</div>';
+        return;
+      }
+
+      const dotsHtml = actions
+        .map((item, idx) => {
+          const pos = latLngToPercentFallback({ lat: item.lat, lng: item.lng });
+          return `<button type="button" class="fallback-map-point-btn" data-action-idx="${idx}" style="left:${pos.left}%;top:${pos.top}%;" aria-label="Detail ${item.title}"></button>`;
+        })
+        .join("");
+
+      communityActionMapEl.innerHTML = `
+        <div class="fallback-map-bg">Peta Dummy Indonesia</div>
+        <div class="fallback-map-layer">${dotsHtml}</div>
+        <div class="fallback-map-hint">Klik titik untuk lihat detail kegiatan.</div>
+      `;
+      communityActionMapEl.classList.add("fallback-map-ui");
+
+      const pointButtons = communityActionMapEl.querySelectorAll("[data-action-idx]");
+      pointButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const idx = Number(button.getAttribute("data-action-idx"));
+          const target = Number.isFinite(idx) ? actions[idx] : null;
+          if (!target) return;
+          const detailHref = target.id
+            ? `kegiatan.html#activity-${encodeURIComponent(target.id)}`
+            : "kegiatan.html#activity-list";
+          window.location.href = detailHref;
+        });
+      });
+      return;
+    }
+
     initCommunityActionMap();
     if (!communityMapState.map || !communityMapState.layerGroup) return;
 
@@ -885,65 +860,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function updateWeeklyPlannerUI() {
-    const state = getWeeklyPlanState();
-    const target = Math.max(1, Number(state.targetKg || 10));
-    const saved = Math.max(0, Number(state.savedKg || 0));
-    const progressPct = Math.min(100, (saved / target) * 100);
-    if (weeklyTarget && weeklyTarget.value !== String(target)) {
-      weeklyTarget.value = String(target);
-    }
-
-    if (weeklyProgress) {
-      weeklyProgress.style.width = `${progressPct.toFixed(1)}%`;
-      weeklyProgress.parentElement?.setAttribute("aria-valuenow", String(Math.round(progressPct)));
-    }
-
-    if (weeklyStatus) {
-      if (saved >= target) {
-        weeklyStatus.textContent = `Target mingguan tercapai: ${saved.toFixed(2)} / ${target} kg CO2.`;
-      } else {
-        weeklyStatus.textContent = `Progress minggu ini: ${saved.toFixed(2)} / ${target} kg CO2.`;
-      }
-    }
-
-    if (weeklyPlanList) {
-      const remaining = Math.max(0, target - saved);
-      weeklyPlanList.innerHTML = `
-        <li>Target minggu ini: hemat ${target} kg CO2.</li>
-        <li>Sisa menuju target: ${remaining.toFixed(2)} kg CO2.</li>
-        <li>Tips cepat: pilih moda bus/carpool untuk rute menengah.</li>
-      `;
-    }
-  }
-
-  function pushWeeklyProgress(savedKg) {
-    const state = getWeeklyPlanState();
-    state.savedKg = Math.max(0, Number(state.savedKg || 0) + Math.max(0, Number(savedKg || 0)));
-    saveWeeklyPlanState(state);
-    updateWeeklyPlannerUI();
-  }
-
-  function renderLeaderboard() {
-    if (!leaderboardList) return;
-    const impact = getImpactState();
-    const weekly = getWeeklyPlanState();
-
-    const entries = [
-      { name: "Kamu", score: Math.round(impact.actions * 5 + weekly.savedKg * 4) },
-      { name: "Komunitas Hijau Timur", score: 126 },
-      { name: "Eco Riders Selatan", score: 113 },
-      { name: "Urban Tree Squad", score: 104 },
-    ].sort((a, b) => b.score - a.score);
-
-    leaderboardList.innerHTML = entries
-      .map(
-        (entry, idx) =>
-          `<li><span class="leaderboard-rank">#${idx + 1}</span><span>${entry.name}</span><strong>${entry.score} pts</strong></li>`,
-      )
-      .join("");
-  }
-
   function haversineDistanceKm(from, to) {
     const R = 6371;
     const dLat = ((to.lat - from.lat) * Math.PI) / 180;
@@ -971,47 +887,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function getWeekKey(date = new Date()) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const day = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 1 - day);
-    return `${d.getUTCFullYear()}-W${String(Math.ceil((((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000) + 1) / 7)).padStart(2, "0")}`;
-  }
-
-  function getWeeklyPlanState() {
-    const defaultState = {
-      weekKey: getWeekKey(),
-      targetKg: Number(weeklyTarget?.value || 10),
-      savedKg: 0,
-    };
-    const raw = localStorage.getItem(WEEKLY_PLAN_KEY);
-    if (!raw) return defaultState;
-
-    try {
-      const state = { ...defaultState, ...JSON.parse(raw) };
-      if (state.weekKey !== getWeekKey()) {
-        return defaultState;
-      }
-      return state;
-    } catch (_) {
-      return defaultState;
-    }
-  }
-
-  function saveWeeklyPlanState(state) {
-    localStorage.setItem(WEEKLY_PLAN_KEY, JSON.stringify(state));
-  }
-
   function syncModeDetailsByViewport() {
     if (!modeDetails) return;
-    if (window.innerWidth >= 769) {
-      modeDetails.setAttribute("open", "open");
-    } else {
-      modeDetails.removeAttribute("open");
-    }
+    modeDetails.setAttribute("open", "open");
   }
 
   function updateMapVisuals() {
+    if (mapState.fallbackLayer && mapEl) {
+      mapState.fallbackLayer.innerHTML = "";
+      const from = mapState.from;
+      const to = mapState.to;
+      if (!from && !to) return;
+
+      const drawDot = (point, cls) => {
+        const pos = latLngToPercentFallback(point);
+        const dot = document.createElement("span");
+        dot.className = `fallback-map-dot ${cls}`;
+        dot.style.left = `${pos.left}%`;
+        dot.style.top = `${pos.top}%`;
+        mapState.fallbackLayer.appendChild(dot);
+        return pos;
+      };
+
+      const fromPos = from ? drawDot(from, "from") : null;
+      const toPos = to ? drawDot(to, "to") : null;
+      if (fromPos && toPos) {
+        const line = document.createElement("div");
+        line.className = "fallback-map-line";
+        const dx = toPos.left - fromPos.left;
+        const dy = toPos.top - fromPos.top;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        line.style.left = `${fromPos.left}%`;
+        line.style.top = `${fromPos.top}%`;
+        line.style.width = `${length}%`;
+        line.style.transform = `rotate(${angle}deg)`;
+        mapState.fallbackLayer.appendChild(line);
+      }
+      return;
+    }
+
     if (!mapState.map || !window.L) return;
 
     if (mapState.fromMarker) {
@@ -1053,7 +968,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initMap() {
-    if (!mapEl || !window.L) return;
+    if (!mapEl) return;
+    if (!window.L) {
+      mapEl.classList.add("fallback-map-ui");
+      mapEl.innerHTML = `
+        <div class="fallback-map-bg">Peta Dummy Indonesia (Klik untuk pilih titik)</div>
+        <div class="fallback-map-layer"></div>
+      `;
+      mapState.fallbackLayer = mapEl.querySelector(".fallback-map-layer");
+      mapEl.addEventListener("click", (event) => {
+        const pointRaw = eventToLatLngFallback(mapEl, event);
+        if (!pointRaw) return;
+        const point = {
+          lat: pointRaw.lat,
+          lng: pointRaw.lng,
+          label: "Mencari alamat...",
+        };
+        if (!mapState.from) {
+          mapState.from = point;
+          resolvePointAddress("from");
+        } else if (!mapState.to) {
+          mapState.to = point;
+          resolvePointAddress("to");
+        } else {
+          mapState.from = point;
+          mapState.to = null;
+          resolvePointAddress("from");
+        }
+
+        updatePointLabels();
+        updateMapVisuals();
+      });
+      return;
+    }
 
     mapState.map = window.L.map(mapEl, { zoomControl: true }).setView([-2.5, 118], 5);
     if (!MOCK_MODE && !DUMMY_MAP_MODE) {
@@ -1269,13 +1216,6 @@ document.addEventListener("DOMContentLoaded", () => {
       )
       .join("");
 
-    if (window.lucide) window.lucide.createIcons({ root: recGrid });
-
-    const state = getImpactState();
-    state.recommendationsViewed += 1;
-    state.actions += 1;
-    saveImpactState(state);
-    updateImpactUI();
   }
 
   function updateHeroInsight(simResult, aqi) {
@@ -1320,22 +1260,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function pushImpactFromSimulation(savedKg) {
-    const state = getImpactState();
-    state.actions += 2;
-    state.savedKg += savedKg;
-    state.lastSimulation = new Date().toISOString();
-    saveImpactState(state);
-
-    if (window.addEcoPoints) {
-      window.addEcoPoints(15, "Simulasi Eco Mobility");
-    }
-
-    updateImpactUI();
-    renderLeaderboard();
-  }
-
-  function setEmptyMessage(message) {
+    function setEmptyMessage(message) {
     if (!emptyCard) return;
     const msg = emptyCard.querySelector("p");
     if (msg) msg.textContent = message;
@@ -1429,23 +1354,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  swapPointsBtn?.addEventListener("click", () => {
-    if (!mapState.from || !mapState.to) return;
-    const temp = mapState.from;
-    mapState.from = mapState.to;
-    mapState.to = temp;
-    updatePointLabels();
-    updateMapVisuals();
-  });
-
-  clearPointsBtn?.addEventListener("click", () => {
-    mapState.from = null;
-    mapState.to = null;
-    updatePointLabels();
-    updateMapVisuals();
-    setEmptyMessage("Klik peta untuk memilih asal dan tujuan perjalanan.");
-  });
-
   dashboardCitySelect?.addEventListener("change", async () => {
     await updateDashboardByCity(dashboardCitySelect.value);
   });
@@ -1460,20 +1368,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   });
 
-  weeklyTarget?.addEventListener("change", () => {
-    const state = getWeeklyPlanState();
-    state.targetKg = Number(weeklyTarget.value || 10);
-    saveWeeklyPlanState(state);
-    updateWeeklyPlannerUI();
-    renderLeaderboard();
-  });
-
   document.getElementById("export-png-btn")?.addEventListener("click", () => {
     exportSummaryPng();
-  });
-
-  document.getElementById("export-pdf-btn")?.addEventListener("click", () => {
-    window.print();
   });
 
   form?.addEventListener("submit", async (event) => {
@@ -1541,9 +1437,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       renderModeComparison(distanceKm, tripsPerWeek, realRoute?.durationMin || null);
-      pushImpactFromSimulation(simResult.savedKg);
-      pushWeeklyProgress(simResult.savedKg);
-
       const nearestCity = nearestCityFromPoints(mapState.from, mapState.to);
       if (dashboardCitySelect) dashboardCitySelect.value = nearestCity;
 
@@ -1561,11 +1454,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", syncModeDetailsByViewport);
     updatePointLabels();
     setEmptyMessage("Klik peta untuk memilih asal dan tujuan perjalanan.");
-
-    updateImpactUI();
-    updateWeeklyPlannerUI();
-    renderLeaderboard();
-
     const initialCity = dashboardCitySelect?.value || "Jakarta";
     const context = await updateDashboardByCity(initialCity);
 
@@ -1576,3 +1464,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 });
+
+

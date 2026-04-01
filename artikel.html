@@ -11,8 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
       rel="stylesheet"
     />
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
     <style>
@@ -85,20 +83,13 @@
     </style>
 
     <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <link rel="stylesheet" href="css/gamification.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
 
@@ -156,7 +147,7 @@
             text-decoration: none;
           "
         >
-          <i data-lucide="arrow-left" size="18"></i> Kembali ke Edukasi
+          <i class="fas fa-arrow-left" size="18"></i> Kembali ke Edukasi
         </a>
       </div>
       <div class="article-container" id="content-box" style="margin-top: 0">
@@ -165,7 +156,6 @@
     </div>
 
     <script>
-      lucide.createIcons();
 
       // Get URL Param
       const params = new URLSearchParams(window.location.search);
@@ -194,13 +184,12 @@
           if (pageId === "-1") {
             contentBox.innerHTML = `
                         <div class="error fade-up visible" style="padding: 60px 20px;">
-                            <i data-lucide="file-warning" size="64" color="var(--color-red-alert)" style="margin-bottom: 20px;"></i>
+                            <i class="fas fa-exclamation-triangle" size="64" color="var(--color-red-alert)" style="margin-bottom: 20px;"></i>
                             <h2 style="margin-bottom: 12px; color: var(--color-text-primary);">Artikel tidak ditemukan</h2>
                             <p style="color: var(--color-text-muted); margin-bottom: 24px;">Maaf, artikel yang Anda cari tidak tersedia atau mungkin telah dihapus.</p>
                             <a href="konten.html" class="btn btn-primary">Kembali ke Edukasi</a>
                         </div>
                     `;
-            lucide.createIcons();
             return;
           }
 
@@ -226,13 +215,12 @@
           console.error(e);
           contentBox.innerHTML = `
                     <div class="error fade-up visible" style="padding: 60px 20px;">
-                        <i data-lucide="wifi-off" size="64" color="var(--color-amber)" style="margin-bottom: 20px;"></i>
+                        <i class="fas fa-wifi" size="64" color="var(--color-amber)" style="margin-bottom: 20px;"></i>
                         <h2 style="margin-bottom: 12px; color: var(--color-text-primary);">Koneksi Bermasalah</h2>
                         <p style="color: var(--color-text-muted); margin-bottom: 24px;">Gagal memuat artikel. Silakan periksa koneksi internet Anda.</p>
                         <a href="konten.html" class="btn btn-primary">Kembali ke Edukasi</a>
                     </div>
                 `;
-          lucide.createIcons();
         }
       }
 
@@ -291,12 +279,6 @@
     <script src="js/main.js"></script>
 
     <!-- Leaflet JS -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <script src="js/gamification.js"></script>
     <script>
       if ((location.protocol === "http:" || location.protocol === "https:") && "serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -308,6 +290,9 @@
     </script>
   </body>
 </html>
+
+
+
 
 
 

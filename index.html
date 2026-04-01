@@ -16,25 +16,23 @@
       rel="stylesheet"
     />
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/pages/mobility.css" />
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-    <link rel="stylesheet" href="css/gamification.css" />
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/mobility.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
 
@@ -133,7 +131,8 @@
               <option value="Manado">Manado</option>
             </select>
             <button id="refresh-dashboard-aqi" class="btn btn-outline" type="button">
-              <i data-lucide="refresh-cw" size="16"></i> Perbarui Kondisi Udara
+              <i class="fas fa-sync-alt" size="16" aria-hidden="true"></i>
+              <span class="btn-label">Perbarui Kondisi Udara</span>
             </button>
           </div>
         </div>
@@ -166,7 +165,7 @@
           <article class="city-widget card fade-up" style="animation-delay: 0.15s">
             <div class="widget-head">
               <h3>Laporan Warga</h3>
-              <i data-lucide="megaphone"></i>
+              <i class="fas fa-bullhorn"></i>
             </div>
             <div class="widget-value" id="dashboard-reports">0</div>
             <p class="widget-note">Total laporan komunitas yang tercatat.</p>
@@ -175,7 +174,7 @@
           <article class="city-widget card fade-up" style="animation-delay: 0.2s">
             <div class="widget-head">
               <h3>Area Prioritas</h3>
-              <i data-lucide="map-pin"></i>
+              <i class="fas fa-map-marker-alt"></i>
             </div>
             <div class="widget-value" id="priority-area">Belum ada</div>
             <p class="widget-note" id="priority-count">Belum ada data lokasi padat laporan.</p>
@@ -184,7 +183,7 @@
           <article class="city-widget card fade-up" style="animation-delay: 0.25s">
             <div class="widget-head">
               <h3>Total Aksi Hijau</h3>
-              <i data-lucide="sprout"></i>
+              <i class="fas fa-seedling"></i>
             </div>
             <div class="widget-value" id="dashboard-actions">0</div>
             <p class="widget-note">Aksi dari simulasi, rekomendasi, dan pelaporan.</p>
@@ -193,7 +192,7 @@
           <article class="city-widget card fade-up" style="animation-delay: 0.3s">
             <div class="widget-head">
               <h3>Estimasi Karbon Dihemat</h3>
-              <i data-lucide="leaf"></i>
+              <i class="fas fa-leaf"></i>
             </div>
             <div class="widget-value"><span id="dashboard-saved">0</span> kg</div>
             <p class="widget-note">Akumulasi estimasi dari perubahan moda perjalanan.</p>
@@ -202,7 +201,7 @@
           <article class="city-widget card fade-up" style="animation-delay: 0.35s">
             <div class="widget-head">
               <h3>Skor Lingkungan Area</h3>
-              <i data-lucide="gauge"></i>
+              <i class="fas fa-tachometer-alt"></i>
             </div>
             <div class="widget-value"><span id="area-score">--</span>/100</div>
             <p id="area-score-note" class="widget-note">Menunggu data AQI dan laporan area.</p>
@@ -211,7 +210,7 @@
           <article class="city-widget card action-map-widget fade-up" style="animation-delay: 0.4s">
             <div class="widget-head">
               <h3>Peta Aksi Komunitas</h3>
-              <i data-lucide="users"></i>
+              <i class="fas fa-users"></i>
             </div>
             <p class="widget-note">Titik aksi solusi komunitas: tanam pohon, bersih sungai, dan drop point daur ulang.</p>
             <div id="community-action-map" class="community-action-map" aria-label="Peta aksi komunitas"></div>
@@ -248,15 +247,6 @@
               </div>
             </div>
 
-            <div class="map-actions">
-              <button id="swap-points-btn" type="button" class="btn btn-outline">
-                <i data-lucide="arrow-left-right" size="16"></i> Tukar Titik
-              </button>
-              <button id="clear-points-btn" type="button" class="btn btn-outline">
-                <i data-lucide="eraser" size="16"></i> Reset Titik
-              </button>
-            </div>
-
             <div class="form-group">
               <label for="mode-select">Naik apa?</label>
               <select id="mode-select" required>
@@ -283,7 +273,7 @@
 
           <div class="mobility-result-col">
             <article id="mobility-empty" class="card empty-state fade-up" style="animation-delay: 0.1s">
-              <i data-lucide="route"></i>
+              <i class="fas fa-route"></i>
               <h3>Belum Ada Simulasi</h3>
               <p>Isi parameter perjalanan untuk melihat perbandingan emisi dan insight personal.</p>
             </article>
@@ -329,7 +319,6 @@
 
               <div class="export-actions">
                 <button id="export-png-btn" type="button" class="btn btn-outline">Ekspor Ringkasan PNG</button>
-                <button id="export-pdf-btn" type="button" class="btn btn-outline">Cetak PDF</button>
               </div>
             </article>
           </div>
@@ -346,7 +335,7 @@
 
         <div id="recommendation-grid" class="recommendation-grid">
           <article class="card recommendation-empty fade-up">
-            <i data-lucide="sparkles"></i>
+            <i class="fas fa-magic"></i>
             <h3>Rekomendasi Cerdas Akan Muncul di Sini</h3>
             <p>Jalankan simulasi terlebih dahulu agar rekomendasi menjadi lebih personal.</p>
           </article>
@@ -354,87 +343,7 @@
       </div>
     </section>
 
-    <section class="section tracker-section">
-      <div class="container">
-        <div class="section-head fade-up">
-          <h2>Eco Impact Tracker</h2>
-          <p>Website ini tidak hanya informatif, tapi juga mendorong perubahan perilaku yang terukur.</p>
-        </div>
-
-        <div class="tracker-layout">
-          <article class="card tracker-card fade-up">
-            <h3>Progress Pribadi</h3>
-            <div class="tracker-stats">
-              <div>
-                <span class="tracker-label">Total Eco Action</span>
-                <strong id="impact-actions">0</strong>
-              </div>
-              <div>
-                <span class="tracker-label">Karbon Dihemat</span>
-                <strong><span id="impact-carbon">0</span> kg</strong>
-              </div>
-              <div>
-                <span class="tracker-label">Level</span>
-                <strong id="impact-level">Eco Starter</strong>
-              </div>
-            </div>
-            <div class="progress-wrap" role="progressbar" aria-label="Progress badge" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <div id="impact-progress" class="progress-bar"></div>
-            </div>
-            <p id="impact-next" class="widget-note">0 aksi lagi menuju Green Mover.</p>
-          </article>
-
-          <article class="card badge-card fade-up" style="animation-delay: 0.1s">
-            <h3>Badge Milestone</h3>
-            <div class="badge-list" id="badge-list">
-              <div class="badge-item active">
-                <i data-lucide="sprout"></i>
-                <span>Eco Starter</span>
-              </div>
-              <div class="badge-item" data-badge="green_mover">
-                <i data-lucide="bike"></i>
-                <span>Green Mover</span>
-              </div>
-              <div class="badge-item" data-badge="earth_guardian">
-                <i data-lucide="shield-check"></i>
-                <span>Earth Guardian</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section planner-section">
-      <div class="container planner-layout">
-        <article class="card planner-card fade-up">
-          <h3>Rencana Perjalanan Hijau Mingguan</h3>
-          <p class="widget-note">Set target hemat karbon mingguan, lalu pantau progresmu dari hasil simulasi.</p>
-          <div class="planner-controls">
-            <label for="weekly-target">Target Hemat per Minggu</label>
-            <select id="weekly-target">
-              <option value="5">5 kg CO2/minggu</option>
-              <option value="10" selected>10 kg CO2/minggu</option>
-              <option value="20">20 kg CO2/minggu</option>
-              <option value="30">30 kg CO2/minggu</option>
-            </select>
-          </div>
-          <div class="progress-wrap" role="progressbar" aria-label="Progress target mingguan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div id="weekly-progress" class="progress-bar"></div>
-          </div>
-          <p id="weekly-status" class="widget-note">Belum ada progres minggu ini.</p>
-          <ul id="weekly-plan-list" class="weekly-plan-list">
-            <li>Mulai simulasi untuk menghitung potensi hemat.</li>
-          </ul>
-        </article>
-
-        <article class="card leaderboard-card fade-up" style="animation-delay: 0.1s">
-          <h3>Leaderboard Komunitas</h3>
-          <p class="widget-note">Peringkat berdasarkan aksi dan estimasi hemat karbon.</p>
-          <ol id="leaderboard-list" class="leaderboard-list"></ol>
-        </article>
-      </div>
-    </section>
+    
 
     <section class="section cta-zone">
       <div class="container card cta-card fade-up">
@@ -496,17 +405,15 @@
       </div>
     </footer>
 
-    <script src="js/main.js"></script>
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="js/main.js"></script>
     <script src="js/mobility.js"></script>
     <script>
-      lucide.createIcons();
     </script>
-    <script src="js/gamification.js"></script>
     <script>
       if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -518,6 +425,9 @@
     </script>
   </body>
 </html>
+
+
+
 
 
 

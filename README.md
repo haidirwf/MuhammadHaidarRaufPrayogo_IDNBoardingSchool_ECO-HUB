@@ -51,4 +51,4 @@ Contoh:
 
 ## Catatan
 - Proyek ini berbasis frontend statis (tanpa backend server khusus).
-- Beberapa fitur (Service Worker, manifest, geolocation) bekerja optimal saat dijalankan via `http/https`, bukan langsung `file://`.
+- Beberapa fitur (Service Worker dan manifest) bekerja optimal saat dijalankan via `http/https`, bukan langsung `file://`.

@@ -15,7 +15,6 @@ const ASSETS = [
   "/css/pages/lapor.css",
   "/css/pages/kegiatan.css",
   "/css/pages/konten.css",
-  "/css/gamification.css",
   "/js/main.js",
   "/js/aqi.js",
   "/js/carbon.js",
@@ -23,7 +22,6 @@ const ASSETS = [
   "/js/mobility.js",
   "/js/lapor.js",
   "/js/kegiatan.js",
-  "/js/gamification.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -39,3 +37,4 @@ self.addEventListener("fetch", (event) => {
       .then((response) => response || fetch(event.request)),
   );
 });
+

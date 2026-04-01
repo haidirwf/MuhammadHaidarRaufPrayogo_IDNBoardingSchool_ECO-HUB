@@ -12,25 +12,23 @@
       rel="stylesheet"
     />
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/pages/kegiatan.css" />
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-    <link rel="stylesheet" href="css/gamification.css" />
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/kegiatan.css" />
   </head>
 
   <body>
     <nav class="navbar">
       <div class="container nav-container">
         <a href="index.html" class="nav-brand">
-          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          <i class="fas fa-leaf" color="var(--color-green-primary)"></i>
           Eco Hub
         </a>
 
@@ -74,7 +72,7 @@
             <p>Warga bisa membuat kegiatan lingkungan berdasarkan lokasi, lalu warga lain bisa langsung join.</p>
           </div>
           <button id="open-form-btn" class="btn btn-primary" type="button">
-            <i data-lucide="plus"></i>
+            <i class="fas fa-plus"></i>
             Buat Kegiatan
           </button>
         </div>
@@ -89,7 +87,6 @@
               <h3>Buat Kegiatan Baru</h3>
               <p class="form-note">Isi kapan kegiatan dilakukan, ngapain, dan di mana lokasinya.</p>
             </div>
-            <button id="close-form-btn" class="btn btn-outline" type="button">Tutup Form</button>
           </div>
 
           <form id="kegiatan-form" class="kegiatan-form">
@@ -120,6 +117,7 @@
             </div>
 
             <button id="create-activity-btn" type="submit" class="btn btn-primary">Buat Kegiatan</button>
+            <button id="close-form-btn" class="btn btn-outline" type="button" style="margin-top: 10px">Tutup Form</button>
             <p id="form-feedback" class="feedback-text" aria-live="polite"></p>
           </form>
         </article>
@@ -174,17 +172,15 @@
       </div>
     </footer>
 
-    <script src="js/main.js"></script>
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="js/main.js"></script>
     <script src="js/kegiatan.js"></script>
     <script>
-      lucide.createIcons();
     </script>
-    <script src="js/gamification.js"></script>
     <script>
       if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -194,4 +190,7 @@
     </script>
   </body>
 </html>
+
+
+
 
