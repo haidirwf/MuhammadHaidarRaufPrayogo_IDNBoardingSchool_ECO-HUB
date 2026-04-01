@@ -20,6 +20,10 @@
   margin: 0 auto 40px;
 }
 
+.konten-hero.unified-banner .hero-subtext {
+  margin: 0 0 28px !important;
+}
+
 .search-container {
   max-width: 600px;
   margin: 0 auto;

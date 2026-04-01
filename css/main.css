@@ -4,6 +4,8 @@
   /* Warm off-white — main background */
   --color-bg-secondary: #edeae1;
   /* Slightly darker warm white */
+  --color-bg-white: #ffffff;
+  /* Explicit white for legacy page CSS */
   --color-bg-dark: #1a1f16;
   /* Deep forest dark — used for sections */
   --color-bg-card: #ffffff;
@@ -83,6 +85,7 @@ body {
   color: var(--color-text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
@@ -93,6 +96,13 @@ body {
 img {
   max-width: 100%;
   display: block;
+}
+
+iframe,
+video,
+canvas,
+svg {
+  max-width: 100%;
 }
 
 a {
@@ -183,6 +193,11 @@ p {
 
 .section {
   padding: 80px 0;
+}
+
+.hero-subtext,
+.section-head p {
+  max-width: 72ch;
 }
 
 /* Animation utilities */
@@ -276,7 +291,7 @@ p {
   }
 
   .section {
-    padding: 60px 0;
+    padding: 56px 0;
   }
 
   h1 {
@@ -292,6 +307,58 @@ p {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .hidden {
   display: none !important;
+}
+
+/* Unified Banner (fitur/about/konten/kontak/lapor) */
+header.unified-banner {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(45, 90, 39, 0.14), transparent 32%),
+    linear-gradient(120deg, rgba(212, 232, 205, 0.42), rgba(255, 255, 255, 0.9)) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  text-align: left !important;
+}
+
+header.unified-banner .container {
+  max-width: var(--container-width);
+}
+
+header.unified-banner h1 {
+  font-size: clamp(42px, 5vw, 64px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-text-primary) !important;
+  margin-bottom: 16px !important;
+}
+
+header.unified-banner .hero-subtext,
+header.unified-banner > .container > p {
+  max-width: 860px !important;
+  color: var(--color-text-secondary) !important;
+  font-size: clamp(18px, 1.9vw, 28px) !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  header.unified-banner h1 {
+    font-size: 38px !important;
+  }
+
+  header.unified-banner .hero-subtext,
+  header.unified-banner > .container > p {
+    font-size: 18px !important;
+  }
 }

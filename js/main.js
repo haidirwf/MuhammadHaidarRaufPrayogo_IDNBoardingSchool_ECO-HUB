@@ -1,3 +1,10 @@
+// Global map config:
+// - dummyOnly: true  => semua map pakai dummy (hemat API)
+// - dummyOnly: false => aktifkan kembali tile/API peta online (OSM/Nominatim/OSRM)
+window.ECO_HUB_MAP_CONFIG = {
+  dummyOnly: true,
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   if (location.protocol === "http:" || location.protocol === "https:") {
     const hasManifest = document.querySelector('link[rel="manifest"]');
@@ -104,7 +111,67 @@ document.addEventListener("DOMContentLoaded", () => {
       link.classList.add("active");
     }
   });
+
+  initQuickStartCta();
 });
+
+function initQuickStartCta() {
+  const ctaTriggers = document.querySelectorAll(
+    'a.btn.btn-primary.hide-mobile[href="index.html#mobility-sim"], .mobile-menu a.btn.btn-primary.btn-full[href="index.html#mobility-sim"]',
+  );
+  if (!ctaTriggers.length) return;
+
+  const overlay = document.createElement("div");
+  overlay.className = "quick-start-overlay";
+  overlay.innerHTML = `
+    <div class="quick-start-sheet" role="dialog" aria-modal="true" aria-label="Mulai Sekarang">
+      <h3>Pilih Aksi</h3>
+      <p>Mulai dari langkah yang paling kamu butuhkan sekarang.</p>
+      <div class="quick-start-actions">
+        <a class="btn btn-primary" href="index.html#mobility-sim">Mulai Hitung Karbon</a>
+        <a class="btn btn-outline" href="kegiatan.html#create-form-card">Buat Kegiatan</a>
+        <a class="btn btn-outline" href="lapor.html#report-form-card">Lapor Isu</a>
+      </div>
+      <button type="button" class="quick-start-close" aria-label="Tutup">Tutup</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const closeBtn = overlay.querySelector(".quick-start-close");
+  const actionLinks = overlay.querySelectorAll("a");
+
+  function openQuickStart() {
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeQuickStart() {
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  ctaTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openQuickStart();
+    });
+  });
+
+  closeBtn?.addEventListener("click", closeQuickStart);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeQuickStart();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("active")) {
+      closeQuickStart();
+    }
+  });
+  actionLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      closeQuickStart();
+    });
+  });
+}
 
 function animateValue(obj) {
   const target = parseInt(obj.getAttribute("data-target"));

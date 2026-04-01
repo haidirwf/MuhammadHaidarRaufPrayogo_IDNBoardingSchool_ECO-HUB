@@ -13,6 +13,10 @@
   margin-bottom: 40px;
 }
 
+.lapor-hero.unified-banner .hero-subtext {
+  margin-bottom: 26px !important;
+}
+
 .lapor-stats {
   display: flex;
   justify-content: center;
@@ -39,7 +43,24 @@
   display: grid;
   grid-template-columns: 1.8fr 1fr;
   gap: 40px;
+  align-items: start;
   padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.lapor-main,
+.lapor-sidebar {
+  min-width: 0;
+}
+
+.lapor-main {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.lapor-sidebar {
+  align-self: start;
 }
 
 /* Form Styling */
@@ -335,7 +356,7 @@ textarea {
 
 /* Process Steps */
 .process-steps {
-  margin-top: 60px;
+  margin-top: 0;
 }
 
 .process-steps h3 {
@@ -489,6 +510,12 @@ textarea {
 @media (max-width: 1024px) {
   .lapor-layout {
     grid-template-columns: 1fr;
+    gap: 28px;
+    padding-bottom: 0;
+  }
+
+  .lapor-main {
+    gap: 36px;
   }
 
   .form-card {

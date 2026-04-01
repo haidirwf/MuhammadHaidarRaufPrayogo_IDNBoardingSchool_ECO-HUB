@@ -1,14 +1,23 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const IMPACT_KEY = "Eco Hub_impact_tracker";
-  const HISTORY_KEY = "Eco Hub_mobility_history_v1";
   const REPORTS_KEY = "Eco Hub_reports";
+  const COMMUNITY_ACTIVITIES_KEY = "Eco Hub_community_activities_v1";
   const AQI_CACHE_KEY = "Eco Hub_aqi_cache_v1";
   const GEO_CACHE_KEY = "Eco Hub_geo_cache_v1";
   const ROUTE_CACHE_KEY = "Eco Hub_route_cache_v1";
+  const WEEKLY_PLAN_KEY = "Eco Hub_weekly_plan_v1";
   const AQI_TTL_MS = 10 * 60 * 1000;
   const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
   const ROUTE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   const MOCK_MODE = localStorage.getItem("Eco Hub_mock_mode") === "1";
+  const DUMMY_MAP_MODE = window.ECO_HUB_MAP_CONFIG?.dummyOnly ?? true;
+  const INDONESIA_BOUNDS = [
+    [-11.2, 94.5],
+    [6.8, 141.5],
+  ];
 
   // g CO2 per km per person (estimasi edukasi)
   const MODE_FACTORS = {
@@ -87,9 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const modeDetails = document.querySelector(".mode-details");
   const resultTag = document.getElementById("result-tag");
   const routeEtaEl = document.getElementById("route-eta");
-  const historyList = document.getElementById("history-list");
-  const historyWeeklySaved = document.getElementById("history-weekly-saved");
-  const historyTotal = document.getElementById("history-total");
 
   const dashboardAqi = document.getElementById("dashboard-aqi");
   const dashboardReports = document.getElementById("dashboard-reports");
@@ -103,6 +109,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const dashboardPm25 = document.getElementById("dashboard-pm25");
   const dashboardPm10 = document.getElementById("dashboard-pm10");
   const dashboardHumidity = document.getElementById("dashboard-humidity");
+  const areaScoreEl = document.getElementById("area-score");
+  const areaScoreNote = document.getElementById("area-score-note");
+  const communityActionMapEl = document.getElementById("community-action-map");
 
   const recGrid = document.getElementById("recommendation-grid");
 
@@ -115,6 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroInsightText = document.getElementById("hero-insight-text");
   const heroAqi = document.getElementById("hero-aqi");
   const heroSaving = document.getElementById("hero-saving");
+  const weeklyTarget = document.getElementById("weekly-target");
+  const weeklyProgress = document.getElementById("weekly-progress");
+  const weeklyStatus = document.getElementById("weekly-status");
+  const weeklyPlanList = document.getElementById("weekly-plan-list");
+  const leaderboardList = document.getElementById("leaderboard-list");
 
   const mapEl = document.getElementById("mobility-map");
   const mapState = {
@@ -131,6 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const geocodeCache = new Map();
   const aqiCache = new Map();
   const routeCache = new Map();
+  const communityMapState = {
+    map: null,
+    layerGroup: null,
+  };
   let lastGeocodeAt = 0;
 
   function setButtonLoading(button, loading, loadingText = "Memproses...") {
@@ -188,61 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function getHistory() {
-    const parsed = safeParse(localStorage.getItem(HISTORY_KEY), []);
-    return Array.isArray(parsed) ? parsed : [];
-  }
-
-  function saveHistory(history) {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  }
-
-  function compactLabel(label) {
-    const clean = String(label || "Titik").trim();
-    return clean.length > 34 ? `${clean.slice(0, 34)}...` : clean;
-  }
-
-  function renderHistory() {
-    const history = getHistory();
-    if (historyTotal) historyTotal.textContent = String(history.length);
-
-    const now = Date.now();
-    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-    const weeklySaved = history
-      .filter((item) => item && typeof item.ts === "number" && now - item.ts <= sevenDaysMs)
-      .reduce((sum, item) => sum + Number(item.savedKg || 0), 0);
-    if (historyWeeklySaved) historyWeeklySaved.textContent = weeklySaved.toFixed(2);
-
-    if (!historyList) return;
-    if (!history.length) {
-      historyList.innerHTML = '<li class="history-empty">Belum ada riwayat simulasi.</li>';
-      return;
-    }
-
-    historyList.innerHTML = history
-      .slice(0, 10)
-      .map((item) => {
-        const ts = new Date(item.ts || Date.now());
-        const when = ts.toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
-        return `
-          <li class="history-item">
-            <div class="history-route">${compactLabel(item.fromLabel)} -> ${compactLabel(item.toLabel)}</div>
-            <div class="history-meta">${(item.distanceKm || 0).toFixed(2)} km | ${formatEta(item.etaMin || 0)} | ${item.modeLabel || "-"}</div>
-            <div class="history-meta">Hemat ${(item.savedKg || 0).toFixed(2)} kg/minggu | ${when}</div>
-          </li>
-        `;
-      })
-      .join("");
-  }
-
-  function pushSimulationHistory(entry) {
-    const history = getHistory();
-    history.unshift(entry);
-    const capped = history.slice(0, 10);
-    saveHistory(capped);
-    renderHistory();
-  }
-
   function persistAqiCache() {
     const obj = {};
     aqiCache.forEach((value, key) => {
@@ -286,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return cached.value;
     }
 
-    if (MOCK_MODE) return null;
+    if (MOCK_MODE || DUMMY_MAP_MODE) return null;
 
     let timeout = null;
     try {
@@ -347,31 +310,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (h <= 0) return `${m}m`;
     if (m === 0) return `${h}j`;
     return `${h}j ${m}m`;
-  }
-
-  function renderBestModeCard(distanceKm, tripsPerWeek, routeDurationMin, selectedMode) {
-    const card = document.getElementById("best-mode-card");
-    if (!card) return;
-
-    const ranked = Object.entries(MODE_FACTORS)
-      .map(([key, mode]) => {
-        const weeklyKm = distanceKm * 2 * tripsPerWeek;
-        const kg = (mode.factor * weeklyKm) / 1000;
-        const eta = estimateEtaMinutes(distanceKm, key, routeDurationMin);
-        return { key, label: mode.label, kg, eta };
-      })
-      .sort((a, b) => a.kg - b.kg);
-
-    const best = ranked[0];
-    const selected = ranked.find((item) => item.key === selectedMode) || best;
-    const delta = Math.max(0, selected.kg - best.kg);
-
-    card.innerHTML = `
-      <strong>Mode paling efisien: ${best.label}</strong><br/>
-      Emisi ${best.kg.toFixed(2)} kg/minggu, ETA ${formatEta(best.eta)}.
-      ${delta > 0 ? `Selisih hemat dari mode pilihanmu: ${delta.toFixed(2)} kg/minggu.` : "Mode pilihanmu sudah paling efisien untuk rute ini."}
-    `;
-    card.classList.remove("hidden");
   }
 
   function makeExportSummary() {
@@ -444,6 +382,138 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     mapState.tileLayer.addTo(mapState.map);
+  }
+
+  function paintDummyMapBase(map) {
+    if (!map || !window.L) return;
+
+    const sumatra = [
+      [5.4, 95.1],
+      [4.4, 96.4],
+      [3.0, 98.0],
+      [1.8, 99.5],
+      [0.2, 100.8],
+      [-1.5, 102.1],
+      [-3.5, 103.4],
+      [-5.4, 104.8],
+      [-5.8, 105.4],
+      [-4.4, 104.0],
+      [-2.0, 102.3],
+      [0.8, 100.2],
+      [3.0, 98.3],
+      [4.8, 96.8],
+    ];
+    const javaBali = [
+      [-6.1, 105.0],
+      [-6.4, 106.2],
+      [-6.8, 108.1],
+      [-7.1, 110.3],
+      [-7.7, 112.9],
+      [-8.2, 114.6],
+      [-8.5, 115.4],
+      [-8.8, 116.5],
+      [-8.9, 118.1],
+      [-8.6, 119.9],
+      [-8.9, 121.8],
+      [-9.4, 123.7],
+      [-10.0, 124.6],
+      [-9.2, 122.4],
+      [-8.7, 120.3],
+      [-8.4, 118.2],
+      [-8.0, 116.1],
+      [-7.6, 113.8],
+      [-7.1, 111.5],
+      [-6.7, 109.1],
+      [-6.2, 106.8],
+    ];
+    const kalimantan = [
+      [3.9, 108.0],
+      [3.2, 110.5],
+      [2.5, 113.2],
+      [1.8, 116.0],
+      [0.5, 117.7],
+      [-1.3, 118.3],
+      [-2.7, 117.1],
+      [-3.1, 114.6],
+      [-2.5, 112.1],
+      [-1.1, 109.5],
+      [0.6, 108.3],
+      [2.4, 108.1],
+    ];
+    const sulawesi = [
+      [1.8, 119.1],
+      [2.7, 121.0],
+      [2.3, 123.2],
+      [1.2, 124.8],
+      [0.0, 124.2],
+      [-1.8, 123.4],
+      [-3.8, 122.3],
+      [-4.9, 120.8],
+      [-4.2, 119.3],
+      [-2.3, 120.2],
+      [-1.0, 121.2],
+      [0.7, 121.0],
+      [1.5, 120.0],
+    ];
+    const papua = [
+      [-1.6, 130.0],
+      [0.6, 131.5],
+      [1.6, 133.8],
+      [0.9, 136.2],
+      [-0.7, 138.2],
+      [-2.0, 140.1],
+      [-3.8, 141.1],
+      [-5.9, 139.2],
+      [-6.5, 136.5],
+      [-5.2, 133.5],
+      [-3.9, 131.2],
+    ];
+
+    window.L.rectangle(
+      INDONESIA_BOUNDS,
+      {
+        stroke: false,
+        fillColor: "#eef3ea",
+        fillOpacity: 0.96,
+      },
+    ).addTo(map);
+
+    [sumatra, javaBali, kalimantan, sulawesi, papua].forEach((island) => {
+      window.L.polygon(island, {
+        color: "#9fb59a",
+        weight: 1,
+        fillColor: "#d9e8d0",
+        fillOpacity: 0.92,
+      }).addTo(map);
+    });
+
+    [
+      [
+        [3.6, 98.7],
+        [-0.9, 104.5],
+        [-6.2, 106.8],
+        [-7.8, 110.4],
+        [-7.3, 112.7],
+        [-5.1, 119.4],
+      ],
+      [
+        [-6.2, 106.8],
+        [-0.0, 109.3],
+        [-1.2, 116.9],
+        [1.5, 124.8],
+      ],
+      [
+        [-5.1, 119.4],
+        [-3.7, 128.2],
+        [-2.5, 140.7],
+      ],
+    ].forEach((path, idx) => {
+      window.L.polyline(path, {
+        color: idx === 0 ? "#8c968c" : "#a6aea6",
+        weight: idx === 0 ? 4 : 3,
+        opacity: 0.75,
+      }).addTo(map);
+    });
   }
 
   function getImpactState() {
@@ -676,6 +746,204 @@ document.addEventListener("DOMContentLoaded", () => {
     return { area: topArea, count };
   }
 
+  function updateAreaScore(aqi, reportCount) {
+    const normalizedAqi = Math.max(0, Math.min(220, Number(aqi || 0)));
+    const reportPenalty = Math.min(30, Number(reportCount || 0) * 3);
+    const score = Math.max(15, Math.round(100 - normalizedAqi * 0.35 - reportPenalty));
+
+    if (areaScoreEl) areaScoreEl.textContent = String(score);
+    if (areaScoreNote) {
+      if (score >= 75) {
+        areaScoreNote.textContent = "Area relatif sehat. Pertahankan transportasi rendah emisi.";
+      } else if (score >= 55) {
+        areaScoreNote.textContent = "Area butuh perbaikan bertahap melalui mobilitas hijau dan aksi warga.";
+      } else {
+        areaScoreNote.textContent = "Area prioritas tinggi. Perlu intervensi cepat dan pengurangan emisi harian.";
+      }
+    }
+  }
+
+  function getCommunityActivitiesForMap(cityName) {
+    const raw = safeParse(localStorage.getItem(COMMUNITY_ACTIVITIES_KEY), []);
+    if (!Array.isArray(raw) || raw.length === 0) return [];
+
+    const cityCoord = CITIES[cityName] || CITIES.Jakarta;
+    const cityPoint = { lat: cityCoord.lat, lng: cityCoord.lon };
+
+    const normalized = raw
+      .map((item) => {
+        const lat = Number(item?.whereCoords?.lat);
+        const lng = Number(item?.whereCoords?.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+        const dt = item?.datetime ? new Date(item.datetime) : null;
+        const timeText =
+          dt && !Number.isNaN(dt.getTime())
+            ? dt.toLocaleString("id-ID", {
+                day: "2-digit",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "Waktu belum ditetapkan";
+
+        return {
+          id: item?.id || "",
+          title: item?.title || "Kegiatan Warga",
+          type: "Kegiatan Warga",
+          lat,
+          lng,
+          detail: `${item?.what || "Aksi komunitas"} | ${timeText}`,
+          participants: Number(item?.participants || 0),
+          distanceKm: haversineDistanceKm({ lat, lng }, cityPoint),
+        };
+      })
+      .filter(Boolean);
+
+    if (!normalized.length) return [];
+
+    const nearby = normalized.filter((item) => item.distanceKm <= 70);
+    const picked = (nearby.length ? nearby : normalized)
+      .sort((a, b) => a.distanceKm - b.distanceKm)
+      .slice(0, 8);
+
+    return picked.map((item) => ({
+      ...item,
+      source: "community_activity",
+    }));
+  }
+
+  function initCommunityActionMap() {
+    if (!communityActionMapEl || !window.L || communityMapState.map) return;
+
+    const map = window.L.map(communityActionMapEl, {
+      attributionControl: false,
+      zoomControl: true,
+      dragging: true,
+      scrollWheelZoom: true,
+      doubleClickZoom: true,
+      touchZoom: true,
+      boxZoom: true,
+      keyboard: true,
+      tap: true,
+    }).setView([-2.5, 118], 5);
+
+    if (!MOCK_MODE && !DUMMY_MAP_MODE) {
+      window.L.tileLayer(MAP_TILE_SOURCES[0].url, {
+        ...MAP_TILE_SOURCES[0].options,
+        referrerPolicy: "strict-origin-when-cross-origin",
+        crossOrigin: true,
+      }).addTo(map);
+    } else {
+      paintDummyMapBase(map);
+      map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
+    }
+
+    communityMapState.map = map;
+    communityMapState.layerGroup = window.L.layerGroup().addTo(map);
+    setTimeout(() => map.invalidateSize(), 120);
+  }
+
+  function renderCommunityActionMap(cityName, topArea) {
+    if (!communityActionMapEl || !window.L) return;
+    initCommunityActionMap();
+    if (!communityMapState.map || !communityMapState.layerGroup) return;
+
+    const userActivities = getCommunityActivitiesForMap(cityName);
+    const actions = [...userActivities];
+
+    communityMapState.layerGroup.clearLayers();
+    actions.forEach((item) => {
+      const isCommunityActivity = item.source === "community_activity";
+      const detailHref =
+        isCommunityActivity && item.id
+          ? `kegiatan.html#activity-${encodeURIComponent(item.id)}`
+          : "kegiatan.html#activity-list";
+      const popupHtml = isCommunityActivity
+        ? `<strong>${item.title}</strong><br>${item.type}<br>${item.detail}<br>${item.participants} peserta<br><a class="map-detail-link" href="${detailHref}">Lihat Detail</a>`
+            : `<strong>${item.title}</strong><br>${item.type}<br><a class="map-detail-link" href="${detailHref}">Lihat Detail</a>`;
+      window.L.circleMarker([item.lat, item.lng], {
+        radius: 6,
+        color: isCommunityActivity ? "#1f4f8f" : "#2d5a27",
+        fillColor: isCommunityActivity ? "#5f94d0" : "#73a567",
+        fillOpacity: 0.92,
+        weight: 1.2,
+      })
+        .bindPopup(popupHtml)
+        .addTo(communityMapState.layerGroup);
+    });
+
+    if (DUMMY_MAP_MODE) {
+      communityMapState.map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
+    } else {
+      const bounds = window.L.latLngBounds(actions.map((item) => [item.lat, item.lng]));
+      if (bounds.isValid()) {
+        communityMapState.map.fitBounds(bounds, { padding: [22, 22], maxZoom: 13 });
+      } else {
+        communityMapState.map.setView([-2.5, 118], 5);
+      }
+    }
+  }
+
+  function updateWeeklyPlannerUI() {
+    const state = getWeeklyPlanState();
+    const target = Math.max(1, Number(state.targetKg || 10));
+    const saved = Math.max(0, Number(state.savedKg || 0));
+    const progressPct = Math.min(100, (saved / target) * 100);
+    if (weeklyTarget && weeklyTarget.value !== String(target)) {
+      weeklyTarget.value = String(target);
+    }
+
+    if (weeklyProgress) {
+      weeklyProgress.style.width = `${progressPct.toFixed(1)}%`;
+      weeklyProgress.parentElement?.setAttribute("aria-valuenow", String(Math.round(progressPct)));
+    }
+
+    if (weeklyStatus) {
+      if (saved >= target) {
+        weeklyStatus.textContent = `Target mingguan tercapai: ${saved.toFixed(2)} / ${target} kg CO2.`;
+      } else {
+        weeklyStatus.textContent = `Progress minggu ini: ${saved.toFixed(2)} / ${target} kg CO2.`;
+      }
+    }
+
+    if (weeklyPlanList) {
+      const remaining = Math.max(0, target - saved);
+      weeklyPlanList.innerHTML = `
+        <li>Target minggu ini: hemat ${target} kg CO2.</li>
+        <li>Sisa menuju target: ${remaining.toFixed(2)} kg CO2.</li>
+        <li>Tips cepat: pilih moda bus/carpool untuk rute menengah.</li>
+      `;
+    }
+  }
+
+  function pushWeeklyProgress(savedKg) {
+    const state = getWeeklyPlanState();
+    state.savedKg = Math.max(0, Number(state.savedKg || 0) + Math.max(0, Number(savedKg || 0)));
+    saveWeeklyPlanState(state);
+    updateWeeklyPlannerUI();
+  }
+
+  function renderLeaderboard() {
+    if (!leaderboardList) return;
+    const impact = getImpactState();
+    const weekly = getWeeklyPlanState();
+
+    const entries = [
+      { name: "Kamu", score: Math.round(impact.actions * 5 + weekly.savedKg * 4) },
+      { name: "Komunitas Hijau Timur", score: 126 },
+      { name: "Eco Riders Selatan", score: 113 },
+      { name: "Urban Tree Squad", score: 104 },
+    ].sort((a, b) => b.score - a.score);
+
+    leaderboardList.innerHTML = entries
+      .map(
+        (entry, idx) =>
+          `<li><span class="leaderboard-rank">#${idx + 1}</span><span>${entry.name}</span><strong>${entry.score} pts</strong></li>`,
+      )
+      .join("");
+  }
+
   function haversineDistanceKm(from, to) {
     const R = 6371;
     const dLat = ((to.lat - from.lat) * Math.PI) / 180;
@@ -701,6 +969,37 @@ document.addEventListener("DOMContentLoaded", () => {
       simulateBtn.disabled = !ready;
       simulateBtn.title = ready ? "" : "Pilih titik asal dan tujuan di peta terlebih dahulu";
     }
+  }
+
+  function getWeekKey(date = new Date()) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const day = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 1 - day);
+    return `${d.getUTCFullYear()}-W${String(Math.ceil((((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000) + 1) / 7)).padStart(2, "0")}`;
+  }
+
+  function getWeeklyPlanState() {
+    const defaultState = {
+      weekKey: getWeekKey(),
+      targetKg: Number(weeklyTarget?.value || 10),
+      savedKg: 0,
+    };
+    const raw = localStorage.getItem(WEEKLY_PLAN_KEY);
+    if (!raw) return defaultState;
+
+    try {
+      const state = { ...defaultState, ...JSON.parse(raw) };
+      if (state.weekKey !== getWeekKey()) {
+        return defaultState;
+      }
+      return state;
+    } catch (_) {
+      return defaultState;
+    }
+  }
+
+  function saveWeeklyPlanState(state) {
+    localStorage.setItem(WEEKLY_PLAN_KEY, JSON.stringify(state));
   }
 
   function syncModeDetailsByViewport() {
@@ -756,12 +1055,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function initMap() {
     if (!mapEl || !window.L) return;
 
-    mapState.map = window.L.map(mapEl, { zoomControl: true }).setView([-6.2, 106.8], 11);
-    if (!MOCK_MODE) {
+    mapState.map = window.L.map(mapEl, { zoomControl: true }).setView([-2.5, 118], 5);
+    if (!MOCK_MODE && !DUMMY_MAP_MODE) {
       mountTileLayer(0);
     } else {
-      mapEl.style.background =
-        "radial-gradient(circle at 20% 20%, rgba(45,90,39,0.14), transparent 35%), #eef1eb";
+      paintDummyMapBase(mapState.map);
+      mapState.map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
     }
 
     mapState.map.on("click", (event) => {
@@ -1010,9 +1309,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateHeroInsight(simResult, air.aqi);
     const topArea = updateReportsDashboard();
+    updateAreaScore(air.aqi, topArea.count);
+    renderCommunityActionMap(city, topArea);
 
     return {
+      city,
       aqi: air.aqi,
+      air,
       priorityArea: topArea,
     };
   }
@@ -1029,6 +1332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateImpactUI();
+    renderLeaderboard();
   }
 
   function setEmptyMessage(message) {
@@ -1065,7 +1369,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const key = geocodeCacheKey(point);
     if (geocodeCache.has(key)) return geocodeCache.get(key);
 
-    if (MOCK_MODE) {
+    if (MOCK_MODE || DUMMY_MAP_MODE) {
       const mockAddress = mockAddressFromPoint(point);
       geocodeCache.set(key, mockAddress);
       persistGeoCache();
@@ -1156,6 +1460,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   });
 
+  weeklyTarget?.addEventListener("change", () => {
+    const state = getWeeklyPlanState();
+    state.targetKg = Number(weeklyTarget.value || 10);
+    saveWeeklyPlanState(state);
+    updateWeeklyPlannerUI();
+    renderLeaderboard();
+  });
+
   document.getElementById("export-png-btn")?.addEventListener("click", () => {
     exportSummaryPng();
   });
@@ -1229,17 +1541,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       renderModeComparison(distanceKm, tripsPerWeek, realRoute?.durationMin || null);
-      renderBestModeCard(distanceKm, tripsPerWeek, realRoute?.durationMin || null, selectedMode);
       pushImpactFromSimulation(simResult.savedKg);
-      pushSimulationHistory({
-        ts: Date.now(),
-        fromLabel: from.label || `${from.lat.toFixed(4)}, ${from.lng.toFixed(4)}`,
-        toLabel: to.label || `${to.lat.toFixed(4)}, ${to.lng.toFixed(4)}`,
-        distanceKm,
-        etaMin: etaMinutes,
-        modeLabel: MODE_FACTORS[selectedMode].label,
-        savedKg: simResult.savedKg,
-      });
+      pushWeeklyProgress(simResult.savedKg);
 
       const nearestCity = nearestCityFromPoints(mapState.from, mapState.to);
       if (dashboardCitySelect) dashboardCitySelect.value = nearestCity;
@@ -1257,10 +1560,11 @@ document.addEventListener("DOMContentLoaded", () => {
     syncModeDetailsByViewport();
     window.addEventListener("resize", syncModeDetailsByViewport);
     updatePointLabels();
-    renderHistory();
     setEmptyMessage("Klik peta untuk memilih asal dan tujuan perjalanan.");
 
     updateImpactUI();
+    updateWeeklyPlannerUI();
+    renderLeaderboard();
 
     const initialCity = dashboardCitySelect?.value || "Jakarta";
     const context = await updateDashboardByCity(initialCity);
@@ -1272,4 +1576,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 });
-

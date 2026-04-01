@@ -1,0 +1,233 @@
+.kegiatan-hero {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(45, 90, 39, 0.14), transparent 32%),
+    linear-gradient(120deg, rgba(212, 232, 205, 0.42), rgba(255, 255, 255, 0.9));
+  border-bottom: 1px solid var(--color-border);
+}
+
+.kegiatan-hero h1 {
+  font-size: 46px;
+  letter-spacing: -0.02em;
+}
+
+.kegiatan-hero p {
+  max-width: 680px;
+  color: var(--color-text-secondary);
+  margin-bottom: 0;
+}
+
+.hero-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.hero-head .btn {
+  margin-top: 6px;
+  width: auto;
+  white-space: nowrap;
+}
+
+.form-card {
+  margin-bottom: 20px;
+}
+
+.form-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-note {
+  color: var(--color-text-muted);
+  margin-bottom: 14px;
+}
+
+.kegiatan-form textarea {
+  resize: vertical;
+}
+
+.activity-map {
+  width: 100%;
+  height: 220px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.map-location-display {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.feedback-text {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.feedback-text.success {
+  color: var(--color-green-primary);
+}
+
+.daftar-section {
+  padding-top: 40px;
+}
+
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.activity-card {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-green-light);
+}
+
+.list-reveal {
+  opacity: 0;
+  transform: translateY(18px) scale(0.995);
+  animation: kegiatanReveal 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes kegiatanReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.activity-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.activity-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.activity-time {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.activity-chip {
+  font-size: 11px;
+  font-weight: 700;
+  background: #eaf3e6;
+  border-radius: 999px;
+  color: var(--color-green-primary);
+  padding: 4px 8px;
+}
+
+.activity-body {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.activity-meta {
+  display: grid;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.activity-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.activity-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.participant-count {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.join-btn.joined {
+  background: var(--color-green-primary);
+  color: #fff;
+  border-color: var(--color-green-primary);
+}
+
+.empty-state-card {
+  grid-column: span 12;
+  text-align: center;
+}
+
+.empty-state-card p {
+  margin-bottom: 14px;
+}
+
+.empty-state-card .btn {
+  width: auto;
+}
+
+@media (max-width: 1024px) {
+  .activity-card {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 768px) {
+  .kegiatan-hero h1 {
+    font-size: 36px;
+  }
+
+  .hero-head,
+  .form-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-head .btn,
+  .form-head .btn {
+    width: 100%;
+  }
+
+  .activity-card {
+    grid-column: span 12;
+  }
+
+  .activity-map {
+    height: 200px;
+  }
+
+  .daftar-section {
+    padding-top: 28px;
+  }
+}

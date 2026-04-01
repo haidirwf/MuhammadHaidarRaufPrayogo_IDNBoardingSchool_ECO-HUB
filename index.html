@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eco Hub — Eco Smart Mobility & City Insights</title>
+    <title>Eco Hub - Eco Smart Mobility & City Insights</title>
     <meta
       name="description"
       content="Platform eco-smart city untuk simulasi mobilitas, insight emisi, kualitas udara, dan rekomendasi aksi hijau personal."
@@ -41,13 +41,13 @@
         <div class="nav-menu hide-mobile">
           <a href="index.html" class="nav-link active">Beranda</a>
           <a href="fitur.html" class="nav-link">Fitur</a>
-          <a href="about.html" class="nav-link">Tentang</a>
           <a href="konten.html" class="nav-link">Edukasi</a>
           <a href="lapor.html" class="nav-link">Lapor</a>
-          <a href="kontak.html" class="nav-link">Kontak</a>
+          <a href="kegiatan.html" class="nav-link">Kegiatan</a>
+          <a href="about.html" class="nav-link">Tentang</a>
         </div>
 
-        <a href="lapor.html" class="btn btn-primary hide-mobile">Mulai Sekarang</a>
+        <a href="index.html#mobility-sim" class="btn btn-primary hide-mobile">Mulai Sekarang</a>
 
         <button class="hamburger" aria-label="Menu">
           <span></span>
@@ -62,11 +62,11 @@
       <div class="mobile-nav-list">
         <a href="index.html" class="mobile-nav-link">Beranda</a>
         <a href="fitur.html" class="mobile-nav-link">Fitur</a>
-        <a href="about.html" class="mobile-nav-link">Tentang</a>
         <a href="konten.html" class="mobile-nav-link">Edukasi</a>
         <a href="lapor.html" class="mobile-nav-link">Lapor</a>
-        <a href="kontak.html" class="mobile-nav-link">Kontak</a>
-        <a href="lapor.html" class="btn btn-primary btn-full" style="margin-top: 20px">Mulai Sekarang</a>
+        <a href="kegiatan.html" class="mobile-nav-link">Kegiatan</a>
+        <a href="about.html" class="mobile-nav-link">Tentang</a>
+        <a href="index.html#mobility-sim" class="btn btn-primary btn-full" style="margin-top: 20px">Mulai Sekarang</a>
       </div>
     </div>
 
@@ -199,6 +199,24 @@
             <p class="widget-note">Akumulasi estimasi dari perubahan moda perjalanan.</p>
           </article>
 
+          <article class="city-widget card fade-up" style="animation-delay: 0.35s">
+            <div class="widget-head">
+              <h3>Skor Lingkungan Area</h3>
+              <i data-lucide="gauge"></i>
+            </div>
+            <div class="widget-value"><span id="area-score">--</span>/100</div>
+            <p id="area-score-note" class="widget-note">Menunggu data AQI dan laporan area.</p>
+          </article>
+
+          <article class="city-widget card action-map-widget fade-up" style="animation-delay: 0.4s">
+            <div class="widget-head">
+              <h3>Peta Aksi Komunitas</h3>
+              <i data-lucide="users"></i>
+            </div>
+            <p class="widget-note">Titik aksi solusi komunitas: tanam pohon, bersih sungai, dan drop point daur ulang.</p>
+            <div id="community-action-map" class="community-action-map" aria-label="Peta aksi komunitas"></div>
+          </article>
+
         </div>
       </div>
     </section>
@@ -304,31 +322,10 @@
 
               <div id="simulation-insight" class="main-insight"></div>
               <div id="population-insight" class="sub-insight"></div>
-              <div id="best-mode-card" class="best-mode-card hidden"></div>
               <details class="mode-details">
                 <summary>Lihat detail emisi per moda</summary>
                 <div id="mode-comparison" class="mode-comparison" aria-label="Perbandingan emisi antar moda"></div>
               </details>
-
-              <section class="history-block" aria-label="Riwayat simulasi">
-                <div class="history-head">
-                  <h4>Riwayat Simulasi</h4>
-                  <small>10 simulasi terakhir</small>
-                </div>
-                <div class="history-metrics">
-                  <div class="history-metric">
-                    <span>Hemat 7 Hari</span>
-                    <strong><span id="history-weekly-saved">0</span> kg</strong>
-                  </div>
-                  <div class="history-metric">
-                    <span>Total Simulasi</span>
-                    <strong id="history-total">0</strong>
-                  </div>
-                </div>
-                <ul id="history-list" class="history-list">
-                  <li class="history-empty">Belum ada riwayat simulasi.</li>
-                </ul>
-              </section>
 
               <div class="export-actions">
                 <button id="export-png-btn" type="button" class="btn btn-outline">Ekspor Ringkasan PNG</button>
@@ -408,6 +405,37 @@
       </div>
     </section>
 
+    <section class="section planner-section">
+      <div class="container planner-layout">
+        <article class="card planner-card fade-up">
+          <h3>Rencana Perjalanan Hijau Mingguan</h3>
+          <p class="widget-note">Set target hemat karbon mingguan, lalu pantau progresmu dari hasil simulasi.</p>
+          <div class="planner-controls">
+            <label for="weekly-target">Target Hemat per Minggu</label>
+            <select id="weekly-target">
+              <option value="5">5 kg CO2/minggu</option>
+              <option value="10" selected>10 kg CO2/minggu</option>
+              <option value="20">20 kg CO2/minggu</option>
+              <option value="30">30 kg CO2/minggu</option>
+            </select>
+          </div>
+          <div class="progress-wrap" role="progressbar" aria-label="Progress target mingguan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="weekly-progress" class="progress-bar"></div>
+          </div>
+          <p id="weekly-status" class="widget-note">Belum ada progres minggu ini.</p>
+          <ul id="weekly-plan-list" class="weekly-plan-list">
+            <li>Mulai simulasi untuk menghitung potensi hemat.</li>
+          </ul>
+        </article>
+
+        <article class="card leaderboard-card fade-up" style="animation-delay: 0.1s">
+          <h3>Leaderboard Komunitas</h3>
+          <p class="widget-note">Peringkat berdasarkan aksi dan estimasi hemat karbon.</p>
+          <ol id="leaderboard-list" class="leaderboard-list"></ol>
+        </article>
+      </div>
+    </section>
+
     <section class="section cta-zone">
       <div class="container card cta-card fade-up">
         <h2>Sudah Punya Insight? Saatnya Aksi Nyata.</h2>
@@ -423,7 +451,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <h3>🌿 Eco Hub</h3>
+            <h3>Eco Hub</h3>
             <p class="footer-tagline">
               Platform edukasi dan monitoring lingkungan untuk masa depan yang
               lebih baik.
@@ -438,7 +466,7 @@
               <li><a href="about.html">Tentang</a></li>
               <li><a href="konten.html">Edukasi</a></li>
               <li><a href="lapor.html">Lapor</a></li>
-              <li><a href="kontak.html">Kontak</a></li>
+              <li><a href="kegiatan.html">Kegiatan</a></li>
             </ul>
           </div>
 
@@ -456,14 +484,14 @@
             <div class="footer-heading">ITB-Stikom Bali</div>
             <ul>
               <li>Web Design Competition</li>
-              <li>Sub-tema: Lingkungan</li>
+              <li>Kategori: Lingkungan</li>
               <li>ITB-Stikom Bali</li>
             </ul>
           </div>
         </div>
 
         <div class="footer-bottom">
-          <p>&copy; 2026 Eco Hub. Dibuat untuk ITB-Stikom Bali oleh Tim Eco Hub.</p>
+          <p>&copy; 2026 Eco Hub. Dibuat untuk ITB-Stikom Bali oleh Idal.</p>
         </div>
       </div>
     </footer>
@@ -480,7 +508,7 @@
     </script>
     <script src="js/gamification.js"></script>
     <script>
-      if ((location.protocol === "http:" || location.protocol === "https:") && "serviceWorker" in navigator) {
+      if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("sw.js")
@@ -490,3 +518,6 @@
     </script>
   </body>
 </html>
+
+
+

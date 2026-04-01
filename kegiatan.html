@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Kegiatan Warga - Eco Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/pages/kegiatan.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="css/gamification.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container nav-container">
+        <a href="index.html" class="nav-brand">
+          <i data-lucide="leaf" color="var(--color-green-primary)"></i>
+          Eco Hub
+        </a>
+
+        <div class="nav-menu hide-mobile">
+          <a href="index.html" class="nav-link">Beranda</a>
+          <a href="fitur.html" class="nav-link">Fitur</a>
+          <a href="konten.html" class="nav-link">Edukasi</a>
+          <a href="lapor.html" class="nav-link">Lapor</a>
+          <a href="kegiatan.html" class="nav-link active">Kegiatan</a>
+          <a href="about.html" class="nav-link">Tentang</a>
+        </div>
+
+        <a href="index.html#mobility-sim" class="btn btn-primary hide-mobile">Mulai Sekarang</a>
+
+        <button class="hamburger" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="mobile-menu-overlay"></div>
+    <div class="mobile-menu">
+      <div class="mobile-nav-list">
+        <a href="index.html" class="mobile-nav-link">Beranda</a>
+        <a href="fitur.html" class="mobile-nav-link">Fitur</a>
+        <a href="konten.html" class="mobile-nav-link">Edukasi</a>
+        <a href="lapor.html" class="mobile-nav-link">Lapor</a>
+        <a href="kegiatan.html" class="mobile-nav-link">Kegiatan</a>
+        <a href="about.html" class="mobile-nav-link">Tentang</a>
+        <a href="index.html#mobility-sim" class="btn btn-primary btn-full" style="margin-top: 20px">Mulai Sekarang</a>
+      </div>
+    </div>
+
+    <header class="kegiatan-hero section fade-up">
+      <div class="container">
+        <div class="hero-head">
+          <div>
+            <h1>Daftar Kegiatan Warga</h1>
+            <p>Warga bisa membuat kegiatan lingkungan berdasarkan lokasi, lalu warga lain bisa langsung join.</p>
+          </div>
+          <button id="open-form-btn" class="btn btn-primary" type="button">
+            <i data-lucide="plus"></i>
+            Buat Kegiatan
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="section daftar-section">
+      <div class="container">
+        <article id="create-form-card" class="card form-card hidden fade-up">
+          <div class="form-head">
+            <div>
+              <h3>Buat Kegiatan Baru</h3>
+              <p class="form-note">Isi kapan kegiatan dilakukan, ngapain, dan di mana lokasinya.</p>
+            </div>
+            <button id="close-form-btn" class="btn btn-outline" type="button">Tutup Form</button>
+          </div>
+
+          <form id="kegiatan-form" class="kegiatan-form">
+            <div class="form-group">
+              <label for="activity-title">Judul Kegiatan</label>
+              <input id="activity-title" type="text" required placeholder="Contoh: Bersih Sungai Mingguan" />
+            </div>
+
+            <div class="form-group">
+              <label for="activity-datetime">Waktu Kegiatan</label>
+              <input id="activity-datetime" type="datetime-local" required />
+            </div>
+
+            <div class="form-group">
+              <label for="activity-what">Ngapain?</label>
+              <textarea id="activity-what" rows="3" required placeholder="Contoh: gotong royong bersih sampah dan sortir daur ulang"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Di mana? (Pilih di Peta)</label>
+              <div id="activity-map" class="activity-map" aria-label="Peta lokasi kegiatan"></div>
+              <p id="activity-location-display" class="map-location-display">Belum ada titik dipilih.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="activity-creator">Nama Penggagas</label>
+              <input id="activity-creator" type="text" placeholder="Nama kamu (opsional)" />
+            </div>
+
+            <button id="create-activity-btn" type="submit" class="btn btn-primary">Buat Kegiatan</button>
+            <p id="form-feedback" class="feedback-text" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <div id="activity-list" class="activity-list"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h3>Eco Hub</h3>
+            <p class="footer-tagline">Platform edukasi dan monitoring lingkungan untuk masa depan yang lebih baik.</p>
+          </div>
+
+          <div class="footer-links">
+            <div class="footer-heading">Navigasi</div>
+            <ul>
+              <li><a href="index.html">Beranda</a></li>
+              <li><a href="fitur.html">Fitur</a></li>
+              <li><a href="about.html">Tentang</a></li>
+              <li><a href="konten.html">Edukasi</a></li>
+              <li><a href="lapor.html">Lapor</a></li>
+              <li><a href="kegiatan.html">Kegiatan</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <div class="footer-heading">Topik</div>
+            <ul>
+              <li><a href="#">Eco Mobility</a></li>
+              <li><a href="#">Kualitas Udara</a></li>
+              <li><a href="#">Citizen Reporting</a></li>
+              <li><a href="#">Smart City</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <div class="footer-heading">ITB-Stikom Bali</div>
+            <ul>
+              <li>Web Design Competition</li>
+              <li>Kategori: Lingkungan</li>
+              <li>ITB-Stikom Bali</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2026 Eco Hub. Dibuat untuk ITB-Stikom Bali oleh Idal.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="js/kegiatan.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script src="js/gamification.js"></script>
+    <script>
+      if ((location.protocol ==="http:" || location.protocol ==="https:") &&"serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("sw.js").catch((err) => console.log("SW error", err));
+        });
+      }
+    </script>
+  </body>
+</html>
+

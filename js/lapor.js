@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Data Management ---
+  const DUMMY_MAP_MODE = window.ECO_HUB_MAP_CONFIG?.dummyOnly ?? true;
+  const INDONESIA_BOUNDS = [
+    [-11.2, 94.5],
+    [6.8, 141.5],
+  ];
   const STORAGE_KEY = "Eco Hub_reports";
   const ALLOWED_STATUS_CLASS = new Set([
     "status-diterima",
@@ -352,16 +357,102 @@ document.addEventListener("DOMContentLoaded", () => {
     const locationLoading = document.getElementById("location-loading");
     const LAST_GPS_KEY = "Eco Hub_lastKnownLocation";
 
-    // Auto-detect Jakarta roughly
-    const pickerMap = L.map("picker-map").setView([-6.2088, 106.8456], 11);
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution: "&copy; OpenStreetMap",
-        subdomains: "abcd",
-        maxZoom: 20,
-      },
-    ).addTo(pickerMap);
+    function paintDummyMapBase(map) {
+      if (!map) return;
+      const islands = [
+        [
+          [5.4, 95.1],
+          [3.0, 98.0],
+          [0.2, 100.8],
+          [-3.5, 103.4],
+          [-5.8, 105.4],
+          [-2.0, 102.3],
+          [3.0, 98.3],
+        ],
+        [
+          [-6.1, 105.0],
+          [-6.8, 108.1],
+          [-7.7, 112.9],
+          [-8.9, 118.1],
+          [-10.0, 124.6],
+          [-8.7, 120.3],
+          [-7.1, 111.5],
+        ],
+        [
+          [3.9, 108.0],
+          [2.5, 113.2],
+          [0.5, 117.7],
+          [-2.7, 117.1],
+          [-3.1, 114.6],
+          [-1.1, 109.5],
+        ],
+        [
+          [1.8, 119.1],
+          [2.3, 123.2],
+          [0.0, 124.2],
+          [-3.8, 122.3],
+          [-4.9, 120.8],
+          [-2.3, 120.2],
+        ],
+        [
+          [-1.6, 130.0],
+          [1.6, 133.8],
+          [-0.7, 138.2],
+          [-3.8, 141.1],
+          [-6.5, 136.5],
+          [-3.9, 131.2],
+        ],
+      ];
+
+      L.rectangle(
+        INDONESIA_BOUNDS,
+        { stroke: false, fillColor: "#eef3ea", fillOpacity: 0.96 },
+      ).addTo(map);
+
+      islands.forEach((island) => {
+        L.polygon(island, {
+          color: "#9fb59a",
+          weight: 1,
+          fillColor: "#d9e8d0",
+          fillOpacity: 0.92,
+        }).addTo(map);
+      });
+
+      [
+        [
+          [3.6, 98.7],
+          [-6.2, 106.8],
+          [-7.3, 112.7],
+          [-5.1, 119.4],
+        ],
+        [
+          [-6.2, 106.8],
+          [-1.2, 116.9],
+          [1.5, 124.8],
+        ],
+      ].forEach((path, idx) => {
+        L.polyline(path, {
+          color: idx === 0 ? "#8c968c" : "#a6aea6",
+          weight: 3,
+          opacity: 0.75,
+        }).addTo(map);
+      });
+    }
+
+    const pickerMap = L.map("picker-map").setView([-2.5, 118], 5);
+    if (!DUMMY_MAP_MODE) {
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+          attribution: "&copy; OpenStreetMap",
+          subdomains: "abcd",
+          maxZoom: 20,
+        },
+      ).addTo(pickerMap);
+    } else {
+      paintDummyMapBase(pickerMap);
+      pickerMap.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
+    }
 
     let pickerMarker = null;
     const reverseCache = new Map();
@@ -370,6 +461,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const cacheKey = `${lat.toFixed(5)},${lng.toFixed(5)}`;
       if (reverseCache.has(cacheKey)) {
         return reverseCache.get(cacheKey);
+      }
+
+      if (DUMMY_MAP_MODE) {
+        return `Sekitar (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
       }
 
       try {
@@ -555,16 +650,21 @@ document.addEventListener("DOMContentLoaded", () => {
   let mainMarkersGroup = null;
 
   if (mapContainer && window.L) {
-    mainMap = L.map("lapor-map").setView([-6.2088, 106.8456], 9);
+    mainMap = L.map("lapor-map").setView([-2.5, 118], 5);
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution: "&copy; OpenStreetMap",
-        subdomains: "abcd",
-        maxZoom: 20,
-      },
-    ).addTo(mainMap);
+    if (!DUMMY_MAP_MODE) {
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+          attribution: "&copy; OpenStreetMap",
+          subdomains: "abcd",
+          maxZoom: 20,
+        },
+      ).addTo(mainMap);
+    } else {
+      paintDummyMapBase(mainMap);
+      mainMap.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
+    }
 
     mainMarkersGroup = L.layerGroup().addTo(mainMap);
   }

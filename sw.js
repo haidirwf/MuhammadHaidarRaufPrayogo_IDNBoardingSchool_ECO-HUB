@@ -5,7 +5,7 @@ const ASSETS = [
   "/about.html",
   "/konten.html",
   "/lapor.html",
-  "/kontak.html",
+  "/kegiatan.html",
   "/artikel.html",
   "/css/main.css",
   "/css/components.css",
@@ -13,7 +13,7 @@ const ASSETS = [
   "/css/pages/about.css",
   "/css/pages/mobility.css",
   "/css/pages/lapor.css",
-  "/css/pages/kontak.css",
+  "/css/pages/kegiatan.css",
   "/css/pages/konten.css",
   "/css/gamification.css",
   "/js/main.js",
@@ -22,6 +22,7 @@ const ASSETS = [
   "/js/konten.js",
   "/js/mobility.js",
   "/js/lapor.js",
+  "/js/kegiatan.js",
   "/js/gamification.js",
 ];
 
