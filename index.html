@@ -198,6 +198,7 @@
             <div class="widget-value"><span id="dashboard-saved">0</span> kg</div>
             <p class="widget-note">Akumulasi estimasi dari perubahan moda perjalanan.</p>
           </article>
+
         </div>
       </div>
     </section>
@@ -275,11 +276,18 @@
                 <span id="result-tag" class="state-chip good">Potensi Hemat Tinggi</span>
               </div>
 
-              <div class="result-grid">
+              <div class="route-grid">
                 <div>
                   <div class="result-label">Jarak Rute</div>
                   <div class="result-number"><span id="route-distance">0</span> km</div>
                 </div>
+                <div>
+                  <div class="result-label">Estimasi Waktu</div>
+                  <div class="result-number"><span id="route-eta">0m</span></div>
+                </div>
+              </div>
+
+              <div class="result-grid">
                 <div>
                   <div class="result-label">Emisi Pilihanmu</div>
                   <div class="result-number"><span id="current-emission">0</span> kg/minggu</div>
@@ -296,10 +304,36 @@
 
               <div id="simulation-insight" class="main-insight"></div>
               <div id="population-insight" class="sub-insight"></div>
+              <div id="best-mode-card" class="best-mode-card hidden"></div>
               <details class="mode-details">
                 <summary>Lihat detail emisi per moda</summary>
                 <div id="mode-comparison" class="mode-comparison" aria-label="Perbandingan emisi antar moda"></div>
               </details>
+
+              <section class="history-block" aria-label="Riwayat simulasi">
+                <div class="history-head">
+                  <h4>Riwayat Simulasi</h4>
+                  <small>10 simulasi terakhir</small>
+                </div>
+                <div class="history-metrics">
+                  <div class="history-metric">
+                    <span>Hemat 7 Hari</span>
+                    <strong><span id="history-weekly-saved">0</span> kg</strong>
+                  </div>
+                  <div class="history-metric">
+                    <span>Total Simulasi</span>
+                    <strong id="history-total">0</strong>
+                  </div>
+                </div>
+                <ul id="history-list" class="history-list">
+                  <li class="history-empty">Belum ada riwayat simulasi.</li>
+                </ul>
+              </section>
+
+              <div class="export-actions">
+                <button id="export-png-btn" type="button" class="btn btn-outline">Ekspor Ringkasan PNG</button>
+                <button id="export-pdf-btn" type="button" class="btn btn-outline">Cetak PDF</button>
+              </div>
             </article>
           </div>
         </div>

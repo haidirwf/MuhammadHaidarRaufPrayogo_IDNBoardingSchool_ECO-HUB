@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const IMPACT_KEY = "Eco Hub_impact_tracker";
+  const HISTORY_KEY = "Eco Hub_mobility_history_v1";
   const REPORTS_KEY = "Eco Hub_reports";
   const AQI_CACHE_KEY = "Eco Hub_aqi_cache_v1";
   const GEO_CACHE_KEY = "Eco Hub_geo_cache_v1";
+  const ROUTE_CACHE_KEY = "Eco Hub_route_cache_v1";
   const AQI_TTL_MS = 10 * 60 * 1000;
   const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+  const ROUTE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
   const MOCK_MODE = localStorage.getItem("Eco Hub_mock_mode") === "1";
 
   // g CO2 per km per person (estimasi edukasi)
@@ -81,7 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const simulationInsight = document.getElementById("simulation-insight");
   const populationInsight = document.getElementById("population-insight");
   const modeComparison = document.getElementById("mode-comparison");
+  const modeDetails = document.querySelector(".mode-details");
   const resultTag = document.getElementById("result-tag");
+  const routeEtaEl = document.getElementById("route-eta");
+  const historyList = document.getElementById("history-list");
+  const historyWeeklySaved = document.getElementById("history-weekly-saved");
+  const historyTotal = document.getElementById("history-total");
 
   const dashboardAqi = document.getElementById("dashboard-aqi");
   const dashboardReports = document.getElementById("dashboard-reports");
@@ -122,7 +130,29 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const geocodeCache = new Map();
   const aqiCache = new Map();
+  const routeCache = new Map();
   let lastGeocodeAt = 0;
+
+  function setButtonLoading(button, loading, loadingText = "Memproses...") {
+    if (!button) return;
+
+    if (loading) {
+      if (!button.dataset.originalLabel) {
+        button.dataset.originalLabel = button.innerHTML;
+      }
+      button.disabled = true;
+      button.classList.add("is-loading");
+      button.innerHTML = `<span class="btn-inline-spinner" aria-hidden="true"></span><span>${loadingText}</span>`;
+      return;
+    }
+
+    button.classList.remove("is-loading");
+    const originalLabel = button.dataset.originalLabel;
+    if (originalLabel) {
+      button.innerHTML = originalLabel;
+    }
+    button.disabled = false;
+  }
 
   function safeParse(raw, fallback = {}) {
     if (!raw) return fallback;
@@ -137,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const now = Date.now();
     const storedAqi = safeParse(localStorage.getItem(AQI_CACHE_KEY), {});
     const storedGeo = safeParse(localStorage.getItem(GEO_CACHE_KEY), {});
+    const storedRoute = safeParse(localStorage.getItem(ROUTE_CACHE_KEY), {});
 
     Object.entries(storedAqi).forEach(([key, item]) => {
       if (item && typeof item.ts === "number" && now - item.ts <= AQI_TTL_MS) {
@@ -149,6 +180,67 @@ document.addEventListener("DOMContentLoaded", () => {
         geocodeCache.set(key, item.value);
       }
     });
+
+    Object.entries(storedRoute).forEach(([key, item]) => {
+      if (item && typeof item.ts === "number" && now - item.ts <= ROUTE_TTL_MS) {
+        routeCache.set(key, item);
+      }
+    });
+  }
+
+  function getHistory() {
+    const parsed = safeParse(localStorage.getItem(HISTORY_KEY), []);
+    return Array.isArray(parsed) ? parsed : [];
+  }
+
+  function saveHistory(history) {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  }
+
+  function compactLabel(label) {
+    const clean = String(label || "Titik").trim();
+    return clean.length > 34 ? `${clean.slice(0, 34)}...` : clean;
+  }
+
+  function renderHistory() {
+    const history = getHistory();
+    if (historyTotal) historyTotal.textContent = String(history.length);
+
+    const now = Date.now();
+    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+    const weeklySaved = history
+      .filter((item) => item && typeof item.ts === "number" && now - item.ts <= sevenDaysMs)
+      .reduce((sum, item) => sum + Number(item.savedKg || 0), 0);
+    if (historyWeeklySaved) historyWeeklySaved.textContent = weeklySaved.toFixed(2);
+
+    if (!historyList) return;
+    if (!history.length) {
+      historyList.innerHTML = '<li class="history-empty">Belum ada riwayat simulasi.</li>';
+      return;
+    }
+
+    historyList.innerHTML = history
+      .slice(0, 10)
+      .map((item) => {
+        const ts = new Date(item.ts || Date.now());
+        const when = ts.toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+        return `
+          <li class="history-item">
+            <div class="history-route">${compactLabel(item.fromLabel)} -> ${compactLabel(item.toLabel)}</div>
+            <div class="history-meta">${(item.distanceKm || 0).toFixed(2)} km | ${formatEta(item.etaMin || 0)} | ${item.modeLabel || "-"}</div>
+            <div class="history-meta">Hemat ${(item.savedKg || 0).toFixed(2)} kg/minggu | ${when}</div>
+          </li>
+        `;
+      })
+      .join("");
+  }
+
+  function pushSimulationHistory(entry) {
+    const history = getHistory();
+    history.unshift(entry);
+    const capped = history.slice(0, 10);
+    saveHistory(capped);
+    renderHistory();
   }
 
   function persistAqiCache() {
@@ -166,6 +258,164 @@ document.addEventListener("DOMContentLoaded", () => {
       obj[key] = { value, ts: now };
     });
     localStorage.setItem(GEO_CACHE_KEY, JSON.stringify(obj));
+  }
+
+  function persistRouteCache() {
+    const MAX_ROUTE_CACHE_ITEMS = 120;
+    while (routeCache.size > MAX_ROUTE_CACHE_ITEMS) {
+      const oldestKey = routeCache.keys().next().value;
+      if (!oldestKey) break;
+      routeCache.delete(oldestKey);
+    }
+
+    const obj = {};
+    routeCache.forEach((value, key) => {
+      obj[key] = value;
+    });
+    localStorage.setItem(ROUTE_CACHE_KEY, JSON.stringify(obj));
+  }
+
+  function routeCacheKey(from, to) {
+    return `${from.lat.toFixed(5)},${from.lng.toFixed(5)}|${to.lat.toFixed(5)},${to.lng.toFixed(5)}`;
+  }
+
+  async function fetchRealRoute(from, to) {
+    const key = routeCacheKey(from, to);
+    const cached = routeCache.get(key);
+    if (cached && typeof cached.ts === "number" && Date.now() - cached.ts <= ROUTE_TTL_MS) {
+      return cached.value;
+    }
+
+    if (MOCK_MODE) return null;
+
+    let timeout = null;
+    try {
+      const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson`;
+      const controller = new AbortController();
+      timeout = setTimeout(() => controller.abort(), 9000);
+      const res = await fetch(url, { signal: controller.signal });
+
+      const data = await res.json();
+      if (!data || data.code !== "Ok" || !Array.isArray(data.routes) || !data.routes[0]) {
+        return null;
+      }
+
+      const route = data.routes[0];
+      const geometry = Array.isArray(route.geometry?.coordinates)
+        ? route.geometry.coordinates.map((coord) => [coord[1], coord[0]])
+        : null;
+
+      const value = {
+        distanceKm: Number(route.distance || 0) / 1000,
+        durationMin: Number(route.duration || 0) / 60,
+        geometry,
+      };
+
+      routeCache.set(key, { value, ts: Date.now() });
+      persistRouteCache();
+      return value;
+    } catch (error) {
+      return null;
+    } finally {
+      if (timeout) clearTimeout(timeout);
+    }
+  }
+
+  function estimateEtaMinutes(distanceKm, mode, routeDurationMin = null) {
+    const speedByMode = {
+      walk: 4.5,
+      bike: 14,
+      bus: 24,
+      carpool: 30,
+      motor: 32,
+    };
+
+    if (typeof routeDurationMin === "number" && routeDurationMin > 0) {
+      if (mode === "motor") return Math.max(1, Math.round(routeDurationMin));
+      if (mode === "carpool") return Math.max(1, Math.round(routeDurationMin * 1.1));
+      if (mode === "bus") return Math.max(1, Math.round(routeDurationMin * 1.35));
+    }
+
+    const speed = speedByMode[mode] || 25;
+    return Math.max(1, Math.round((distanceKm / speed) * 60));
+  }
+
+  function formatEta(minutes) {
+    if (!Number.isFinite(minutes) || minutes <= 0) return "-";
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h <= 0) return `${m}m`;
+    if (m === 0) return `${h}j`;
+    return `${h}j ${m}m`;
+  }
+
+  function renderBestModeCard(distanceKm, tripsPerWeek, routeDurationMin, selectedMode) {
+    const card = document.getElementById("best-mode-card");
+    if (!card) return;
+
+    const ranked = Object.entries(MODE_FACTORS)
+      .map(([key, mode]) => {
+        const weeklyKm = distanceKm * 2 * tripsPerWeek;
+        const kg = (mode.factor * weeklyKm) / 1000;
+        const eta = estimateEtaMinutes(distanceKm, key, routeDurationMin);
+        return { key, label: mode.label, kg, eta };
+      })
+      .sort((a, b) => a.kg - b.kg);
+
+    const best = ranked[0];
+    const selected = ranked.find((item) => item.key === selectedMode) || best;
+    const delta = Math.max(0, selected.kg - best.kg);
+
+    card.innerHTML = `
+      <strong>Mode paling efisien: ${best.label}</strong><br/>
+      Emisi ${best.kg.toFixed(2)} kg/minggu, ETA ${formatEta(best.eta)}.
+      ${delta > 0 ? `Selisih hemat dari mode pilihanmu: ${delta.toFixed(2)} kg/minggu.` : "Mode pilihanmu sudah paling efisien untuk rute ini."}
+    `;
+    card.classList.remove("hidden");
+  }
+
+  function makeExportSummary() {
+    return [
+      `Jarak Rute: ${routeDistanceEl?.textContent || "0"} km`,
+      `Estimasi Waktu: ${routeEtaEl?.textContent || "-"}`,
+      `Emisi Pilihan: ${currentEmissionEl?.textContent || "0"} kg/minggu`,
+      `Emisi Saran: ${targetEmissionEl?.textContent || "0"} kg/minggu`,
+      `Penghematan: ${savedEmissionEl?.textContent || "0"} kg/minggu`,
+      `Waktu Ekspor: ${new Date().toLocaleString("id-ID")}`,
+    ];
+  }
+
+  function exportSummaryPng() {
+    const lines = makeExportSummary();
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 630;
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#f2f6ef";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#b8c9b4";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(52, 52, 1096, 526);
+
+    ctx.fillStyle = "#1f2a1f";
+    ctx.font = "700 44px Arial";
+    ctx.fillText("EcoSense - Ringkasan Simulasi", 84, 120);
+
+    ctx.fillStyle = "#2d5a27";
+    ctx.font = "700 30px Arial";
+    ctx.fillText("Smart Mobility Summary", 84, 180);
+
+    ctx.fillStyle = "#243024";
+    ctx.font = "500 30px Arial";
+    lines.forEach((line, idx) => {
+      ctx.fillText(line, 84, 245 + idx * 58);
+    });
+
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = `ecosense-summary-${Date.now()}.png`;
+    link.click();
   }
 
   function mountTileLayer(index) {
@@ -446,10 +696,19 @@ document.addEventListener("DOMContentLoaded", () => {
   function updatePointLabels() {
     if (fromPointLabel) fromPointLabel.textContent = formatPointLabel(mapState.from);
     if (toPointLabel) toPointLabel.textContent = formatPointLabel(mapState.to);
+    const ready = Boolean(mapState.from && mapState.to);
     if (simulateBtn) {
-      const ready = Boolean(mapState.from && mapState.to);
       simulateBtn.disabled = !ready;
       simulateBtn.title = ready ? "" : "Pilih titik asal dan tujuan di peta terlebih dahulu";
+    }
+  }
+
+  function syncModeDetailsByViewport() {
+    if (!modeDetails) return;
+    if (window.innerWidth >= 769) {
+      modeDetails.setAttribute("open", "open");
+    } else {
+      modeDetails.removeAttribute("open");
     }
   }
 
@@ -537,17 +796,54 @@ document.addEventListener("DOMContentLoaded", () => {
     return "carpool";
   }
 
-  function renderModeComparison(distanceKm, tripsPerWeek) {
+  async function resolveAndDrawRoute(from, to, modeForEta = "motor") {
+    const realRoute = await fetchRealRoute(from, to);
+    const distanceKm =
+      realRoute && Number.isFinite(realRoute.distanceKm) && realRoute.distanceKm > 0
+        ? realRoute.distanceKm
+        : haversineDistanceKm(from, to);
+    const etaMinutes = estimateEtaMinutes(distanceKm, modeForEta, realRoute?.durationMin);
+
+    if (mapState.routeLine && mapState.map) {
+      mapState.map.removeLayer(mapState.routeLine);
+      mapState.routeLine = null;
+    }
+
+    if (mapState.map && window.L) {
+      const latlngs =
+        realRoute && Array.isArray(realRoute.geometry) && realRoute.geometry.length > 1
+          ? realRoute.geometry
+          : [
+              [from.lat, from.lng],
+              [to.lat, to.lng],
+            ];
+
+      mapState.routeLine = window.L.polyline(latlngs, {
+        color: "#2d5a27",
+        weight: 4,
+        opacity: 0.9,
+      }).addTo(mapState.map);
+
+      mapState.map.fitBounds(mapState.routeLine.getBounds(), { padding: [40, 40] });
+    }
+
+    return { realRoute, distanceKm, etaMinutes };
+  }
+
+  function renderModeComparison(distanceKm, tripsPerWeek, routeDurationMin = null) {
     if (!modeComparison) return;
 
     const roundTripKm = distanceKm * 2;
     const emissionByMode = Object.entries(MODE_FACTORS).map(([key, mode]) => {
       const kg = (mode.factor * roundTripKm * tripsPerWeek) / 1000;
-      return { key, ...mode, kg };
+      const etaMin = estimateEtaMinutes(distanceKm, key, routeDurationMin);
+      return { key, ...mode, kg, etaMin };
     });
 
-    const maxKg = Math.max(...emissionByMode.map((item) => item.kg), 1);
-    modeComparison.innerHTML = emissionByMode
+    const rows = emissionByMode.sort((a, b) => a.kg - b.kg);
+    const maxKg = Math.max(...rows.map((item) => item.kg), 1);
+
+    modeComparison.innerHTML = rows
       .map((item) => {
         const width = Math.max(2, (item.kg / maxKg) * 100);
 
@@ -557,7 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="mode-bar-wrap">
               <div class="mode-bar" data-width="${width.toFixed(1)}" style="background:${item.color}"></div>
             </div>
-            <div class="mode-value">${item.kg.toFixed(2)} kg</div>
+            <div class="mode-value">${item.kg.toFixed(2)} kg <span>${formatEta(item.etaMin)}</span></div>
           </div>
         `;
       })
@@ -624,12 +920,14 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Mode Rendah Emisi Prioritas Hari Ini",
         desc: "AQI sedang tinggi. Gunakan bus/carpool atau kurangi perjalanan yang tidak mendesak.",
         chip: "Air Quality Alert",
+        action: "Kurangi perjalanan jam 11.00-14.00",
       });
     } else {
       items.push({
         title: "Waktu Tepat untuk Mobilitas Hijau",
         desc: "Kualitas udara cukup baik. Jadwalkan jalan kaki atau bersepeda untuk perjalanan pendek.",
         chip: "Good Air Window",
+        action: "Pilih rute hijau untuk jarak <2 km",
       });
     }
 
@@ -638,12 +936,14 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Pertahankan Mode Alternatif",
         desc: `Pilihanmu berpotensi menekan emisi ${context.savedKg.toFixed(2)} kg CO2 per minggu. Konsisten 1 bulan akan berdampak besar.`,
         chip: "Behavior Shift",
+        action: "Ulangi mode ini minimal 3 hari ke depan",
       });
     } else {
       items.push({
         title: "Optimalkan Mode Perjalanan",
         desc: "Coba mode dengan emisi lebih rendah untuk rute ini agar penghematan karbon lebih terasa.",
         chip: "Optimization",
+        action: "Coba bus/carpool untuk perjalanan berikutnya",
       });
     }
 
@@ -652,6 +952,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Aktivasi Aksi Komunitas Lokal",
         desc: `Area ${context.priorityArea.area} sedang padat laporan. Ajak komunitas lokal untuk aksi akhir pekan ini.`,
         chip: "Community Action",
+        action: "Buat agenda aksi komunitas akhir pekan",
       });
     }
 
@@ -662,6 +963,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <article class="card recommendation-card fade-up visible">
             <h3>${item.title}</h3>
             <p>${item.desc}</p>
+            <p class="recommendation-action">Aksi cepat: <strong>${item.action}</strong></p>
             <span class="recommendation-chip">${item.chip}</span>
           </article>
         `,
@@ -854,6 +1156,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   });
 
+  document.getElementById("export-png-btn")?.addEventListener("click", () => {
+    exportSummaryPng();
+  });
+
+  document.getElementById("export-pdf-btn")?.addEventListener("click", () => {
+    window.print();
+  });
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -864,63 +1174,90 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const distanceKm = haversineDistanceKm(mapState.from, mapState.to);
+    const from = mapState.from;
+    const to = mapState.to;
     const selectedMode = modeSelect?.value || "motor";
     const tripsPerWeek = Math.max(1, Number(tripsWeek?.value || 10));
 
-    const simResult = simulateMobility({
-      distanceKm,
-      tripsPerWeek,
-      selectedMode,
-    });
+    setButtonLoading(simulateBtn, true, "Menghitung...");
+    try {
+      const { realRoute, distanceKm, etaMinutes } = await resolveAndDrawRoute(
+        from,
+        to,
+        selectedMode,
+      );
 
-    emptyCard?.classList.add("hidden");
-    resultCard?.classList.remove("hidden");
-    resultCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const simResult = simulateMobility({
+        distanceKm,
+        tripsPerWeek,
+        selectedMode,
+      });
 
-    if (routeDistanceEl) routeDistanceEl.textContent = distanceKm.toFixed(2);
-    if (currentEmissionEl) currentEmissionEl.textContent = simResult.selectedKg.toFixed(2);
-    if (targetEmissionEl) targetEmissionEl.textContent = simResult.suggestedKg.toFixed(2);
-    if (savedEmissionEl) savedEmissionEl.textContent = simResult.savedKg.toFixed(2);
+      emptyCard?.classList.add("hidden");
+      resultCard?.classList.remove("hidden");
+      resultCard?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    const tag = getSimulationTag(simResult.savedKg);
-    if (resultTag) {
-      resultTag.textContent = tag.text;
-      resultTag.className = `state-chip ${tag.className}`;
-    }
+      if (routeDistanceEl) routeDistanceEl.textContent = distanceKm.toFixed(2);
+      if (routeEtaEl) routeEtaEl.textContent = formatEta(etaMinutes);
+      if (currentEmissionEl) currentEmissionEl.textContent = simResult.selectedKg.toFixed(2);
+      if (targetEmissionEl) targetEmissionEl.textContent = simResult.suggestedKg.toFixed(2);
+      if (savedEmissionEl) savedEmissionEl.textContent = simResult.savedKg.toFixed(2);
 
-    const selectedLabel = MODE_FACTORS[selectedMode].label;
-    const suggestedLabel = MODE_FACTORS[simResult.recommendedMode].label;
-
-    if (simulationInsight) {
-      simulationInsight.textContent =
-        `Jarak rute sekitar ${distanceKm.toFixed(2)} km. Jika memakai ${selectedLabel} sebanyak ${tripsPerWeek}x pulang-pergi/minggu, emisi diperkirakan ${simResult.selectedKg.toFixed(2)} kg CO2.`;
-    }
-
-    if (populationInsight) {
-      if (simResult.savedKg > 0) {
-        populationInsight.textContent =
-          `Untuk rute ini, mode yang lebih efisien adalah ${suggestedLabel}. Potensi hematmu ${simResult.savedKg.toFixed(2)} kg CO2 per minggu (${simResult.people100SavedKg.toFixed(0)} kg jika dilakukan 100 orang).`;
-      } else {
-        populationInsight.textContent =
-          `Mode ${selectedLabel} sudah termasuk efisien untuk rute ini. Pertahankan kebiasaan ini agar dampaknya konsisten.`;
+      const tag = getSimulationTag(simResult.savedKg);
+      if (resultTag) {
+        resultTag.textContent = tag.text;
+        resultTag.className = `state-chip ${tag.className}`;
       }
+
+      const selectedLabel = MODE_FACTORS[selectedMode].label;
+      const suggestedLabel = MODE_FACTORS[simResult.recommendedMode].label;
+
+      if (simulationInsight) {
+        const routeBasis = realRoute ? "rute jalan nyata" : "estimasi garis lurus";
+        simulationInsight.textContent =
+          `Jarak ${routeBasis} sekitar ${distanceKm.toFixed(2)} km dengan estimasi waktu ${formatEta(etaMinutes)}. Jika memakai ${selectedLabel} sebanyak ${tripsPerWeek}x pulang-pergi/minggu, emisi diperkirakan ${simResult.selectedKg.toFixed(2)} kg CO2.`;
+      }
+
+      if (populationInsight) {
+        if (simResult.savedKg > 0) {
+          populationInsight.textContent =
+            `Untuk rute ini, mode yang lebih efisien adalah ${suggestedLabel}. Potensi hematmu ${simResult.savedKg.toFixed(2)} kg CO2 per minggu (${simResult.people100SavedKg.toFixed(0)} kg jika dilakukan 100 orang).`;
+        } else {
+          populationInsight.textContent =
+            `Mode ${selectedLabel} sudah termasuk efisien untuk rute ini. Pertahankan kebiasaan ini agar dampaknya konsisten.`;
+        }
+      }
+
+      renderModeComparison(distanceKm, tripsPerWeek, realRoute?.durationMin || null);
+      renderBestModeCard(distanceKm, tripsPerWeek, realRoute?.durationMin || null, selectedMode);
+      pushImpactFromSimulation(simResult.savedKg);
+      pushSimulationHistory({
+        ts: Date.now(),
+        fromLabel: from.label || `${from.lat.toFixed(4)}, ${from.lng.toFixed(4)}`,
+        toLabel: to.label || `${to.lat.toFixed(4)}, ${to.lng.toFixed(4)}`,
+        distanceKm,
+        etaMin: etaMinutes,
+        modeLabel: MODE_FACTORS[selectedMode].label,
+        savedKg: simResult.savedKg,
+      });
+
+      const nearestCity = nearestCityFromPoints(mapState.from, mapState.to);
+      if (dashboardCitySelect) dashboardCitySelect.value = nearestCity;
+
+      const context = await updateDashboardByCity(nearestCity, simResult);
+      renderRecommendations({ ...context, savedKg: simResult.savedKg });
+    } finally {
+      setButtonLoading(simulateBtn, false);
     }
-
-    renderModeComparison(distanceKm, tripsPerWeek);
-    pushImpactFromSimulation(simResult.savedKg);
-
-    const nearestCity = nearestCityFromPoints(mapState.from, mapState.to);
-    if (dashboardCitySelect) dashboardCitySelect.value = nearestCity;
-
-    const context = await updateDashboardByCity(nearestCity, simResult);
-    renderRecommendations({ ...context, savedKg: simResult.savedKg });
   });
 
   (async function init() {
     hydrateCaches();
     initMap();
+    syncModeDetailsByViewport();
+    window.addEventListener("resize", syncModeDetailsByViewport);
     updatePointLabels();
+    renderHistory();
     setEmptyMessage("Klik peta untuk memilih asal dan tujuan perjalanan.");
 
     updateImpactUI();
@@ -935,3 +1272,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 });
+
