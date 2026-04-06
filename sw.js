@@ -1,10 +1,9 @@
-const CACHE_NAME = "Eco Hub-v3";
+const CACHE_NAME = "Eco Hub-v4";
 const ASSETS = [
   "/",
   "/index.html",
   "/about.html",
   "/konten.html",
-  "/lapor.html",
   "/kegiatan.html",
   "/artikel.html",
   "/css/main.css",
@@ -12,7 +11,6 @@ const ASSETS = [
   "/css/pages/home.css",
   "/css/pages/about.css",
   "/css/pages/mobility.css",
-  "/css/pages/lapor.css",
   "/css/pages/kegiatan.css",
   "/css/pages/konten.css",
   "/js/main.js",
@@ -20,7 +18,6 @@ const ASSETS = [
   "/js/carbon.js",
   "/js/konten.js",
   "/js/mobility.js",
-  "/js/lapor.js",
   "/js/kegiatan.js",
 ];
 

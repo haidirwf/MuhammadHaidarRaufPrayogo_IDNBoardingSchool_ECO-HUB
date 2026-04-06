@@ -2,7 +2,6 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const REPORTS_KEY = "Eco Hub_reports";
   const COMMUNITY_ACTIVITIES_KEY = "Eco Hub_community_activities_v1";
   const AQI_CACHE_KEY = "Eco Hub_aqi_cache_v1";
   const GEO_CACHE_KEY = "Eco Hub_geo_cache_v1";
@@ -95,13 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const routeEtaEl = document.getElementById("route-eta");
 
   const dashboardAqi = document.getElementById("dashboard-aqi");
-  const dashboardReports = document.getElementById("dashboard-reports");
-  const priorityArea = document.getElementById("priority-area");
-  const priorityCount = document.getElementById("priority-count");
   const dashboardActions = document.getElementById("dashboard-actions");
   const dashboardSaved = document.getElementById("dashboard-saved");
   const aqiBadge = document.getElementById("aqi-badge");
-  const aqiCityNote = document.getElementById("aqi-city-note");
   const aqiDesc = document.getElementById("aqi-desc");
   const dashboardPm25 = document.getElementById("dashboard-pm25");
   const dashboardPm10 = document.getElementById("dashboard-pm10");
@@ -533,18 +528,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-    function getReports() {
-    const raw = localStorage.getItem(REPORTS_KEY);
-    if (!raw) return [];
-
-    try {
-      return JSON.parse(raw);
-    } catch (error) {
-      console.warn("Reports invalid", error);
-      return [];
-    }
-  }
-
   function animateNumber(el, toValue, suffix = "") {
     if (!el) return;
     const current = Number(el.dataset.current || 0);
@@ -641,35 +624,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function updateReportsDashboard() {
-    const reports = getReports();
-    if (dashboardReports) dashboardReports.textContent = String(reports.length);
-
-    if (reports.length === 0) {
-      if (priorityArea) priorityArea.textContent = "Belum ada";
-      if (priorityCount) priorityCount.textContent = "Belum ada data lokasi padat laporan.";
-      return { area: "Belum ada", count: 0 };
-    }
-
-    const areaCount = {};
-    reports.forEach((report) => {
-      const area = (report.location || "Unknown").split(",")[0].trim();
-      areaCount[area] = (areaCount[area] || 0) + 1;
-    });
-
-    const sorted = Object.entries(areaCount).sort((a, b) => b[1] - a[1]);
-    const [topArea, count] = sorted[0];
-
-    if (priorityArea) priorityArea.textContent = topArea;
-    if (priorityCount) priorityCount.textContent = `${count} laporan aktif di area ini. Prioritaskan aksi komunitas.`;
-
-    return { area: topArea, count };
-  }
-
-  function updateAreaScore(aqi, reportCount) {
+  function updateAreaScore(aqi) {
     const normalizedAqi = Math.max(0, Math.min(220, Number(aqi || 0)));
-    const reportPenalty = Math.min(30, Number(reportCount || 0) * 3);
-    const score = Math.max(15, Math.round(100 - normalizedAqi * 0.35 - reportPenalty));
+    const score = Math.max(15, Math.round(100 - normalizedAqi * 0.42));
 
     if (areaScoreEl) areaScoreEl.textContent = String(score);
 
@@ -695,7 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (score >= 75) {
         areaScoreNote.textContent = "Area relatif sehat. Pertahankan transportasi rendah emisi.";
       } else if (score >= 55) {
-        areaScoreNote.textContent = "Area butuh perbaikan bertahap melalui mobilitas hijau dan aksi warga.";
+        areaScoreNote.textContent = "Area butuh perbaikan bertahap melalui mobilitas hijau harian.";
       } else {
         areaScoreNote.textContent = "Area prioritas tinggi. Perlu intervensi cepat dan pengurangan emisi harian.";
       }
@@ -783,7 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => map.invalidateSize(), 120);
   }
 
-  function renderCommunityActionMap(cityName, topArea) {
+  function renderCommunityActionMap(cityName) {
     if (!communityActionMapEl) return;
     if (!window.L) {
       const actions = getCommunityActivitiesForMap(cityName);
@@ -1194,12 +1151,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    if (context.priorityArea.count >= 3) {
+    if (context.communityActionCount >= 3) {
       items.push({
         title: "Aktivasi Aksi Komunitas Lokal",
-        desc: `Area ${context.priorityArea.area} sedang padat laporan. Ajak komunitas lokal untuk aksi akhir pekan ini.`,
+        desc: "Ada banyak agenda komunitas di sekitarmu. Pilih satu kegiatan akhir pekan untuk dampak langsung.",
         chip: "Community Action",
-        action: "Buat agenda aksi komunitas akhir pekan",
+        action: "Gabung 1 kegiatan komunitas minggu ini",
       });
     }
 
@@ -1238,7 +1195,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const descriptor = getAqiDescriptor(air.aqi);
 
     if (dashboardAqi) dashboardAqi.textContent = String(Math.round(air.aqi));
-    if (aqiCityNote) aqiCityNote.textContent = city;
     if (aqiBadge) {
       aqiBadge.textContent = descriptor.label;
       aqiBadge.className = `state-chip ${descriptor.className}`;
@@ -1249,15 +1205,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardHumidity) dashboardHumidity.textContent = `${air.humidity}%`;
 
     updateHeroInsight(simResult, air.aqi);
-    const topArea = updateReportsDashboard();
-    updateAreaScore(air.aqi, topArea.count);
-    renderCommunityActionMap(city, topArea);
+    updateAreaScore(air.aqi);
+    const communityActions = getCommunityActivitiesForMap(city);
+    renderCommunityActionMap(city);
 
     return {
       city,
       aqi: air.aqi,
       air,
-      priorityArea: topArea,
+      communityActionCount: communityActions.length,
     };
   }
 
@@ -1467,7 +1423,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const context = await updateDashboardByCity(initialCity);
 
     if (heroSaving) heroSaving.textContent = "Belum ada";
-    if (context.priorityArea.count === 0 && heroInsightText) {
+    if (context.communityActionCount === 0 && heroInsightText) {
       heroInsightText.textContent =
         "Mulai dengan klik peta untuk menentukan asal dan tujuan. Kami hitungkan emisinya secara otomatis.";
     }

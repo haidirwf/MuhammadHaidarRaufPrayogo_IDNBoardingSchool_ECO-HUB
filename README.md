@@ -6,12 +6,12 @@
 - Judul website: EcoSense - Smart Mobility & City Insights
 
 ## Deskripsi Singkat Website
-EcoSense adalah website edukasi dan simulasi lingkungan yang membantu pengguna memahami dampak emisi perjalanan harian, memantau kualitas udara kota, serta melaporkan isu lingkungan secara interaktif berbasis peta.
+EcoSense adalah website edukasi dan simulasi lingkungan yang membantu pengguna memahami dampak emisi perjalanan harian, memantau kualitas udara kota, serta menggerakkan aksi hijau komunitas berbasis peta.
 
 Fitur utama:
 - Smart Mobility Simulation (pilih titik asal dan tujuan di peta, lalu hitung emisi)
-- Dashboard kondisi kota (AQI, PM2.5, PM10, kelembapan, dan ringkasan laporan)
-- Form pelaporan isu lingkungan berbasis lokasi
+- Dashboard kondisi kota (AQI, PM2.5, PM10, kelembapan, dan insight area)
+- Peta aksi komunitas dan agenda kegiatan lingkungan berbasis lokasi
 - Rekomendasi aksi hijau dan pelacakan dampak pengguna
 - Konten edukasi lingkungan
 

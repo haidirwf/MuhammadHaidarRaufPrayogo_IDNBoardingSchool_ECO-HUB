@@ -259,7 +259,6 @@ p {
   .dashboard-grid,
   .mobility-layout,
   .tracker-layout,
-  .lapor-layout,
   .kontak-layout,
   .content-layout,
   .mission-grid,
@@ -324,7 +323,7 @@ p {
   display: none !important;
 }
 
-/* Unified Banner (fitur/about/konten/kontak/lapor) */
+/* Unified Banner (fitur/about/konten/kontak) */
 header.unified-banner {
   background:
     radial-gradient(circle at 90% 10%, rgba(45, 90, 39, 0.14), transparent 32%),

@@ -307,14 +307,6 @@
   font-size: 14px;
 }
 
-.aqi-city-note {
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-top: -2px;
-  margin-bottom: 4px;
-}
-
 .air-detail-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -912,15 +904,6 @@
     transform: rotate(225deg);
   }
 
-  .dashboard-grid .dashboard-more-toggle p {
-    margin: 10px 0 0;
-    font-size: 12px;
-    color: var(--color-text-muted);
-    line-height: 1.45;
-    padding-top: 8px;
-    border-top: 1px solid rgba(132, 151, 125, 0.3);
-  }
-
   .dashboard-grid .mobile-more-item {
     display: none;
   }
@@ -929,21 +912,12 @@
     display: block;
   }
 
-  .dashboard-grid .dashboard-card-reports {
+  .dashboard-grid .dashboard-card-saved {
     order: 5;
   }
 
-  .dashboard-grid .dashboard-card-saved {
-    order: 6;
-  }
-
-  .dashboard-grid .dashboard-card-priority {
-    order: 7;
-    grid-column: 1 / -1;
-  }
-
   .dashboard-grid .action-map-widget {
-    order: 8;
+    order: 6;
   }
 
   .dashboard-grid .widget-head {
