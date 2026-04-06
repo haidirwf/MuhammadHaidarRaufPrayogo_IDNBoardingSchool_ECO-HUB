@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dashboardCitySelect = document.getElementById("dashboard-city-select");
   const refreshDashboardBtn = document.getElementById("refresh-dashboard-aqi");
+  const dashboardMoreToggle = document.getElementById("dashboard-more-mobile");
 
   const resultCard = document.getElementById("mobility-result");
   const emptyCard = document.getElementById("mobility-empty");
@@ -1366,6 +1367,14 @@ document.addEventListener("DOMContentLoaded", () => {
       refreshDashboardBtn.disabled = false;
       refreshDashboardBtn.classList.remove("is-loading");
     }, 300);
+  });
+
+  dashboardMoreToggle?.addEventListener("toggle", () => {
+    if (!dashboardMoreToggle.open) return;
+    if (!communityMapState.map) return;
+    setTimeout(() => {
+      communityMapState.map.invalidateSize();
+    }, 180);
   });
 
   document.getElementById("export-png-btn")?.addEventListener("click", () => {
