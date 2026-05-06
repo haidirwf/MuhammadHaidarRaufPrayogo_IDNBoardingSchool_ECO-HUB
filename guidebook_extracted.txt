@@ -1,0 +1,384 @@
+G U I D E B O O K
+W E B  D E S I G N
+G U I D E B O O K
+W E B  D E S I G N
+
+0 1
+ F A S T T E K N O  2 0 2 6  a d a l a h  k o m p e t i s i  y a n g  d i s e l e n g g a r a k a n  o l e h  I T B
+S T I K O M  B a l i .  P e r l o m b a a n  D e s a i n  W e b  i n i  d i t u j u k a n  b a g i  s i s w a  d a n
+s i s w i  S e k o l a h  M e n e n g a h  A t a s  ( S M A / K )  d i  s e l u r u h  I n d o n e s i a  u n t u k
+m e n g e k s p r e s i k a n  k r e a t i v i t a s  m e r e k a  d a l a m  p e m b u a t a n  d e s a i n
+w e b s i t e  s t a t i s ,  a t a u  y a n g  s e r i n g  d i s e b u t  s e b a g a i  f r o n t - e n d  d a r i
+s e b u a h  w e b s i t e .  P e s e r t a  d i h a r a p k a n  u n t u k  m e n c i p t a k a n  t a m p i l a n
+w e b s i t e  s t a t i s  y a n g  m e n a r i k  d a n  s e s u a i  d e n g a n  t e m a  y a n g  t e l a h
+d i t e n t u k a n .  T u j u a n  u t a m a n y a  a d a l a h  u n t u k  m e n g g u g a h  s e m a n g a t
+b e l a j a r  d a n  s e m a n g a t  k o m p e t i s i  d i  k a l a n g a n  g e n e r a s i  m u d a .  M e l a l u i
+k o m p e t i s i  i n i ,  d i h a r a p k a n  p a r a  p e s e r t a  d a p a t  m e r a s a k a n
+p e n g a l a m a n  m e n d a l a m  d a l a m  m e n g g a l i  i l m u  d a n  m e n u n j u k k a n
+b a k a t  m e r e k a  d a l a m  d u n i a  d e s a i n  w e b .  M a r i  b e r s a m a - s a m a  k i t a
+d o r o n g  s e m a n g a t  d a n  k r e a t i v i t a s  g e n e r a s i  m u d a  d a l a m
+b e r k o m p e t i s i  m e l a l u i  p l a t f o r m  y a n g  m e n g i n s p i r a s i  i n i .   
+D E S K R I P S I
+D E S K R I P S I
+
+0 2
+ P a d a  l o m b a  D e s a i n  W e b  k a l i  i n i  m e n g a m b i l  t e m a  “ I n n o v a t i v e  W e b
+D e s i g n  F o r  T h e  D i g i t a l  F u t u r e ” .  L o m b a  i n i  d i t u j u k a n  b a g i  s i s w a - s i s w i
+S M A / S M K  s e d e r a j a t .  T e m a  i n i  m e n g a j a k  p e s e r t a  u n t u k  m e r a n c a n g
+d e s a i n  w e b  y a n g  t i d a k  h a n y a  m e n a r i k  s e c a r a  v i s u a l ,  t e t a p i  j u g a
+f u n g s i o n a l ,  a d a p t i f ,  d a n  m a m p u  m e m b e r i k a n  p e n g a l a m a n  y a n g
+o p t i m a l .  D i  t e n g a h  p e r k e m b a n g a n  t e k n o l o g i  d i g i t a l  y a n g  s e m a k i n
+p e s a t ,  w e b s i t e  m e n j a d i  m e d i a  p e n t i n g  d a l a m  m e n y a m p a i k a n
+i n f o r m a s i ,  l a y a n a n ,  s e r t a  b e r b a g a i  i n o v a s i  k e p a d a  m a s y a r a k a t .  O l e h
+k a r e n a  i t u ,  s e b u a h  w e b s i t e  d i  m a s a  d e p a n  d i h a r a p k a n  m a m p u
+m e n y e s u a i k a n  d i r i  d e n g a n  b e r b a g a i  p e r a n g k a t  p i n t a r ,  b e r s i f a t
+r e s p o n s i f ,  s e r t a  t e t a p  m e m p e r h a t i k a n  a s p e k  a k s e s i b i l i t a s  a g a r  d a p a t
+d i g u n a k a n  o l e h  b e r b a g a i  k a l a n g a n  m a s y a r a k a t .  M e l a l u i  t e m a  i n i ,
+p e s e r t a  d i h a r a p k a n  m a m p u  m e n g h a d i r k a n  i d e - i d e  k r e a t i f  d a l a m
+m e r a n c a n g  a n t a r m u k a  w e b  y a n g  m o d e r n ,  i n t e r a k t i f ,  r i n g a n ,  d a n
+m u d a h  d i n a v i g a s i .  D e s a i n  y a n g  d i b u a t  j u g a  d i h a r a p k a n  d a p a t
+m e n c e r m i n k a n  p e m a n f a a t a n  t e k n o l o g i  d i g i t a l  s e c a r a  i n o v a t i f  s e r t a
+r e l e v a n  d e n g a n  k e b u t u h a n  m a s y a r a k a t  d i  e r a  d i g i t a l .  S e l a i n  i t u ,
+m e l a l u i  p r o s e s  p e r a n c a n g a n  t e r s e b u t  p e s e r t a  d i h a r a p k a n  d a p a t
+m e n g e m b a n g k a n  k e t e r a m p i l a n  t e k n i s  s e r t a  k e m a m p u a n  b e r p i k i r
+s o l u t i f  d a l a m  m e n c i p t a k a n  d e s a i n  w e b  y a n g  i n k l u s i f ,  e f i s i e n ,  d a n
+b e r o r i e n t a s i  p a d a  m a s a  d e p a n .  
+T E M A
+T E M A
+
+0 3
+P e n d a f t a r a n  :  2 2  M a r e t  -  2 3  A p r i l  
+P e n d a f t a r a n  b a t c h  2  :  2 3  A p r i l  -  1 3  M e i
+T e c h n i c a l  M e e t i n g  :  9  M e i  -  1 0  M e i
+P e n g u m p u l a n  K a r y a  :  1 0  M e i  -  1 3  M e i
+P e n i l a i a n  P e n y i s i h a n  :  1 8  M e i  
+P e n g u m u m a n  F i n a l i s  :  1 9  M e i
+P e l a k s a n a a n  L o m b a  :  2 2  M e i
+N o m i n a s i  p e s e r t a  y a n g  m e n d a p a t k a n  j u a r a  a k a n
+d i u m u m k a n  p a d a  a k u n  i n s t a g r a m  F a s t t e k n o  :  2 5  M e i
+P e n y e r a h a n  H a d i a h  J u a r a  d i  G e d u n g  D h a r m a  A l a y a  :
+2 6  M e i
+T I M E L I N E  K E G I A T A N
+T I M E L I N E  K E G I A T A N
+
+0 4
+1 . P e s e r t a  a d a l a h  s i s w a / i  S M A / K  S e d e r a j a t .  
+2 . L o m b a  b e r s i f a t  o n l i n e .  
+3 . P e s e r t a  m e r u p a k a n  i n d i v i d u  a k t i f  d a r i  i n s t a n s i  s e l u r u h  I n d o n e s i a
+d a n  d a p a t  d i b u k t i k a n  d e n g a n  k a r t u  p e l a j a r .  
+4 . S e t i a p  i n s t a n s i  d i i z i n k a n  u n t u k  m e n d a f t a r  l e b i h  d a r i  s a t u
+p e r w a k i l a n .  
+5 . P e s e r t a  d i p e r b o l e h k a n  u n t u k  m e n d a f t a r  p a d a  c a b a n g  l o m b a
+l a i n n y a  y a n g  t i d a k  b e r s a m a a n  ( d a p a t  d i n y a t a k a n  p a d a  p a n i t i a ) .  
+6 . P e s e r t a  w a j i b  m e l a k u k a n  p e n d a f t a r a n  s e s u a i  d e n g a n  p r o s e d u r
+d a n  b a t a s  w a k t u  y a n g  t e l a h  d i t e n t u k a n  o l e h  p a n i t i a .  
+7 . K a r y a  y a n g  d i l o m b a k a n  m e r u p a k a n  k a r y a  a s l i  p e s e r t a  d a n  b e l u m
+p e r n a h  d i i k u t s e r t a k a n  a t a u  d i p u b l i k a s i k a n  u n t u k  k e p e r l u a n  y a n g
+b e r s i f a t  k o m e r s i l  s e r t a  h a r u s  b e b a s  d a r i  s e t i a p  k o n t r a k  a t a u  i k a t a n
+l a i n .  
+8 . K a r y a  y a n g  d i k u m p u l k a n  t i d a k  b o l e h  m e n g a n d u n g  u n s u r  S A R A ,
+p o r n o g r a f i ,  k e k e r a s a n ,  a t a u  h a l - h a l  y a n g  m e l a n g g a r  h u k u m .  
+9 . H a s i l  k a r y a  d a p a t  d i k u m p u l k a n  m e l a l u i  w e b s i t e  F A S T T E K N O  I T B
+S T I K O M  B a l i  d e n g a n  a l a m a t  w e b s i t e  s e b a g a i  b e r i k u t :  f a s t t e k n o -
+i t b s t i k o m b a l i . c o m .
+1 0 . A p a b i l a  d i k e m u d i a n  h a r i  t e r d a p a t  g u g a t a n  h a k  c i p t a ,  p i h a k  p a n i t i a
+t i d a k  b e r t a n g g u n g  j a w a b  a t a s  h a l  t e r s e b u t ,  p a n i t i a  a k a n  b e r a s u m s i
+b a h w a  s e l u r u h  d e s a i n  y a n g  d i i k u t s e r t a k a n  m e r u p a k a n  o r i s i n i l
+p e s e r t a .  
+1 1 . S e t i a p  p e s e r t a  w a j i b  m e n g i k u t i  s e r a n g k a i a n  T e c h n i c a l  M e e t i n g
+( T M )  y a n g  t e l a h  d i s u s u n  p a n i t i a  g u n a  p e m b e k a l a n  p e s e r t a  l o m b a
+m e l a l u i  l i n k  z o o m  y a n g  a k a n  d i i n f o r m a s i k a n  p a n i t i a .  
+1 2 . S e t i a p  p e s e r t a  y a n g  s u d a h  t e r d a f t a r  t i d a k  d a p a t  d i g a n t i k a n  o l e h
+o r a n g  l a i n .  
+1 3 . P e s e r t a  y a n g  t i d a k  m e m e n u h i  s y a r a t  d a n  k e t e n t u a n  l o m b a  a k a n
+d i a n g g a p  g u g u r .  
+K E T E N T U A N  U M U M
+K E T E N T U A N  U M U M
+
+0 5
+1 4 . P e s e r t a  s e t u j u  u n t u k  m e m b e r i k a n  h a k  k e p a d a  p e l a k s a n a a n
+k e g i a t a n  u n t u k  m e m p r o d u k s i  d a n  m e n g g u n a k a n  k a r y a  t e r s e b u t
+p a d a  m e d i a  p u b l i k a s i  k e g i a t a n .  
+1 5 . P e s e r t a  w a j i b  m e n g i k u t i  s e l u r u h  p e r a t u r a n  y a n g  d i b e r i k a n  p a n i t i a .  
+1 6 . G e l a r  j u a r a  y a n g  d i p e r o l e h  d a p a t  d i c a b u t  o l e h  p i h a k  p a n i t i a
+F A S T T E K N O  2 0 2 6  a p a b i l a  d i k e t a h u i  m e l a k u k a n  k e c u r a n g a n
+a t a u p u n  p e l a n g g a r a n  t e r h a d a p  a t u r a n  d a l a m  k o m p e t i s i
+F A S T T E K N O  2 0 2 6 .  
+1 7 . K e p u t u s a n  j u r i  d a n  p a n i t i a  F A S T T E K N O  2 0 2 6  b e r s i f a t  f i n a l  d a n
+t i d a k  d a p a t  d i g a n g g u  g u g a t .  
+1 8 . D e n g a n  m e n g i k u t i  l o m b a  i n i ,  p e s e r t a  d i a n g g a p  t e l a h  m e m a h a m i
+d a n  m e n y e t u j u i  s e l u r u h  k e t e n t u a n  y a n g  b e r l a k u  d a l a m  g u i d e b o o k .  
+1 9 . G u i d e b o o k  d a p a t  b e r u b a h  s e w a k t u - w a k t u .  A p a b i l a  t e r d a p a t
+p e r u b a h a n ,  a k a n  d i u m u m k a n  m e l a l u i  m e d i a  s o s i a l  F A S T T E K N O
+2 0 2 6 .  
+2 0 . P e s e r t a  w a j i b  m e n g i k u t i  o f f i c i a l  a k u n  i n s t a g r a m
+@ f a s t t e k n o _ i t b s t i k o m b a l i  
+
+0 6
+1 . P e s e r t a  d i w a j i b k a n  u n t u k  m e m i l i k i  a k u n  w e b s i t e  f a s t t e k n o -
+i t b s t i k o m b a l i . c o m .  A p a b i l a  b e l u m ,  p e s e r t a  d a p a t  m e n d a f t a r
+t e r l e b i h  d a h u l u .  D e n g a n  c a r a  s e b a g a i  b e r i k u t  :  
+a . M e n g u n j u n g i  w e b s i t e  f a s t t e k n o - i t b s t i k o m b a l i . c o m
+b . M e n e k a n  t o m b o l  d a f t a r  l a l u  m e n g i s i  d a t a  s e s u a i  d e n g a n
+d a t a  y a n g  d i m i n t a .  
+c . P a d a  h a l a m a n  P e s e r t a  L o m b a ,  p e s e r t a  d i m i n t a  u n t u k
+m e m i l i h  c a b a n g  l o m b a  d a n  m e m a s u k a n  d a t a  s e s u a i  d e n g a n
+i n s t r u k s i  y a n g  a d a .  
+d . U n t u k  p e m b a y a r a n  t e r d a p a t  p a d a  p o i n  p e m b a y a r a n .   
+2 . M e l a k u k a n  p e m b a y a r a n  d e n g a n  k e t e n t u a n  s e b a g a i  b e r i k u t  :  
+a . P e m b a y a r a n  d i b a y a r k a n  s e j u m l a h  d e n g a n  l o m b a  y a n g
+d i i k u t i .  M o h o n  u n t u k  m e m b a y a r  s e s u a i  j u m l a h  y a n g  t e r t e r a
+p a d a  w e b s i t e  p e n d a f t a r a n  l o m b a .  ( H a r a p  m e n y i m p a n  b u k t i
+p e m b a y a r a n ) .  
+b . P e m b a y a r a n  d a p a t  d i l a k u k a n  m e l a l u i  w e b s i t e  r e s m i
+f a s t t e k n o - i t b s t i k o m b a l i . c o m  d e n g a n  p i l i h a n  m e t o d e  o n l i n e
+m e l a l u i  b e r b a g a i  p e m b a y a r a n  d i g i t a l  y a n g  t e r s e d i a  a t a u
+s e c a r a  o f f l i n e  d e n g a n  m e n a n d a t a n g a n i  s t a n d  r e s m i
+F A S T T E K N O  2 0 2 6  u n t u k  p e m b a y a r a n  l a n g s u n g .  
+3 . P i h a k  p a n i t i a  a k a n  m e n g k o n f i r m a s i  b a h w a  k e l e n g k a p a n  b e r k a s
+d a n  p e m b a y a r a n  t e l a h  t e r p e n u h i .  D e n g a n  i n i ,  p e s e r t a
+d i n y a t a k a n  r e s m i  m e n g i k u t i  k o m p e t i s i  F A S T T E K N O  2 0 2 6 .  
+P E N D A F T A R A N
+P E N D A F T A R A N
+
+0 7
+1 . Ide dan karya yang dikompetisikan merupakan karya hasil kreasi
+sepenuhnya milik peserta.  
+2 . Karya yang  diikutsertakan di FASTTEKNO 2026 adalah karya yang
+belum pernah menjadi juara dalam kompetisi manapun.  
+3 . K arya tindak mengandung unsur SARA (Suku, Agama, Ras, dan Antar
+Golongan), pornografi, maupun kekerasan.  
+4 . Peserta dibebaskan menggunakan  
+a . Text Editor  
+b . Aplikasi Editing  
+c . Browser  
+d . Bahasa pembangun w ebsite apa saja (minimal HTML dan CSS)  
+5 . K arya yang dibuat adalah murni buatan peserta.  
+6 . Berikut adalah beberapa library yang diizinkan untuk digunakan:  
+a . Filtrify.  
+b . Mixitup-3.  
+c . star-rating-svg.  
+d . Fancybox v3.  
+e . Flickity v2.2.  
+f . fontawesome-free-5.15.1-web.  
+g . jquery-3.5.1.  
+h . O nepage-scroll v1.3.1.  
+i . Parallax.js v3.1.0.  
+j . Smooth-scroll v15.1.3.  
+k . Type.js v1.0.  
+l . Google Font
+7 . Peserta dilarang untuk menggunakan framework atau library lain
+selain yang diizinkan panitia ataupun template orang lain.  
+8 . Peserta diperbolehkan untuk men ggunakan AI, tetapi hanya sebatas
+pada asset visual.
+K E T E N T U A N  L O M B A
+K E T E N T U A N  L O M B A
+
+0 8
+1 . P e r l o m b a a n  t e r d i r i  d a r i  2  b a b a k  y a i t u  b a b a k  p e n y i s i h a n  d a n  b a b a k  f i n a l .
+2 . H a s i l  K a r y a  d i k u m p u l  d a l a m  B e n t u k :  
+a . L i n k  G o o g l e  D r i v e  
+i . P e s e r t a  m e n g u m p u l k a n  U R L  f o l d e r  G o o g l e  D r i v e  y a n g  t e l a h  d i a t u r
+a k s e s n y a  m e n j a d i  “ S i a p a  s a j a  y a n g  m e m i l i k i  l i n k  ( A n y o n e  w i t h  t h e  l i n k ) ”
+c a n  v i e w  /  b i s a  m e l i h a t .
+i i . S e l u r u h  F i l e  p r o y e k  d i k o m p r e s i  d a l a m  s a t u  f i l e  . z i p  a t a u  d i s u s u n  d a l a m
+s t r u k t u r  f o l d e r  y a n g  r a p i .  
+i i i . F o r m a t  p e n a m a a n  f o l d e r  d r i v e  s e p e r t i  b e r i k u t :  N o m o r  P e s e r t a _ N a m a
+P e s e r t a _ K a t e g o r i  L o m b a   
+                   C o n t o h :  0 1 _ P u t r i  A y u _ D e s i g n  W e b  
+b . L i n k  G i t H u b  
+i . P e s e r t a  m e n g u m p u l k a n  U R L  r e p o s i t o r y  G i t H u b  p u b l i k .  W a j i b
+m e n y e r t a k a n  f i l e R E A D M E . m d  y a n g  m e n j e l a s k a n  c a r a  m e n j a l a n k a n
+p r o y e k .  
+i i . N i l a i  T a m b a h a n :  P e s e r t a  d i s a r a n k a n  m e n g a k t i f k a n  G i t H u b  p a g e s  a g a r
+j u r i  d a p a t  m e l i h a t  t a m p i l a n  l i v e  w e b s i t e  s e c a r a  l a n g s u n g .  
+i i i . F o r m a t  P e n a m a a n  G i t H u b  R e p o :  N o m o r  P e s e r t a _ N a m a  P e s e r t a _ K a t e g o r i
+L o m b a  
+                   C o n t o h :  0 1 _ P u t r i  A y u _ D e s i g n  W e b  
+3 . P a d a  b a b a k  p e n y i s i h a n ,  p e s e r t a  m e n g u m p u l k a n  l i n k  d r i v e  d a n  G i t h u b  m e l a l u i
+w e b s i t e  d a n  p a d a  h a l a m a n  D a s h b o a r d  P e s e r t a .  f a s t t e k n o - i t b s t i k o m b a l i . c o m
+4 . D r i v e / G i t H u b  y a n g  d i u n g g a h  b e r i s i k a n :  
+a . S o u r c e  c o d e  w e b s i t e  
+b . F o l d e r  a s e t  ( i m g ,  f o n t ,  d a n  l a i n - l a i n )  
+c . F o l d e r  L i b r a r y  
+d . B e r k a s  y a n g  b e r i s i k a n  s c r e e n s h o o t  t i a p  h a l a m a n  w e b s i t e  y a n g  d i b u a t .  
+5 . L i m a  ( 5 )  p e s e r t a  t e r b a i k  y a n g  t e r p i l i h  a k a n  m a j u  k e  b a b a k  f i n a l  d a n
+m e m p r e s e n t a s i k a n  h a s i l  k a r y a  y a n g  t e l a h  d i b u a t  d i h a d a p a n  j u r i  m e l a l u i  Z o o m
+m e e t i n g  c o n f e r e n c e .  
+6 . P e s e r t a  m a s u k  1 5  m e n i t  l e b i h  a w a l  p a d a  Z o o m  m e e t i n g  c o n f e r e n c e ,  s a a t  b a b a k
+F i n a l ,  s e r t a  m e n g e n a k a n  s e r a g a m  m a s i n g - m a s i n g  i n s t a n s i .  
+7 . U n t u k  k e t e n t u a n  l e b i h  l a n j u t  m e n g e n a i  t a h a p  f i n a l  a k a n  d i j e l a s k a n  s a a t  T M
+F i n a l i s .  
+8 . P e m e n a n g  d i t e n t u k a n  d e n g a n  t o t a l  p e r o l e h a n  n i l a i  p a d a  P e n i l a i a n  K a r y a
+w e b s i t e  ( 5 0 % )  d a n  P e n i l a i a n  p r e s e n t a s i  w e b s i t e  ( 5 0 % )  s a a t  b a b a k  F i n a l .
+A L U R  P E R L O M B A A N
+A L U R  P E R L O M B A A N
+
+0 9
+P e n g u m p u l a n  k a r y a  d i l a k u k a n  s e c a r a  o n l i n e  m e l a l u i  w e b s i t e  r e s m i  F A S T T E K N O .  P e s e r t a
+d i w a j i b k a n  m e n g u n g g a h  h a s i l  k a r y a  w e b s i t e  y a n g  t e l a h  d i b u a t  d e n g a n  m e n g i k u t i  s a l a h
+s a t u  m e t o d e  p e n g u m p u l a n  y a n g  t e l a h  d i s e d i a k a n  o l e h  p a n i t i a .  M e t o d e  p e n g u m p u l a n
+k a r y a  t e r d i r i  d a r i :  
+P e n g u m p u l a n  m e l a l u i  G o o g l e  D r i v e  ( D i r e k o m e n d a s i k a n )  
+P e n g u m p u l a n  m e l a l u i  G i t H u b  R e p o s i t o r y  ( O p s i o n a l )  
+P e s e r t a  h a n y a  p e r l u  m e n g g u n a k a n  s a l a h  s a t u  m e t o d e  p e n g u m p u l a n  k a r y a  y a n g
+t e r s e d i a .  
+1 . P e n g u m p u l a n  K a r y a  M e l a l u i  G o o g l e  D r i v e  
+M e t o d e  p e n g u m p u l a n  k a r y a  m e l a l u i  G o o g l e  D r i v e  d i r e k o m e n d a s i k a n  b a g i  p e s e r t a  y a n g
+b e l u m  t e r b i a s a  m e n g g u n a k a n  p l a t f o r m  v e r s i o n  c o n t r o l  s e p e r t i  G i t H u b .  L a n g k a h -
+l a n g k a h  p e n g u m p u l a n  k a r y a  a d a l a h  s e b a g a i  b e r i k u t  :  
+P e s e r t a  m a s u k  k e  a k u n  G o o g l e  D r i v e  m a s i n g - m a s i n g .  
+P e s e r t a  m e m b u a t  f o l d e r  b a r u  d e n g a n  f o r m a t  p e n a m a a n  s e b a g a i  b e r i k u t :
+N a m a P e s e r t a _ A s a l S e k o l a h _ J u d u l W e b s i t e  
+C o n t o h  :
+P u t r i A y u _ S M A N 1 D e n p a s a r _ E d u P r o f i l e  
+2 . P e s e r t a  m e n g u n g g a h  s e l u r u h  f i l e  k a r y a  w e b s i t e  k e  d a l a m  f o l d e r  t e r s e b u t ,  y a n g
+m e l i p u t i :  
+S o u r c e  c o d e  w e b s i t e  ( H T M L ,  C S S ,  J a v a S c r i p t ,  a t a u  t e k n o l o g i  l a i n  y a n g  d i g u n a k a n )  
+F o l d e r  a s s e t  s e p e r t i  g a m b a r ,  i k o n ,  f o n t ,  d a n  f i l e  p e n d u k u n g  l a i n n y a  
+F i l e  D o k u m e n t a s i . p d f  y a n g  b e r i s i  d o k u m e n t a s i  S c r e e n s h o t  w e b s i t e  y a n g  d i b u a t
+3 . S e t e l a h  s e l u r u h  f i l e  b e r h a s i l  d i u n g g a h ,  p e s e r t a  w a j i b  m e n g a t u r  a k s e s  f o l d e r  G o o g l e
+D r i v e  d e n g a n  l a n g k a h  b e r i k u t :  
+K l i k  m e n u  S h a r e  /  B a g i k a n  
+U b a h  p e n g a t u r a n  a k s e s  m e n j a d i  A n y o n e  w i t h  t h e  l i n k  /  S i a p a  s a j a  y a n g  m e m i l i k i  l i n k  
+P i l i h  i z i n  a k s e s  V i e w e r  /  L i h a t  S a j a
+4 . P e s e r t a  m e n y a l i n  l i n k  f o l d e r  G o o g l e  D r i v e  t e r s e b u t .  
+5 . L i n k  f o l d e r  k e m u d i a n  d i k i r i m k a n  m e l a l u i  w e b s i t e  r e s m i  F A S T T E K N O  p a d a  h a l a m a n
+p e n g u m p u l a n  k a r y a .  
+T A H A P  P E N G U M P U L A N  
+K A R Y A
+T A H A P  P E N G U M P U L A N  
+K A R Y A
+
+1 0
+2 . P e n g u m p u l a n  K a r y a  M e l a l u i  G i t H u b  ( O p s i o n a l )  
+P e s e r t a  y a n g  t e l a h  t e r b i a s a  m e n g g u n a k a n  p l a t f o r m  G i t H u b  d a p a t  m e n g u m p u l k a n
+k a r y a  m e l a l u i  r e p o s i t o r y  G i t H u b .  
+L a n g k a h - l a n g k a h  p e n g u m p u l a n  k a r y a  m e l a l u i  G i t H u b  a d a l a h  s e b a g a i  b e r i k u t :  
+1 . P e s e r t a  m e m b u a t  r e p o s i t o r y  b a r u  p a d a  a k u n  G i t H u b  m a s i n g - m a s i n g  d e n g a n
+f o r m a t  p e n a m a a n :  
+       N a m a P e s e r t a _ A s a l S e k o l a h _ J u d u l W e b s i t e  C o n t o h  :  
+       P u t r i A y u _ S M A N 1 D e n p a s a r _ E d u P r o f i l e  
+2 . P e s e r t a  m e n g u n g g a h  s e l u r u h  s o u r c e  c o d e  w e b s i t e  k e  d a l a m  r e p o s i t o r y
+t e r s e b u t .  
+3 . P e s e r t a  d i s a r a n k a n  u n t u k  m e n y e r t a k a n  f i l e  R E A D M E . m d  y a n g  b e r i s i  i n f o r m a s i
+s e b a g a i  b e r i k u t :  
+N a m a  p e s e r t a  a t a u  t i m  
+A s a l  s e k o l a h  a t a u  i n s t i t u s i  
+J u d u l  w e b s i t e  
+D e s k r i p s i  s i n g k a t  m e n g e n a i  w e b s i t e  y a n g  d i b u a t  
+T e k n o l o g i  y a n g  d i g u n a k a n  d a l a m  p e n g e m b a n g a n  w e b s i t e  
+4 . P e s e r t a  w a j i b  m e m a s t i k a n  b a h w a  r e p o s i t o r y  y a n g  d i b u a t  b e r s i f a t  P u b l i c ,
+s e h i n g g a  d a p a t  d i a k s e s  o l e h  p a n i t i a  d a n  d e w a n  j u r i .  
+5 . P e s e r t a  m e n y a l i n  l i n k  r e p o s i t o r y  G i t H u b  y a n g  t e l a h  d i b u a t .  
+6 . L i n k  r e p o s i t o r y  k e m u d i a n  d i k i r i m k a n  m e l a l u i  w e b s i t e  r e s m i  F A S T T E K N O  p a d a
+h a l a m a n  p e n g u m p u l a n  k a r y a .  
+
+1 1
+P e s e r t a  w a j i b  m e m a s t i k a n  b a h w a :  
+L i n k  k a r y a  y a n g  d i k u m p u l k a n  d a p a t  d i a k s e s  o l e h  p a n i t i a  
+S e l u r u h  f i l e  k a r y a  t e l a h  d i u n g g a h  s e c a r a  l e n g k a p  
+P e n a m a a n  f o l d e r  a t a u  r e p o s i t o r y  s e s u a i  d e n g a n  k e t e n t u a n  y a n g  t e l a h  d i t e t a p k a n  
+A p a b i l a  l i n k  k a r y a  t i d a k  d a p a t  d i a k s e s  o l e h  p a n i t i a  a t a u  f i l e  y a n g  d i k u m p u l k a n  t i d a k
+l e n g k a p ,  m a k a  p a n i t i a  t i d a k  b e r t a n g g u n g  j a w a b  a t a s  k e g a g a l a n  p r o s e s  p e n i l a i a n  k a r y a
+t e r s e b u t .
+K E T E N T U A N  P E N G U M P U L A N  
+K A R Y A
+K E T E N T U A N  P E N G U M P U L A N  
+K A R Y A
+
+1 2
+K R I T E R I A  P E N I L A I A N
+K R I T E R I A  P E N I L A I A N
+P E N Y I S I H A N
+P E N Y I S I H A N
+1 . V i s u a l  &   I n t e r f a c e  D e s i g n  3 0 %
+( M e n i l a i  k u a l i t a s  t a m p i l a n  v i s u a l  w e b s i t e  s e c a r a
+k e s e l u r u h a n )  
+E s t e t i k a  d e s a i n  d a n  k e s e l a r a s a n  t a m p i l a n
+P e n g g u n a a n  p a l e t  w a r n a  y a n g  h a r m o n i
+P e m i l i h a n  t i p o g r a f i  y a n g  m u d a h  d i b a c a
+T a t a  l e t a k  ( l a y o u t )  y a n g  r a p i  d a n  k o n s i s t e n  
+K o n s i s t e n s i  e l e m e n  d e s a i n  p a d a  s e t i a p  h a l a m a n  w e b s i t e  
+2 . K r e a t i v i t a s  &  I n o v a s i  3 0 %  
+( M e n i l a i  t i n g k a t  k r e a t i v i t a s  p e s e r t a  d a l a m  m e n g e m b a n g k a n
+k o n s e p  w e b s i t e . )
+O r i g i n a l i t a s  i d e  d a n  k o n s e p  d e s a i n  
+I n o v a s i  d a l a m  p e n y a j i a n  i n f o r m a s i  
+P e n g g u n a a n  a n i m a s i  a t a u  e l e m e n  i n t e r a k t i f  
+P e m a n f a a t a n  l i b r a r y  y a n g  d i p e r b o l e h k a n  
+P e m a n f a a t a n  t e k n o l o g i  t a m b a h a n  s e p e r t i  A I  u n t u k
+p e m b u a t a n  a s s e t  v i s u a l
+3 .  U s e r  E x p e r i e n c e  ( U X )  &  A c c e s s i b i l i t y  2 0 %
+M e n i l a i  k e n y a m a n a n  p e n g g u n a  s a a t  m e n g a k s e s  w e b s i t e .  
+R e s p o n s i v i t a s  w e b s i t e  p a d a  b e r b a g a i  p e r a n g k a t  ( d e s k t o p
+m a u p u n  m o b i l e )  
+K e m u d a h a n  n a v i g a s i  m e n u  
+K e j e l a s a n  s t r u k t u r  i n f o r m a s i  
+K e m u d a h a n  p e n g g u n a a n  b a g i  p e n g g u n a  a w a m
+K e t e r b a c a a n  k o n t e n  p a d a  h a l a m a n  w e b s i t e  
+ 
+
+1 3
+4 . K e s e s u a i n  d e n g a n  T e m a  2 0 %
+M e n i l a i  k e s e s u a i a n  w e b s i t e  d e n g a n  t e m a  y a n g  t e l a h
+d i t e n t u k a n  o l e h  p a n i t i a .  
+R e l e v a n s i  k o n t e n  d e n g a n  t e m a  l o m b a  
+K e d a l a m a n  p e n y a j i a n  i n f o r m a s i  
+K o n s i s t e n s i  a n t a r a  d e s a i n  v i s u a l  d a n  i s i  k o n t e n  
+K e m a m p u a n  w e b s i t e  d a l a m  m e r e p r e s e n t a s i k a n  t e m a
+s e c a r a  m e n a r i k  d a n  i n f o r m a t i f  
+
+1 4
+1 . P e n y a m p a i a n  &  K o m u n i k a s i   2 5 %
+P e n i l a i a n  m e n c a k u p  k e j e l a s a n  d a l a m  m e n y a m p a i k a n  i d e ,  t i n g k a t
+k e p e r c a y a a n  d i r i  p e s e r t a ,  k e m a m p u a n  m e m b a n g u n  a l u r
+p r e s e n t a s i  y a n g  r u n t u t ,  s e r t a  k e m a m p u a n  m e n a r i k  p e r h a t i a n
+j u r i .  S e l a i n  i t u ,  p e n g g u n a a n  m e d i a  p r e s e n t a s i  s e p e r t i  s l i d e  j u g a
+d i n i l a i  d a r i  s e g i  e f e k t i v i t a s  d a l a m  m e n d u k u n g  p e n y a m p a i a n
+m a t e r i .
+2 . P e n g u a s a a n  T e k n i s  &  D e m o  3 5 %  
+A s p e k  i n i  m e n i l a i  k e m a m p u a n  p e s e r t a  d a l a m
+m e n d e m o n s t r a s i k a n  p r o d u k  s e c a r a  l a n g s u n g ,  t e r m a s u k
+k e l a n c a r a n  s a a t  d e m o  b e r l a n g s u n g ,  s t a b i l i t a s  s i s t e m ,  s e r t a
+p e m a h a m a n  t e k n i s  t e r h a d a p  f i t u r  y a n g  d i t a m p i l k a n .  P e s e r t a  j u g a
+d i h a r a p k a n  m a m p u  m e n j e l a s k a n  a l u r  s i s t e m ,  t e k n o l o g i  y a n g
+d i g u n a k a n ,  s e r t a  m a m p u  m e n j a w a b  p e r t a n y a a n  t e k n i s  d a r i  j u r i
+d e n g a n  b a i k .  
+3 . I n o v a s i  &  S o l u s i  2 5 %
+P e n i l a i a n  d i f o k u s k a n  p a d a  t i n g k a t  k e b a r u a n  i d e  y a n g  d i u s u n g
+s e r t a  k e m a m p u a n  p e s e r t a  d a l a m  m e n g i d e n t i f i k a s i  d a n
+m e n y e l e s a i k a n  p e r m a s a l a h a n  y a n g  r e l e v a n  d e n g a n  t e m a .
+P e s e r t a  d i h a r a p k a n  m a m p u  m e n j e l a s k a n  l a t a r  b e l a k a n g  m a s a l a h ,
+a l a s a n  p e m i l i h a n  s o l u s i ,  s e r t a  b a g a i m a n a  s o l u s i  t e r s e b u t  b e k e r j a
+s e c a r a  e f e k t i f .  
+4 . K e t e p a t a n  W a k t u  1 5 %
+A s p e k  i n i  m e n i l a i  k e m a m p u a n  p e s e r t a  d a l a m  m e n g e l o l a  w a k t u
+p r e s e n t a s i ,  t e r m a s u k  p e m b a g i a n  w a k t u  a n t a r a  p e n y a m p a i a n
+m a t e r i  d a n  d e m o n s t r a s i ,  s e r t a  k e p a t u h a n  t e r h a d a p  d u r a s i  y a n g
+t e l a h  d i t e n t u k a n .   D u r a s i  p r e s e n t a s i  y a n g  d i t e n t u k a n  a d a l a h  1 5
+m e n i t .
+F I N A L
+F I N A L
+
+1 5
+J u a r a  1  :  U a n g  t u n a i ,  P i a g a m  d a n  P i a l a  
+J u a r a  2  :  U a n g  t u n a i ,  P i a g a m  d a n  P i a l a  
+J u a r a  3  :  U a n g  t u n a i ,  P i a g a m  d a n  P i a l a  
+J U A R A
+J U A R A
+
+1 6
+K e t u a  P a n i t i a
+( P r a m u d y a )  
++ 6 2  8 7 8 - 5 1 0 5 - 0 7 8 1
+W a k i l  K e t u a  P a n i t i a
+( C o k  D e )
++ 6 2 .  8 6 9 - 2 4 6 2 - 8 0 0 5
+K o o r  S i e  L o m b a
+( P a n d e )  
++ 6 2  8 8 7 - 0 3 0 4 - 4 3 7 0
+S o c i a l  M e d i a
+@ f a s t t e k n o _ i t b s t i k o m b a l i  ( I n s t a g r a m )
+C O N T A C T  P E R S O N
+C O N T A C T  P E R S O N

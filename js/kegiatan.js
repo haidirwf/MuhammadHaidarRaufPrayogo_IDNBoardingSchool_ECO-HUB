@@ -6,6 +6,40 @@ document.addEventListener("DOMContentLoaded", () => {
     [-11.2, 94.5],
     [6.8, 141.5],
   ];
+  const PROVINCE_ZONES = [
+    { name: "Aceh", minLat: 3.2, maxLat: 5.9, minLng: 95.0, maxLng: 98.3 },
+    { name: "Sumatera Utara", minLat: 1.0, maxLat: 3.7, minLng: 97.0, maxLng: 100.6 },
+    { name: "Sumatera Barat", minLat: -1.6, maxLat: 1.3, minLng: 98.5, maxLng: 101.3 },
+    { name: "Riau", minLat: -0.8, maxLat: 1.7, minLng: 100.4, maxLng: 103.1 },
+    { name: "DKI Jakarta", minLat: -6.35, maxLat: -6.05, minLng: 106.7, maxLng: 107.0 },
+    { name: "Jawa Barat", minLat: -7.8, maxLat: -5.85, minLng: 106.0, maxLng: 108.9 },
+    { name: "Jawa Tengah", minLat: -8.1, maxLat: -6.2, minLng: 108.5, maxLng: 111.8 },
+    { name: "DI Yogyakarta", minLat: -8.05, maxLat: -7.55, minLng: 110.15, maxLng: 110.7 },
+    { name: "Jawa Timur", minLat: -8.95, maxLat: -6.75, minLng: 111.0, maxLng: 114.6 },
+    { name: "Bali", minLat: -8.9, maxLat: -8.0, minLng: 114.4, maxLng: 115.8 },
+    { name: "Nusa Tenggara Barat", minLat: -9.4, maxLat: -8.0, minLng: 115.7, maxLng: 119.2 },
+    { name: "Nusa Tenggara Timur", minLat: -10.9, maxLat: -8.0, minLng: 118.6, maxLng: 125.5 },
+    { name: "Kalimantan Barat", minLat: -3.3, maxLat: 2.3, minLng: 108.0, maxLng: 114.2 },
+    { name: "Kalimantan Tengah", minLat: -3.9, maxLat: 0.8, minLng: 111.0, maxLng: 115.8 },
+    { name: "Kalimantan Timur", minLat: -2.8, maxLat: 2.6, minLng: 115.7, maxLng: 119.6 },
+    { name: "Sulawesi Selatan", minLat: -6.9, maxLat: -1.8, minLng: 118.7, maxLng: 121.8 },
+    { name: "Sulawesi Tengah", minLat: -2.8, maxLat: 2.2, minLng: 119.2, maxLng: 123.6 },
+    { name: "Maluku", minLat: -8.4, maxLat: -1.0, minLng: 124.0, maxLng: 131.4 },
+    { name: "Papua", minLat: -9.8, maxLat: 0.2, minLng: 131.0, maxLng: 141.5 },
+  ];
+  const FALLBACK_MAP_BG = `
+    <div class="fallback-map-bg">
+      <svg class="fallback-indo-svg" viewBox="0 0 1000 520" aria-hidden="true">
+        <rect x="0" y="0" width="1000" height="520" fill="#eef3ea"></rect>
+        <path d="M88 120 L150 95 L206 118 L234 150 L218 196 L170 238 L130 228 L94 188 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M272 272 L355 266 L438 278 L536 302 L620 322 L680 336 L748 350 L820 365 L784 382 L702 370 L610 348 L514 326 L420 310 L332 296 L276 286 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M462 155 L528 132 L596 146 L640 190 L624 244 L568 268 L492 252 L450 212 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M666 194 L712 174 L760 188 L744 226 L700 242 L666 222 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M820 214 L900 196 L958 230 L930 282 L860 296 L806 266 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+      </svg>
+      <span class="fallback-map-title">Peta Dummy Indonesia (klik untuk pilih lokasi)</span>
+    </div>
+  `;
   const CITIES = {
     Jakarta: { lat: -6.2088, lon: 106.8456 },
     Bandung: { lat: -6.9175, lon: 107.6191 },
@@ -69,6 +103,57 @@ document.addEventListener("DOMContentLoaded", () => {
     return { left, top };
   }
 
+  function clampPercent(value) {
+    return Math.max(2, Math.min(98, value));
+  }
+
+  function provinceFromPoint(point) {
+    if (point && typeof point.provinceHint === "string" && point.provinceHint) {
+      return point.provinceHint;
+    }
+    const zone = PROVINCE_ZONES.find(
+      (item) =>
+        point.lat >= item.minLat &&
+        point.lat <= item.maxLat &&
+        point.lng >= item.minLng &&
+        point.lng <= item.maxLng,
+    );
+    return zone?.name || nearestCityForPoint(point);
+  }
+
+  function provinceFromFallbackScreenClick(container, event) {
+    const rect = container.getBoundingClientRect();
+    const xPct = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 100;
+    const yPct = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 100;
+
+    if (yPct >= 50 && yPct <= 76 && xPct >= 27 && xPct <= 88) {
+      if (xPct < 33) return "DKI Jakarta";
+      if (xPct < 47) return "Jawa Barat";
+      if (xPct < 57) return yPct >= 62 ? "DI Yogyakarta" : "Jawa Tengah";
+      if (xPct < 68) return "Jawa Timur";
+      if (xPct < 72) return "Bali";
+      if (xPct < 79) return "Nusa Tenggara Barat";
+      return "Nusa Tenggara Timur";
+    }
+
+    const zones = [
+      { name: "Aceh", x1: 6, x2: 14, y1: 24, y2: 40 },
+      { name: "Sumatera Utara", x1: 12, x2: 20, y1: 24, y2: 42 },
+      { name: "Sumatera Barat", x1: 15, x2: 23, y1: 34, y2: 52 },
+      { name: "Riau", x1: 19, x2: 28, y1: 30, y2: 47 },
+      { name: "Kalimantan Barat", x1: 42, x2: 52, y1: 28, y2: 45 },
+      { name: "Kalimantan Tengah", x1: 50, x2: 59, y1: 33, y2: 49 },
+      { name: "Kalimantan Timur", x1: 58, x2: 66, y1: 30, y2: 47 },
+      { name: "Sulawesi Tengah", x1: 66, x2: 74, y1: 35, y2: 51 },
+      { name: "Sulawesi Selatan", x1: 69, x2: 77, y1: 49, y2: 63 },
+      { name: "Maluku", x1: 77, x2: 85, y1: 44, y2: 60 },
+      { name: "Papua", x1: 82, x2: 97, y1: 34, y2: 60 },
+    ];
+
+    const hit = zones.find((z) => xPct >= z.x1 && xPct <= z.x2 && yPct >= z.y1 && yPct <= z.y2);
+    return hit?.name || null;
+  }
+
   function showForm() {
     if (!formCard) return;
     formCard.classList.remove("hidden");
@@ -108,8 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function mockAddressFromPoint(point) {
-    const city = nearestCityForPoint(point);
-    return `Sekitar ${city}`;
+    const province = provinceFromPoint(point);
+    return `${province}, Indonesia`;
   }
 
   function formatMapLocation(point) {
@@ -215,18 +300,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!window.L) {
       activityMapEl.classList.add("fallback-picker-map");
       activityMapEl.innerHTML =
-        '<div class="fallback-map-bg">Peta Dummy Indonesia (klik untuk pilih lokasi)</div><div class="fallback-map-layer"></div>';
+        `${FALLBACK_MAP_BG}<div class="fallback-map-layer"></div>`;
       const layer = activityMapEl.querySelector(".fallback-map-layer");
 
       activityMapEl.addEventListener("click", (event) => {
         const picked = eventToLatLngFallback(activityMapEl, event);
         if (!picked || !layer) return;
+        const titleEl = activityMapEl.querySelector(".fallback-map-title");
+        if (titleEl) titleEl.style.display = "none";
+        const provinceHint = provinceFromFallbackScreenClick(activityMapEl, event);
         formMapState.location = {
           lat: picked.lat,
           lng: picked.lng,
-          label: mockAddressFromPoint({ lat: picked.lat, lng: picked.lng }),
+          provinceHint: provinceHint || undefined,
+          label: mockAddressFromPoint({
+            lat: picked.lat,
+            lng: picked.lng,
+            provinceHint: provinceHint || undefined,
+          }),
         };
-        const pos = latLngToPercentFallback(formMapState.location);
+        const posRaw = latLngToPercentFallback(formMapState.location);
+        const pos = {
+          left: clampPercent(posRaw.left),
+          top: clampPercent(posRaw.top),
+        };
         layer.innerHTML = `<span class="fallback-map-dot" style="left:${pos.left}%;top:${pos.top}%"></span>`;
         updateMapLocationDisplay();
       });

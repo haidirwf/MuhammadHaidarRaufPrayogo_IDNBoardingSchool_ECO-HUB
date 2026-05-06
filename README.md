@@ -1,54 +1,42 @@
-# README
+# Eco Hub
 
-## Informasi Peserta
-- Nama peserta: Muhammad Haidar Rauf Prayogo
-- Asal sekolah/institusi: ITB-Stikom Bali
-- Judul website: EcoSense - Smart Mobility & City Insights
+Website statis bertema lingkungan untuk simulasi mobilitas, insight kualitas udara, rekomendasi aksi hijau, dan kegiatan komunitas.
 
-## Deskripsi Singkat Website
-EcoSense adalah website edukasi dan simulasi lingkungan yang membantu pengguna memahami dampak emisi perjalanan harian, memantau kualitas udara kota, serta menggerakkan aksi hijau komunitas berbasis peta.
-
-Fitur utama:
-- Smart Mobility Simulation (pilih titik asal dan tujuan di peta, lalu hitung emisi)
-- Dashboard kondisi kota (AQI, PM2.5, PM10, kelembapan, dan insight area)
-- Peta aksi komunitas dan agenda kegiatan lingkungan berbasis lokasi
-- Rekomendasi aksi hijau dan pelacakan dampak pengguna
-- Konten edukasi lingkungan
+## Fitur Utama
+- Simulasi mobilitas (pilih asal/tujuan di peta dummy, hitung estimasi emisi)
+- Dashboard kota (AQI, PM2.5, PM10, kelembapan, dan skor area)
+- Peta aksi komunitas dan daftar kegiatan warga
+- Rekomendasi aksi hijau berbasis hasil simulasi
+- Halaman konten edukasi lingkungan
 
 ## Teknologi
 - HTML5
 - CSS3
 - JavaScript (Vanilla)
-- Leaflet.js
+- Font Awesome 5.15.1
+- Google Fonts
 
-## Cara Menjalankan Proyek
-### 1) Prasyarat
-- Sudah terpasang Python 3 (untuk menjalankan local server sederhana)
+Catatan: peta berjalan dengan fallback native (tanpa Leaflet/OpenStreetMap).
 
-### 2) Jalankan di lokal
-Buka terminal di folder proyek:
+## Struktur Singkat
+- `index.html` : halaman utama + simulasi mobilitas
+- `kegiatan.html` : halaman kegiatan komunitas
+- `konten.html`, `fitur.html`, `about.html`, `artikel.html` : halaman konten
+- `css/` : stylesheet global, komponen, dan halaman
+- `js/` : logic interaktif frontend
 
+## Cara Menjalankan
+1. Buka terminal di folder proyek:
 ```powershell
 cd C:\Users\idal\sekolajh\eco-hub
+```
+2. Jalankan server lokal:
+```powershell
 python -m http.server 8080
 ```
-
-Lalu buka di browser:
+3. Buka di browser:
 - `http://localhost:8080`
 
-### 3) Jalankan di jaringan yang sama (opsional, untuk buka dari HP)
-Cari IP laptop:
-
-```powershell
-ipconfig
-```
-
-Buka dari perangkat lain pada Wi-Fi yang sama:
-- `http://<IP-LAPTOP>:8080`
-
-Contoh:
-- `http://192.168.1.10:8080`
-
 ## Catatan
-- Proyek ini berbasis frontend statis (tanpa backend server khusus).
-- Beberapa fitur (Service Worker dan manifest) bekerja optimal saat dijalankan via `http/https`, bukan langsung `file://`.
+- Proyek ini frontend-only (tanpa backend khusus).
+- Service worker dan manifest bekerja lebih baik melalui `http/https` daripada `file://`.

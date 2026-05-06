@@ -15,6 +15,40 @@ document.addEventListener("DOMContentLoaded", () => {
     [-11.2, 94.5],
     [6.8, 141.5],
   ];
+  const PROVINCE_ZONES = [
+    { name: "Aceh", minLat: 3.2, maxLat: 5.9, minLng: 95.0, maxLng: 98.3 },
+    { name: "Sumatera Utara", minLat: 1.0, maxLat: 3.7, minLng: 97.0, maxLng: 100.6 },
+    { name: "Sumatera Barat", minLat: -1.6, maxLat: 1.3, minLng: 98.5, maxLng: 101.3 },
+    { name: "Riau", minLat: -0.8, maxLat: 1.7, minLng: 100.4, maxLng: 103.1 },
+    { name: "DKI Jakarta", minLat: -6.35, maxLat: -6.05, minLng: 106.7, maxLng: 107.0 },
+    { name: "Jawa Barat", minLat: -7.8, maxLat: -5.85, minLng: 106.0, maxLng: 108.9 },
+    { name: "Jawa Tengah", minLat: -8.1, maxLat: -6.2, minLng: 108.5, maxLng: 111.8 },
+    { name: "DI Yogyakarta", minLat: -8.05, maxLat: -7.55, minLng: 110.15, maxLng: 110.7 },
+    { name: "Jawa Timur", minLat: -8.95, maxLat: -6.75, minLng: 111.0, maxLng: 114.6 },
+    { name: "Bali", minLat: -8.9, maxLat: -8.0, minLng: 114.4, maxLng: 115.8 },
+    { name: "Nusa Tenggara Barat", minLat: -9.4, maxLat: -8.0, minLng: 115.7, maxLng: 119.2 },
+    { name: "Nusa Tenggara Timur", minLat: -10.9, maxLat: -8.0, minLng: 118.6, maxLng: 125.5 },
+    { name: "Kalimantan Barat", minLat: -3.3, maxLat: 2.3, minLng: 108.0, maxLng: 114.2 },
+    { name: "Kalimantan Tengah", minLat: -3.9, maxLat: 0.8, minLng: 111.0, maxLng: 115.8 },
+    { name: "Kalimantan Timur", minLat: -2.8, maxLat: 2.6, minLng: 115.7, maxLng: 119.6 },
+    { name: "Sulawesi Selatan", minLat: -6.9, maxLat: -1.8, minLng: 118.7, maxLng: 121.8 },
+    { name: "Sulawesi Tengah", minLat: -2.8, maxLat: 2.2, minLng: 119.2, maxLng: 123.6 },
+    { name: "Maluku", minLat: -8.4, maxLat: -1.0, minLng: 124.0, maxLng: 131.4 },
+    { name: "Papua", minLat: -9.8, maxLat: 0.2, minLng: 131.0, maxLng: 141.5 },
+  ];
+  const FALLBACK_MAP_BG = `
+    <div class="fallback-map-bg">
+      <svg class="fallback-indo-svg" viewBox="0 0 1000 520" aria-hidden="true">
+        <rect x="0" y="0" width="1000" height="520" fill="#eef3ea"></rect>
+        <path d="M88 120 L150 95 L206 118 L234 150 L218 196 L170 238 L130 228 L94 188 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M272 272 L355 266 L438 278 L536 302 L620 322 L680 336 L748 350 L820 365 L784 382 L702 370 L610 348 L514 326 L420 310 L332 296 L276 286 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M462 155 L528 132 L596 146 L640 190 L624 244 L568 268 L492 252 L450 212 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M666 194 L712 174 L760 188 L744 226 L700 242 L666 222 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+        <path d="M820 214 L900 196 L958 230 L930 282 L860 296 L806 266 Z" fill="#d5e3cc" stroke="#9fb59a" stroke-width="2"/>
+      </svg>
+      <span class="fallback-map-title">Peta Dummy Indonesia (Klik untuk pilih titik)</span>
+    </div>
+  `;
 
   // g CO2 per km per person (estimasi edukasi)
   const MODE_FACTORS = {
@@ -47,27 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Makassar: { lat: -5.1477, lon: 119.4328 },
     Manado: { lat: 1.4748, lon: 124.8421 },
   };
-  const MAP_TILE_SOURCES = [
-    {
-      name: "CARTO Light",
-      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      options: {
-        subdomains: "abcd",
-        maxZoom: 20,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CARTO',
-      },
-    },
-    {
-      name: "OpenStreetMap",
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      options: {
-        maxZoom: 19,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      },
-    },
-  ];
 
   const form = document.getElementById("mobility-form");
   const modeSelect = document.getElementById("mode-select");
@@ -161,6 +174,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const left = ((point.lng - minLng) / (maxLng - minLng)) * 100;
     const top = ((maxLat - point.lat) / (maxLat - minLat)) * 100;
     return { left, top };
+  }
+
+  function clampPercent(value) {
+    return Math.max(2, Math.min(98, value));
+  }
+
+  function provinceFromPoint(point) {
+    if (point && typeof point.provinceHint === "string" && point.provinceHint) {
+      return point.provinceHint;
+    }
+    const zone = PROVINCE_ZONES.find(
+      (item) =>
+        point.lat >= item.minLat &&
+        point.lat <= item.maxLat &&
+        point.lng >= item.minLng &&
+        point.lng <= item.maxLng,
+    );
+    return zone?.name || nearestCityForPoint(point);
+  }
+
+  function provinceFromFallbackScreenClick(container, event) {
+    const rect = container.getBoundingClientRect();
+    const xPct = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 100;
+    const yPct = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 100;
+
+    // Prioritaskan Java belt agar tidak nyasar ke Kalimantan/Sulawesi.
+    if (yPct >= 50 && yPct <= 76 && xPct >= 27 && xPct <= 88) {
+      if (xPct < 33) return "DKI Jakarta";
+      if (xPct < 47) return "Jawa Barat";
+      if (xPct < 57) return yPct >= 62 ? "DI Yogyakarta" : "Jawa Tengah";
+      if (xPct < 68) return "Jawa Timur";
+      if (xPct < 72) return "Bali";
+      if (xPct < 79) return "Nusa Tenggara Barat";
+      return "Nusa Tenggara Timur";
+    }
+
+    const zones = [
+      { name: "Aceh", x1: 6, x2: 14, y1: 24, y2: 40 },
+      { name: "Sumatera Utara", x1: 12, x2: 20, y1: 24, y2: 42 },
+      { name: "Sumatera Barat", x1: 15, x2: 23, y1: 34, y2: 52 },
+      { name: "Riau", x1: 19, x2: 28, y1: 30, y2: 47 },
+      { name: "Kalimantan Barat", x1: 42, x2: 52, y1: 28, y2: 45 },
+      { name: "Kalimantan Tengah", x1: 50, x2: 59, y1: 33, y2: 49 },
+      { name: "Kalimantan Timur", x1: 58, x2: 66, y1: 30, y2: 47 },
+      { name: "Sulawesi Tengah", x1: 66, x2: 74, y1: 35, y2: 51 },
+      { name: "Sulawesi Selatan", x1: 69, x2: 77, y1: 49, y2: 63 },
+      { name: "Maluku", x1: 77, x2: 85, y1: 44, y2: 60 },
+      { name: "Papua", x1: 82, x2: 97, y1: 34, y2: 60 },
+    ];
+
+    const hit = zones.find((z) => xPct >= z.x1 && xPct <= z.x2 && yPct >= z.y1 && yPct <= z.y2);
+    return hit?.name || null;
   }
 
   function setButtonLoading(button, loading, loadingText = "Memproses...") {
@@ -261,39 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return cached.value;
     }
 
-    if (MOCK_MODE || DUMMY_MAP_MODE) return null;
-
-    let timeout = null;
-    try {
-      const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson`;
-      const controller = new AbortController();
-      timeout = setTimeout(() => controller.abort(), 9000);
-      const res = await fetch(url, { signal: controller.signal });
-
-      const data = await res.json();
-      if (!data || data.code !== "Ok" || !Array.isArray(data.routes) || !data.routes[0]) {
-        return null;
-      }
-
-      const route = data.routes[0];
-      const geometry = Array.isArray(route.geometry?.coordinates)
-        ? route.geometry.coordinates.map((coord) => [coord[1], coord[0]])
-        : null;
-
-      const value = {
-        distanceKm: Number(route.distance || 0) / 1000,
-        durationMin: Number(route.duration || 0) / 60,
-        geometry,
-      };
-
-      routeCache.set(key, { value, ts: Date.now() });
-      persistRouteCache();
-      return value;
-    } catch (error) {
-      return null;
-    } finally {
-      if (timeout) clearTimeout(timeout);
-    }
+    return null;
   }
 
   function estimateEtaMinutes(distanceKm, mode, routeDurationMin = null) {
@@ -366,34 +399,6 @@ document.addEventListener("DOMContentLoaded", () => {
     link.href = canvas.toDataURL("image/png");
     link.download = `ecosense-summary-${Date.now()}.png`;
     link.click();
-  }
-
-  function mountTileLayer(index) {
-    if (!mapState.map || !window.L) return;
-    const source = MAP_TILE_SOURCES[index];
-    if (!source) return;
-
-    if (mapState.tileLayer) {
-      mapState.map.removeLayer(mapState.tileLayer);
-      mapState.tileLayer = null;
-    }
-
-    mapState.tileErrors = 0;
-    mapState.tileIndex = index;
-    mapState.tileLayer = window.L.tileLayer(source.url, {
-      ...source.options,
-      referrerPolicy: "strict-origin-when-cross-origin",
-      crossOrigin: true,
-    });
-
-    mapState.tileLayer.on("tileerror", () => {
-      mapState.tileErrors += 1;
-      if (mapState.tileErrors >= 5 && mapState.tileIndex < MAP_TILE_SOURCES.length - 1) {
-        mountTileLayer(mapState.tileIndex + 1);
-      }
-    });
-
-    mapState.tileLayer.addTo(mapState.map);
   }
 
   function paintDummyMapBase(map) {
@@ -724,16 +729,8 @@ document.addEventListener("DOMContentLoaded", () => {
       tap: true,
     }).setView([-2.5, 118], 5);
 
-    if (!MOCK_MODE && !DUMMY_MAP_MODE) {
-      window.L.tileLayer(MAP_TILE_SOURCES[0].url, {
-        ...MAP_TILE_SOURCES[0].options,
-        referrerPolicy: "strict-origin-when-cross-origin",
-        crossOrigin: true,
-      }).addTo(map);
-    } else {
-      paintDummyMapBase(map);
-      map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
-    }
+    paintDummyMapBase(map);
+    map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
 
     communityMapState.map = map;
     communityMapState.layerGroup = window.L.layerGroup().addTo(map);
@@ -752,21 +749,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const dotsHtml = actions
         .map((item, idx) => {
-          const pos = latLngToPercentFallback({ lat: item.lat, lng: item.lng });
+          const posRaw = latLngToPercentFallback({ lat: item.lat, lng: item.lng });
+          const pos = {
+            left: clampPercent(posRaw.left),
+            top: clampPercent(posRaw.top),
+          };
           return `<button type="button" class="fallback-map-point-btn" data-action-idx="${idx}" style="left:${pos.left}%;top:${pos.top}%;" aria-label="Detail ${item.title}"></button>`;
         })
         .join("");
 
       communityActionMapEl.innerHTML = `
-        <div class="fallback-map-bg">Peta Dummy Indonesia</div>
+        ${FALLBACK_MAP_BG}
         <div class="fallback-map-layer">${dotsHtml}</div>
         <div class="fallback-map-hint">Klik titik untuk lihat detail kegiatan.</div>
       `;
       communityActionMapEl.classList.add("fallback-map-ui");
+      const titleEl = communityActionMapEl.querySelector(".fallback-map-title");
+      if (titleEl && actions.length > 0) {
+        titleEl.style.display = "none";
+      }
 
       const pointButtons = communityActionMapEl.querySelectorAll("[data-action-idx]");
       pointButtons.forEach((button) => {
         button.addEventListener("click", () => {
+          if (titleEl) titleEl.style.display = "none";
           const idx = Number(button.getAttribute("data-action-idx"));
           const target = Number.isFinite(idx) ? actions[idx] : null;
           if (!target) return;
@@ -852,13 +858,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateMapVisuals() {
     if (mapState.fallbackLayer && mapEl) {
+      const titleEl = mapEl.querySelector(".fallback-map-title");
       mapState.fallbackLayer.innerHTML = "";
       const from = mapState.from;
       const to = mapState.to;
-      if (!from && !to) return;
+      if (!from && !to) {
+        if (titleEl) titleEl.style.display = "";
+        return;
+      }
+      if (titleEl) titleEl.style.display = "none";
 
       const drawDot = (point, cls) => {
-        const pos = latLngToPercentFallback(point);
+        const posRaw = latLngToPercentFallback(point);
+        const pos = {
+          left: clampPercent(posRaw.left),
+          top: clampPercent(posRaw.top),
+        };
         const dot = document.createElement("span");
         dot.className = `fallback-map-dot ${cls}`;
         dot.style.left = `${pos.left}%`;
@@ -870,15 +885,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const fromPos = from ? drawDot(from, "from") : null;
       const toPos = to ? drawDot(to, "to") : null;
       if (fromPos && toPos) {
+        const mapRect = mapEl.getBoundingClientRect();
+        const fromPx = {
+          x: (fromPos.left / 100) * mapRect.width,
+          y: (fromPos.top / 100) * mapRect.height,
+        };
+        const toPx = {
+          x: (toPos.left / 100) * mapRect.width,
+          y: (toPos.top / 100) * mapRect.height,
+        };
         const line = document.createElement("div");
         line.className = "fallback-map-line";
-        const dx = toPos.left - fromPos.left;
-        const dy = toPos.top - fromPos.top;
+        const dx = toPx.x - fromPx.x;
+        const dy = toPx.y - fromPx.y;
         const length = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx) * (180 / Math.PI);
         line.style.left = `${fromPos.left}%`;
         line.style.top = `${fromPos.top}%`;
-        line.style.width = `${length}%`;
+        line.style.width = `${Math.max(0, length)}px`;
         line.style.transform = `rotate(${angle}deg)`;
         mapState.fallbackLayer.appendChild(line);
       }
@@ -930,16 +954,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!window.L) {
       mapEl.classList.add("fallback-map-ui");
       mapEl.innerHTML = `
-        <div class="fallback-map-bg">Peta Dummy Indonesia (Klik untuk pilih titik)</div>
+        ${FALLBACK_MAP_BG}
         <div class="fallback-map-layer"></div>
       `;
       mapState.fallbackLayer = mapEl.querySelector(".fallback-map-layer");
       mapEl.addEventListener("click", (event) => {
         const pointRaw = eventToLatLngFallback(mapEl, event);
         if (!pointRaw) return;
+        const provinceHint = provinceFromFallbackScreenClick(mapEl, event);
         const point = {
           lat: pointRaw.lat,
           lng: pointRaw.lng,
+          provinceHint: provinceHint || undefined,
           label: "Mencari alamat...",
         };
         if (!mapState.from) {
@@ -961,12 +987,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     mapState.map = window.L.map(mapEl, { zoomControl: true }).setView([-2.5, 118], 5);
-    if (!MOCK_MODE && !DUMMY_MAP_MODE) {
-      mountTileLayer(0);
-    } else {
-      paintDummyMapBase(mapState.map);
-      mapState.map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
-    }
+    paintDummyMapBase(mapState.map);
+    mapState.map.fitBounds(INDONESIA_BOUNDS, { padding: [10, 10] });
 
     mapState.map.on("click", (event) => {
       const point = {
@@ -1243,11 +1265,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function mockAddressFromPoint(point) {
-    const city = nearestCityForPoint(point);
-    return `Sekitar ${city} (${point.lat.toFixed(4)}, ${point.lng.toFixed(4)})`;
+    const province = provinceFromPoint(point);
+    return `${province}, Indonesia`;
   }
 
   async function reverseGeocode(point) {
+    if (point?.provinceHint) {
+      return `${point.provinceHint}, Indonesia`;
+    }
+
     const key = geocodeCacheKey(point);
     if (geocodeCache.has(key)) return geocodeCache.get(key);
 
@@ -1258,42 +1284,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return mockAddress;
     }
 
-    const elapsed = Date.now() - lastGeocodeAt;
-    if (elapsed < 1100) {
-      await new Promise((resolve) => setTimeout(resolve, 1100 - elapsed));
-    }
-    lastGeocodeAt = Date.now();
-
-    try {
-      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${point.lat}&lon=${point.lng}`;
-      const res = await fetch(url, {
-        headers: {
-          "Accept-Language": "id-ID,id;q=0.9,en;q=0.8",
-        },
-      });
-      const data = await res.json();
-
-      let address = data.display_name || `${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}`;
-      if (data.address) {
-        const { road, suburb, village, city, town, county } = data.address;
-        const compact = [road, suburb || village, city || town || county].filter(Boolean);
-        if (compact.length) address = compact.join(", ");
-      }
-
-      geocodeCache.set(key, address);
-      persistGeoCache();
-      return address;
-    } catch (error) {
-      const fallbackAddress = mockAddressFromPoint(point);
-      geocodeCache.set(key, fallbackAddress);
-      persistGeoCache();
-      return fallbackAddress;
-    }
+    const fallbackAddress = mockAddressFromPoint(point);
+    geocodeCache.set(key, fallbackAddress);
+    persistGeoCache();
+    return fallbackAddress;
   }
 
   async function resolvePointAddress(role) {
     const target = role === "from" ? mapState.from : mapState.to;
     if (!target) return;
+    if (target.provinceHint) {
+      target.label = `${target.provinceHint}, Indonesia`;
+      updatePointLabels();
+      return;
+    }
 
     const snapshot = { lat: target.lat, lng: target.lng };
     const address = await reverseGeocode(snapshot);
